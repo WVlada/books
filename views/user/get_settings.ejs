@@ -1,0 +1,287 @@
+<link rel="stylesheet" href="/css/settings.css" />
+<div id="settings_modal_background"></div>
+<div class="modal_placeholder">
+  <div class="modal_title_bar">
+    <span class="modal_title_bar_span">Korisnik: <%= user.email %></span>
+  </div>
+  <div id="settings_dialog">
+    <div class="settings_tab">
+      <button
+        class="settings_tablinks"
+        onclick="openSetting(event, 'user')"
+        id="settings_defaultOpen"
+      >
+        User information
+      </button>
+      <button class="settings_tablinks" onclick="openSetting(event, 'company')">
+        Company information
+      </button>
+      <button
+        class="settings_tablinks"
+        onclick="openSetting(event, 'preferences')"
+      >
+        Program preferences
+      </button>
+    </div>
+
+    <!-- USER TAB-->
+    <div id="user" class="settings_tabcontent">
+      <img
+        src="../../../images/usermr.png"
+        class="user_slika"
+        height="60"
+        width="60"
+      />
+      <h5>Name:</h5>
+      <p><%= user.email %></p>
+      <h5>Last name:</h5>
+      <p><%= user.email %></p>
+      <h5>Telephone:</h5>
+      <p><%= user.email %></p>
+      <h5>E-mail:</h5>
+      <p><%= user.email %></p>
+      <h5>Mobile:</h5>
+      <p><%= user.email %></p>
+      <h5>Adress:</h5>
+      <p><%= user.email %></p>
+    </div>
+    <!-- USER TAB-->
+
+    <!-- COMPANY TAB-->
+    <div id="company" class="settings_tabcontent">
+      <div class="row">
+        <div class="col-md-4">
+          <img
+            src="../../../images/usermr.png"
+            class="companysettings_slika"
+            height="60"
+            width="60"
+          />
+          <h4>All companies:</h4>
+          <div class="company_vertical_menu">
+            <% for (let i=0; i <= companies.length -1; i++) { %> <% if
+            (companies[i]._id === company._id) { %>
+            <span
+              data-id="`settings_company"
+              ${current_company._id}`
+              class="company_select_span active"
+              onclick="company_select(event)"
+              ><%= company.name %></span
+            >
+            <% } else { %>
+            <span
+              data-id="`settings_company"
+              ${companies[i]._id}`
+              class="company_select_span"
+              onclick="company_select(event)"
+              ><%= companies[i].name %></span
+            >
+            <% } %> <% } %>
+          </div>
+
+          <div>
+            <buttoni id="new_company_button" style="float: left;">
+              <i class="fa fa-plus-square"></i>
+            </buttoni>
+            <p style="float: left; margin-top:13px;margin-left: 5px;">
+              Add new company
+            </p>
+          </div>
+          <div id="new_company_dialog_placeholder"></div>
+        </div>
+
+        <div class="col-md-8">
+          
+          <% for (let i=0; i <= companies.length -1; i++) { %>
+          <div
+            id="`settings_company"
+            ${companies[i]._id}`
+            class="company_settings_display"
+          >
+            <h5>Name:</h5>
+            <%= companies[i].name %>
+            <h5>MB:</h5>
+            <%= companies[i].mb %>
+            <h5>Tax ID:</h5>
+            <%= companies[i].pib %>
+            <h5>Adress:</h5>
+            <%= companies[i].adress %>
+            <h5>Telephone:</h5>
+            <%= companies[i].telephone %>
+            <h5>Email:</h5>
+            <%= companies[i].email %>
+            <h5>Registered years:</h5>
+
+            <% if (companies[i].year.length > 0) { %>
+            <select>
+              <% for (let j = 0; j <= companies[i].year.length -1; j++) { %>
+              <option><%= companies[i].year[j] %></option>
+              <% } %>
+            </select>
+            <% } %>
+          </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+    <!-- COMPANY TAB-->
+    <!-- PREFERENCES TAB-->
+    <div id="preferences" class="settings_tabcontent">
+      <img
+        src="../../../images/usermr.png"
+        class="settings_preferences_slika"
+        height="60"
+        width="60"
+      />
+      <h4>Preferences</h4>
+
+      <p>Disable tutorial tips:</p>
+      <label class="switch">
+        <% if (user.program_preference.tutorialtip === true) { %>
+        <input
+          id="settings_tutorial"
+          type="checkbox"
+          checked
+          onclick="settings_tutorial_change()"
+        />
+        <% } else { %>
+        <input
+          id="settings_tutorial"
+          type="checkbox"
+          onclick="settings_tutorial_change()"
+        />
+        <% } %>
+        <span class="slider round"></span>
+      </label>
+
+      <p>Autosave on logout:</p>
+      <label class="switch">
+        <% if (user.program_preference.autosave === true) { %>
+        <input
+          id="settings_autosave"
+          type="checkbox"
+          checked
+          onclick="settings_autosave_change()"
+        />
+        <% } else { %>
+        <input
+          id="settings_autosave"
+          type="checkbox"
+          onclick="settings_autosave_change()"
+        />
+        <% } %>
+        <span class="slider round"></span>
+      </label>
+
+      <p>User permissions:</p>
+      <label class="switch">
+        <% if (user.program_preference.permissions === true) { %>
+        <input
+          id="settings_permisions"
+          type="checkbox"
+          checked
+          onclick="settings_permisions_change(event)"
+        />
+        <% } else { %>
+        <input
+          id="settings_permisions"
+          type="checkbox"
+          onclick="settings_permisions_change(event)"
+        />
+        <% } %>
+        <span class="slider round"></span>
+      </label>
+
+      <div id="settings_user_preference_placeholder"></div>
+    </div>
+    <!-- PREFERENCES TAB-->
+  </div>
+
+  <div class="modal_bottom_buttons_panel">
+    <div class="modal_bottom_buttons_panel_buttonset">
+      <finbutton onclick="close_dialog()">Close dialog</finbutton>
+    </div>
+  </div>
+  <script>
+    document.getElementById("settings_defaultOpen").click();
+    if (document.getElementsByClassName("company_select_span active") != null) {
+      document.getElementsByClassName("company_select_span active")[0].click();
+    }
+
+    function openSetting(evt, linkName) {
+      var i, tabcontent, tablinks;
+      tabcontent = document.getElementsByClassName("settings_tabcontent");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+      tablinks = document.getElementsByClassName("settings_tablinks");
+      for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+      document.getElementById(linkName).style.display = "block";
+      evt.currentTarget.className += " active";
+    }
+
+    function company_select(evt) {
+      // da sve informacije budu skrivene
+      companycontent = document.getElementsByClassName(
+        "company_settings_display"
+      );
+      for (i = 0; i < companycontent.length; i++) {
+        companycontent[i].style.display = "none";
+      }
+      // da prikazem samo onu koja je aktivna
+      document.getElementById(
+        evt.currentTarget.getAttribute("data-id")
+      ).style.display = "block";
+
+      // za klikanje po meniju
+      companySpans = document.getElementsByClassName("company_select_span");
+      for (i = 0; i < companySpans.length; i++) {
+        companySpans[i].className = companySpans[i].className.replace(
+          " active",
+          ""
+        );
+      }
+      evt.currentTarget.className += " active";
+    }
+
+    // ovo je za admin panel
+    //if (
+    //  document.getElementsByClassName("company_select_span_admin active") !=
+    //  null
+    //) {
+    //  document
+    //    .getElementsByClassName("company_select_span_admin active")[0]
+    //    .click();
+    //}
+    function company_select_admin(evt) {
+      companySpans = document.getElementsByClassName(
+        "company_select_span_admin"
+      );
+      for (i = 0; i < companySpans.length; i++) {
+        companySpans[i].className = companySpans[i].className.replace(
+          " active",
+          ""
+        );
+      }
+      evt.currentTarget.className += " active";
+    }
+
+    function users_select_admin(evt) {
+      companySpans = document.getElementsByClassName("users_select_span");
+      for (i = 0; i < companySpans.length; i++) {
+        companySpans[i].className = companySpans[i].className.replace(
+          " active",
+          ""
+        );
+      }
+      evt.currentTarget.className += " active";
+    }
+
+    function close_dialog(){
+      var dialog_placeholder = document.getElementById("settings_placeholder");
+      dialog_placeholder.innerHTML='';
+    }
+  </script>
+</div>

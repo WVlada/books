@@ -1,0 +1,96 @@
+<link rel="stylesheet" href="/css/main.css" />
+<link rel="stylesheet" href="/css/login.css" />
+<link rel="icon" href="/public/images/favicon.png" />
+<div class="background-image"></div>
+
+<% if (validationErrors.length > 0) { %>
+  <div id="user-message" class="user-message-div">
+      <div class="user-message user-message--error">
+          <ul class="user-message-error-list">
+            <% validationErrors.forEach(error=>{ %>
+              <li><%= error.msg %></li>
+            <% }) %>
+          </ul>
+      </div>
+  </div>
+  <% } %>
+
+  <% if (successMessage) { %>
+    <div id="user-message" class="user-message-div">
+        <div class="user-message user-message--success">
+            <ul class="user-message-error-list">
+                <li><%= successMessage %></li>
+            </ul>
+        </div>
+    </div>
+    <% } %>
+    <% if (infoMessage) { %>
+      <div id="user-message" class="user-message-div">
+          <div class="user-message user-message--info">
+              <ul class="user-message-error-list">
+                  <li><%= infoMessage %></li>
+              </ul>
+          </div>
+      </div>
+      <% } %>
+
+<div class="slika-container">
+  <div id="login_slika" class="col-md-6">
+    <form class="login_form" action="/login" method="POST">
+      <div class="form-control">
+        <input
+          class="login_input <%= validationErrors.find(e => e.param ==='email') ? 'invalid' : ''%>"
+          type="text"
+          placeholder="Email"
+          name="email"
+          id="email"
+          value="<%= oldInput.email %>"
+        />
+      </div>
+      <div class="form-control">
+        <input
+          class="login_input <%= validationErrors.find(e => e.param ==='password') ? 'invalid' : ''%>"
+          type="password"
+          placeholder="Password"
+          name="password"
+          id="password"
+          value="<%= oldInput.password %>"
+        />
+      </div>
+
+      <button class="login_button" type="submit">Login</button>
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+    </form>
+    <div class="login-signup">
+      <p><a href="/signup">Not a user? Sign up here</a></p>
+    </div>
+    <div class="login-donji_deo">
+      <p class="verzija_tekst">Version 0.8b</p>
+      <p id="modal-click" class="tutorial_modal_paragraph">
+        Presentation guide
+      </p>
+
+      <div id="tutorial_dialog">
+        <%- include('../includes/login-modal.ejs') %>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  var msgdiv = document.getElementById("user-message");
+  var msg = document.getElementsByClassName("user-message");
+
+  if (msg.length > 0) {
+    for (i = 0; i < msg.length; i++) {
+      let message = msg[i]; // zanimljivo je probati sa msg[i] pa timeout :)
+      message.style.opacity = 1;
+      message.style.transition = "opacity 1s ease-in-out";
+      setTimeout(function() {
+        message.style.opacity = "0";
+      }, 1800);
+      setTimeout(function() {
+        message.style.visibility = "hidden";
+      }, 3000);
+    }
+  }
+</script>

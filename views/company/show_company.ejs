@@ -1,0 +1,180 @@
+<link rel="stylesheet" href="/css/show_company.css" />
+
+<%- include('../includes/header.ejs') %>
+
+<div class="row">
+	<div class=" style="height: 24px">
+		
+		<% if (infoMessage) { %>
+            <div id="user-message" class="user-message-div">
+              <div class="user-message user-message--info">
+                <ul class="user-message-error-list">
+                  <li><%= infoMessage %></li>
+                </ul>
+              </div>
+            </div>
+            <% } %> <% if (validationErrors.length > 0) { %>
+            <div id="user-message" class="user-message-div">
+              <div class="user-message user-message--error">
+                <ul class="user-message-error-list">
+                  <% validationErrors.forEach(error=>{ %>
+                  <li><%= error.msg %></li>
+                  <% }) %>
+                </ul>
+              </div>
+            </div>
+            <% } %> <% if (successMessage) { %>
+            <div id="user-message" class="user-message-div">
+              <div class="user-message user-message--success">
+                <ul class="user-message-error-list">
+                  <li><%= successMessage %></li>
+                </ul>
+              </div>
+            </div>
+            <% } %>
+		
+		
+
+	</div>
+</div>
+
+<div id="wrapper">   
+
+    <div class="levo">
+			<%- include('../includes/accordion.ejs') %>
+            
+    </div>
+
+    <div class="centar">
+    			
+			<%- include('../includes/dashboard/tok_dokumentacije.ejs') %>
+            
+                    <div id="nalog_placeholder">
+                    </div>
+                    <div id="novi_komitent_placeholder">
+        			</div>
+                    <div id="odabir_kartice_placeholder">
+                    </div>
+
+    </div>
+  
+
+    <div class="desno">
+			<%- include('../includes/stanje_obaveza.ejs') %>
+             
+    </div>
+    
+</div>
+
+
+<div class="kontejner">
+    <div class="dole">
+		<div class="dole_grid">
+			<div class="dole_grid_item_1">
+				<finbutton id="novi_nalog">
+					Novi nalog
+				</finbutton>
+			</div>
+			<div class="dole_grid_item_2">	
+				<finbutton id="odabir_kartice_button">
+					Kartica
+				</finbutton>
+			</div>
+			<div class="dole_grid_item_3">	
+				<finbutton id="promet_od_do_button">
+					Promet
+				</finbutton>
+				<div id="promet_od_do_placeholder">
+				</div>
+			</div>
+			<div class="dole_grid_item_4">
+				<finbutton id="dole_button4">
+					#
+				</finbutton>
+			</div>
+			<div class="dole_grid_item_5">	
+				<finbutton id="dole_button5">
+					#
+				</finbutton>
+			</div>
+			<div class="dole_grid_item_6">	
+				<finbutton id="dole_button6">
+					#
+				</finbutton>
+			</div>
+			<div class="dole_grid_item_6">	
+					<finbutton id="dole_button6">
+						#
+					</finbutton>
+			</div>
+			<div class="dole_grid_item_6">	
+				<finbutton id="dole_button6">
+							#
+				</finbutton>
+			</div>
+			<div class="dole_grid_item_6">	
+				<finbutton id="dole_button6">
+							#
+				</finbutton>
+			</div>
+			<div class="dole_grid_item_6">	
+				<finbutton id="dole_button6">
+							#
+				</finbutton>
+			</div>
+		</div>
+    </div>
+</div>
+
+
+<script>
+	$(document)
+      .off("click", "#novi_nalog")
+      .on("click", "#novi_nalog", function() {
+        var me = $(this);
+        if (me.data("requestRunning")) {
+          return;
+        }
+        me.data("requestRunning", true);
+        $.ajax({
+          url: "/novi_nalog",
+          type: "GET",
+          data: {
+            current_company: `<%= current_company.id.toString() %>`,
+            current_year: `<%= current_company_year %>`
+          },
+          dataType: "html",
+          complete: function() {
+            me.data("requestRunning", false);
+          },
+          success: function(html) {
+            $("#nalog_placeholder").html(html);
+          }
+        });
+      });
+	
+
+//$(document).off('click', '#promet_od_do_button').on('click', '#promet_od_do_button', function()        
+//
+//    {   
+//    	var me = $(this);
+//        
+//        if (me.data('requestRunning')) 
+//            { return; }
+//        
+//        me.data('requestRunning', true);
+//        
+//        $.ajax({
+//                url: "/promet_od_do_dialog",
+//                type: "get",
+//                data: {"" : ""},
+//                dataType: "script",
+//                complete: function() { 
+//                    me.data('requestRunning', false);
+//                                    }
+//               });
+//               
+//    }
+//);
+	
+</script>

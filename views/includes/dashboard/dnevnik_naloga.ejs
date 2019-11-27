@@ -1,0 +1,74 @@
+<link rel="stylesheet" href="/css/dnevnik_naloga.css" />
+
+<div id="table">
+  <table class="dnevnik_naloga">
+    <thead>
+      <tr class="dnevnik_naloga">
+        <th class="dnevnik_naloga">Tip naloga</th>
+        <th class="dnevnik_naloga">Broj naloga</th>
+        <th class="dnevnik_naloga">Opis</th>
+        <th class="dnevnik_naloga">Iznos</th>
+        <th class="dnevnik_naloga">Datum</th>
+        <th class="dnevnik_naloga">Zaključan?</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- @nalozi.each do |x| -->
+      <tr
+        id="<!--=x.tipnaloga.oznaka.to_s + x.broj.to_s -->"
+        class="dnevnik_naloga"
+      >
+        <!-- if x.duguje == x.potrazuje -->
+        <!--# ovo je test da mi je nalog balansiran -->
+        <td class="dnevnik_naloga"><!--= x.tipnaloga.oznaka --></td>
+        <td class="dnevnik_naloga"><!--= x.broj --></td>
+        <td class="dnevnik_naloga"><!--= x.opis --></td>
+        <td class="dnevnik_naloga">
+          <!--= number_to_currency(x.potrazuje, :locale => "sr") -->
+        </td>
+        <td class="dnevnik_naloga">
+          <!--= l(x.datum, :format => '%d/%m/%Y') -->
+        </td>
+        <td class="dnevnik_naloga"><!--= x.zakljucan --></td>
+        <!-- else -->
+        <td class="dnevnik_naloga crven"><!--= x.tipnaloga.oznaka --></td>
+        <td class="dnevnik_naloga crven"><!--= x.broj --></td>
+        <td class="dnevnik_naloga crven "><!--= x.opis --></td>
+        <td class="dnevnik_naloga crven">
+          <!--= number_to_currency(x.potrazuje, :locale => "sr") -->
+        </td>
+        <td class="dnevnik_naloga crven ">
+          <!--= l(x.datum, :format => '%d/%m/%Y') -->
+        </td>
+        <td class="dnevnik_naloga crven "><!--= x.zakljucan --></td>
+        <!-- end -->
+      </tr>
+      <!-- end -->
+    </tbody>
+  </table>
+
+  <div class="table_dnevnik_naloga_donji_deo">
+    <!-- pre ovog params:, kad naopravim nalog sa dugmetom dole, svi linkovi su
+    pamtili /create_nalog metod   paginate @nalozi, remote: true, params:
+    {controller: 'nalog', action: 'index'}, window: 2-->
+  </div>
+
+  <script>
+    $(document)
+      .off("dblclick", "tr.dnevnik_naloga")
+      .on("dblclick", "tr.dnevnik_naloga", function() {
+        page = $("span.current")
+          .text()
+          .replace(/[\t\n]+/g, " ")
+          .trim();
+        //x = this.id;
+
+        $.ajax({
+          url: "/nalog_show",
+          type: "get",
+          data: {},
+          dataType: "script"
+        });
+      });
+  </script>
+</div>

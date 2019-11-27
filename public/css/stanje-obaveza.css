@@ -1,0 +1,35 @@
+#stanje_obaveza_okvir_div {
+  font-size: 13px;
+  margin-top: 5px;
+  margin-left: 5px;
+  margin-right: 5px;
+  height: 550px;
+}
+.tab {
+  overflow: hidden;
+  border: 1px solid #d8d9ea;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+}
+.tab button {
+  background-image: -webkit-linear-gradient(top, #e6e6e6 0%, #a5a5a5 100%);
+  float: left;
+  border-bottom: none;
+  outline: none;
+  cursor: pointer;
+  transition: 0.3s;
+  color: #49435b;
+  padding: 2px;
+}
+.tablinks:hover {
+  background-image: -webkit-linear-gradient(top, #a5a5a5 0%, #e6e6e6 100%);
+  color: white;
+}
+.refresh_dugme {
+  padding: 2px;
+  margin-top: 1px;
+  float: right;
+}
+#refresh_dugme:hover {
+  color: white;
+}

@@ -1,0 +1,150 @@
+<link rel="stylesheet" href="/css/nalog.css" />
+
+<div id="novi_nalog_modal_background"></div>
+
+<div class="modal_placeholder">
+  <div class="modal_title_bar">
+    <span class="modal_title_bar_span">Korisnik: <%= user.email %></span>
+    <% if (infoMessage) { %>
+        <div id="user-message" class="user-message-div">
+          <div class="user-message user-message--info">
+            <ul class="user-message-error-list">
+              <li><%= infoMessage %></li>
+            </ul>
+          </div>
+        </div>
+        <% } %> <% if (validationErrors.length > 0) { %>
+        <div id="user-message" class="user-message-div">
+          <div class="user-message user-message--error">
+            <ul class="user-message-error-list">
+              <% validationErrors.forEach(error=>{ %>
+              <li><%= error.msg %></li>
+              <% }) %>
+            </ul>
+          </div>
+        </div>
+        <% } %> <% if (successMessage) { %>
+        <div id="user-message" class="user-message-div">
+          <div class="user-message user-message--success">
+            <ul class="user-message-error-list">
+              <li><%= successMessage %></li>
+            </ul>
+          </div>
+        </div>
+        <% } %>  
+</div>
+
+<div id = "nalog_dijalog">
+        <!---->
+<!-- form_tag("/novinalog", method: "post", remote: true, id: "novinalog") do-->
+<form class="new_nalog_form" action="/new_nalog" method="POST">
+    <div class = "container-fluid">
+        <div class = "prvi_row"> 
+            <div class="vrsta_naloga_div">
+                <div class="form-control">
+                    <span>Vrsta:</span>
+                    <select class="novi_nalog_input" name = "vrsta" id="vrstaNaloga" onchange="Pronadji_brojeve_naloga()">
+                        
+                        <% for(let i = 0; i <= vrste_naloga.length - 1; i++) { %>
+                            <option <%= vrste_naloga[i] === "N" ? "selected" : null %>><%= vrste_naloga[i] %></option>
+                         <% } %>
+                    </select>
+                </div>
+            </div>
+            <div class="broj_naloga_div">
+                  <div id="broj_naloga">
+                      <span>Broj:</span>
+                      <select class="novi_nalog_input" name= "broj_naloga" id="broj_naloga_select">
+                          <!-- @brojevi.each do |x|-->
+                              <option></option> <!--value="#{x}"%>>"#{x}"%></option>
+                           end -->
+                      </select>
+                  </div>
+            </div>
+            <div class="opis_naloga_div"> 
+              
+                  
+                  <div class="form-control">
+                      <span>Opis naloga:</span>
+                    <input class="novi_nalog_input opis_naloga_input" type="text"/>
+                  </div>
+                    <!-- text_field_tag(:opis, "" , :size => "80")-->
+              
+          </div>
+           
+        </div>
+
+        <div class = "drugi_row"> 
+            <div class="">
+                <div>  
+                  DATUM
+                      <!-- label_tag(:datum, "Datum:")--></br>
+                      <!-- date_field(:nalog, :datum, :size => "40", :value => Time.now.strftime('%Y-%m-%d'))-->
+                </div>
+            </div>
+            
+        </div>   
+        <div class="treci_row">
+
+            <div class="grid-item">
+                <!-- label_tag(:opis_stav, "Opis stava:")--></br>
+                <!--# ovde multiple true ne radi, pa se mora dodati []-->
+                <!--# label_tag(1, nil, class: "label")-->
+                <!-- text_field_tag("opis_stav[]", "", :size => "35")-->
+            </div>
+            
+            <div class="grid-item">
+                <!-- label_tag(:sifra_komitenta, "Šifra k.")-->
+                <select data-placeholder="Select..." class="chosen-select" name="sifre_komitenata[]">
+                    <!-- @sifre.each do |x|-->
+                        <option></option>
+                        <option><!-- x[0]--> | <!-- x[1]--></option>
+                    <!-- end-->
+                </select>
+            </div>
+            
+            <div class="grid-item">
+                <!-- label_tag(:poziv, "Poziv:")-->
+                <!-- search_field_tag('poziv[]', nil, class: "konto")-->
+            </div>
+            
+            <div class="grid-item">
+                <!-- label_tag(:konto, "Konto:")--> <i class="fa fa-plus-square dodaj_racun" style="display:inline-block;margin-top:5px;cursor: pointer;"></i> <div id="dijalog_za_konta" style="display: none;" ></div>       
+                <!--# search_field_tag('konto[]', nil, class: "konto")-->
+                <input type="text" list="konto[]" class="konto" size="15" oninput="skinitekst(this)" name="konto[]" autocomplete="off">
+                <datalist id="konto[]">
+                    <!-- @konta.each do |x|-->
+                    <option></option> <!--value=" x[0] + " | " + x[1]-->">
+                        <!-- end-->
+                </datalist>
+            </div>
+            
+            <div class="grid-item dugipot">
+                <!-- label_tag(:duguje, "Duguje:")-->
+                <!--# multiple true magija, za polja sa istim imenom-->
+                <!-- number_field(:stav, :duguje, step: 0.01, multiple: true, :value => 0.0)-->
+            </div>
+            
+            <div class="grid-item dugipot">
+                <!-- label_tag(:potrazuje, "Potražuje:")-->
+                <!-- number_field(:stav, :potrazuje, step: 0.01, multiple: true, :value => 0.0)-->
+            </div>
+            
+            <div class="grid-item valuta">
+                <!-- label_tag(:valuta, "Valuta:")-->
+                <!-- date_field(:stav, :datum, :size => "20", multiple: true)-->
+            </div>
+            
+            <div class="grid-item">
+                <!--# <div class="dodaj_button" onclick="dodaj_red()">&plus;</div>-->
+            </div>
+
+        </div>
+
+    </div>
+
+
+</form>    
+</div><!-- nalog dijalog-->
+
+</div>

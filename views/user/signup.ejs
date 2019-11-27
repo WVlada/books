@@ -1,0 +1,89 @@
+<link rel="stylesheet" href="/css/main.css" />
+<link rel="stylesheet" href="/css/signup.css" />
+<link rel="icon" href="/public/images/favicon.png" />
+<div class="background-image"></div>
+
+<% if (validationErrors.length > 0) { %>
+<div id="user-message" class="user-message-div">
+    <div class="user-message user-message--error">
+        <ul class="user-message-error-list">
+          <% validationErrors.forEach(error=>{ %>
+            <li><%= error.msg %></li>
+          <% }) %>
+        </ul>
+    </div>
+</div>
+<% } %>
+
+<div class="slika-container">
+  <div id="signup_slika" class="col-md-6">
+    <div class="new_user_slika_div">
+      <img
+        class="new_user_slika"
+        src="../../images/login/usermr.png"
+        alt="New user"
+      />
+      <p class="new_user_slika_text">
+        Register by entering your details below:
+      </p>
+    </div>
+    <form class="signup_form" action="/signup" method="POST">
+      <div class="form-control">
+        <input
+          class="signup_input <%= validationErrors.find(e => e.param ==='email') ? 'invalid' : ''%>"
+          type="text"
+          placeholder="Email"
+          name="email"
+          id="email"
+          value="<%= oldInput.email %>"
+        />
+      </div>
+      <div class="form-control">
+        <input
+          class="signup_input <%= validationErrors.find(e => e.param ==='password') ? 'invalid' : ''%>"
+          type="password"
+          placeholder="Password"
+          name="password"
+          id="password"
+          value="<%= oldInput.password %>"
+        />
+      </div>
+      <div class="form-control">
+        <input
+          class="signup_input <%= validationErrors.find(e => e.param ==='confirmPassword') ? 'invalid' : ''%>"
+          type="password"
+          placeholder="Confirm password"
+          name="confirmPassword"
+          id="confirmPassword"
+          value="<%= oldInput.confirmPassword %>"
+        />
+      </div>
+
+      <button class="signup_button" type="submit">Signup</button>
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+    </form>
+    <div class="signup-back-to-login">
+      <p><a href="/">Back to login</a></p>
+    </div>
+
+    <div class="signup-donji_deo"></div>
+  </div>
+</div>
+<script>
+  var msgdiv = document.getElementById("user-message");
+  var msg = document.getElementsByClassName("user-message");
+
+  if (msg.length > 0) {
+    for (i = 0; i < msg.length; i++) {
+      let message = msg[i]; // zanimljivo je probati sa msg[i] pa timeout :)
+      message.style.opacity = 1;
+      message.style.transition = "opacity 1s ease-in-out";
+      setTimeout(function() {
+        message.style.opacity = "0";
+      }, 1800);
+      setTimeout(function() {
+        message.style.visibility = "hidden";
+      }, 3000);
+    }
+  }
+</script>

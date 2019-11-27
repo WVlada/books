@@ -1,0 +1,42 @@
+<link rel="stylesheet" href="../css/modal.css" />
+<div id="myModal" class="modal">
+  <div class="modal-frame">
+    <div class="modal-header">
+      <div class="modal-title">
+        Presentation guide:
+      </div>
+      <span class="modal-close">&times;</span>
+    </div>
+
+    <div class="modal-content">
+      <%- include('./login-slideshow.ejs') %>
+    </div>
+    <div class="modal-footer"></div>
+  </div>
+</div>
+
+<script>
+  var modal = document.getElementById("myModal");
+  var btn = document.getElementById("modal-click");
+  var span = document.getElementsByClassName("modal-close")[0];
+  btn.onclick = function() {
+    modal.style.display = "block";
+    setTimeout(function() {
+      modal.style.opacity = "1";
+    }, 200);
+    modal.style.visibility = "visible";
+  };
+  span.onclick = function() {
+    modal.style.visibility = "hidden";
+    modal.style.opacity = "0";
+    setTimeout(function() {
+      modal.style.display = "none";
+    }, 500);
+  };
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  };
+</script>

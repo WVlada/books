@@ -1,0 +1,63 @@
+<link rel="stylesheet" href="/css/accordion.css" />
+<script src="accordion.js"></script>
+
+<div id="accordion">
+  <button class="accordion">Dashboard</button>
+  <div class="panel">
+    <% if (user.admin) { %>
+    <button id="overview_button" class="link">Overview</button>
+    <% } %>
+    <button id="tok_dokumentacije" class="link">Tok dokumentacije</button>
+    <button id="dnevnik_naloga" class="link">Dnevnik naloga</button>
+    <button id="kontni_plan" class="link">Kontni plan</button>
+    <button id="komitenti" class="link">Pregled komitenata</button>
+  </div>
+
+  <button class="accordion">Reports</button>
+  <div class="panel">
+    <button id="zakljucni" class="link">Zaključni list</button>
+    <button id="zakljucni_list_trocifreni" class="link">
+      Zaključni list - trocifreni
+    </button>
+  </div>
+
+  <button class="accordion">Graphs</button>
+  <div class="panel">
+    <% if (user.admin) { %>
+    <button id="check_data" class="link">Check database</button>
+    <% } %>
+    <button id="#" class="link">#</button>
+    <button id="#" class="link">#</button>
+  </div>
+
+  <div class="levi_grafik">
+    <!-- render "static/graphs/summerized_claims" %>-->
+  </div>
+
+  <script>
+    $(document)
+      .off("click", "#dnevnik_naloga")
+      .on("click", "#dnevnik_naloga", function() {
+        var me = $(this);
+        if (me.data("requestRunning")) {
+          return;
+        }
+        me.data("requestRunning", true);
+        $.ajax({
+          url: "/dnevnik_naloga",
+          type: "GET",
+          data: {
+            current_company: `<%= current_company.id.toString() %>`,
+            current_year: `<%= current_company_year %>`
+          },
+          dataType: "script",
+          complete: function() {
+            me.data("requestRunning", false);
+          },
+          success: function(html) {
+            $(".centar").html(html);
+          }
+        });
+      });
+  </script>
+</div>

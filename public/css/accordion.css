@@ -1,0 +1,93 @@
+button.accordion {
+  font-weight: 500;
+  cursor: pointer;
+  padding: 6px;
+  width: 100%;
+  text-align: left;
+  outline: none;
+  transition: 0.4s;
+  border-width: 1px 1px 1px 1px;
+  background-image: -webkit-linear-gradient(top, #6d687e 0%, #49435b 100%);
+  color: white;
+  white-space: nowrap;
+}
+button.accordion:first-child {
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+}
+button.accordion:last-child {
+  /* ne radi selektor */
+}
+button.link {
+  cursor: pointer;
+  padding: 5px;
+  width: 100%;
+  text-align: left;
+  outline: none;
+  transition: 0.4s;
+  border-style: none;
+  border-width: 1px 1px 1px 1px;
+  background-image: -webkit-linear-gradient(top, #fefefe 0%, #f0f0f0 100%);
+  color: #6d687e;
+}
+.panel > *:not(:last-child) {
+  border-bottom: 1px solid #d1d1d1;
+}
+
+/* Add a background color to the button if it is clicked on 
+(add the .active class with JS), 
+and when you move the mouse over it (hover) */
+button.accordion.active,
+button.accordion:hover {
+  background-image: -webkit-linear-gradient(top, #67617d 0%, #89849b 100%);
+}
+button.link.active,
+button.link:hover {
+  color: white;
+  background-image: -webkit-linear-gradient(top, #67617d 30%, #89849b 60%);
+}
+
+button.accordion:after {
+  content: "\002B"; /* CSS character for "plus" sign (+) */
+  color: #f0f0f0;
+  float: right;
+  margin-left: 5px;
+}
+button.accordion.active:after {
+  content: "\2212"; /* CSS character for "minus" sign (-) */
+}
+
+/* div panel - hidden by default*/
+
+div.panel {
+  margin-bottom: 0px;
+  border-width: 1px 1px 1px 1px;
+  background-color: white;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+  border-width: 1px 1px 1px 1px;
+}
+
+#accordion {
+  margin: 3px;
+  max-width: 200px;
+  min-width: 150px;
+  font-size: 13px;
+  /*background-image: -webkit-linear-gradient(top, white 0%, #D8D9EA 100%);*/ /* belo */
+  /*background-image: -webkit-linear-gradient(
+    top,
+    #d8d9ea 0%,
+    #fff9e8 100%
+  ); 
+  */
+  /*border: 1px solid #d8d9ea;*/
+  position: relative;
+  height: 550px;
+}
+.levi_grafik {
+  position: absolute;
+  bottom: 0px;
+  display: inline-block;
+  z-index: -1;
+}

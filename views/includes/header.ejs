@@ -1,0 +1,277 @@
+<link rel="stylesheet" href="/css/main.css" />
+<link rel="stylesheet" href="/css/header.css" />
+<link
+  rel="stylesheet"
+  href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+  crossorigin="anonymous"
+/>
+<link href="/css/font-awesome/css/fontawesome.min.css" rel="stylesheet" />
+<link href="/css/font-awesome/css/solid.min.css" rel="stylesheet" />
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-brand"><a href="/">Current company:</a></div>
+
+    <ul class="nav navbar-nav">
+      <li class="dropdown">
+        <a
+          href="#"
+          class="dropdown-toggle"
+          data-toggle="dropdown"
+          role="button"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          <%= current_company.name %>
+          <span class="caret"></span
+        ></a>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+          <li
+            id="currentcompanyid"
+            data-id="<%= current_company._id %>"
+            class="item"
+          >
+            <%= current_company.name %>
+          </li>
+          <li role="separator" class="divider"></li>
+          <% for(let i=0; i < companies.length - 1 ; i++) { %>
+          <li class="item" onclick="change_company()" data-id="<%= i %>">
+            <% companies[i].name %>
+          </li>
+          <% } %>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <a
+          href="#"
+          class="dropdown-toggle"
+          data-toggle="dropdown"
+          role="button"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          <%= current_company_year %>
+          <span class="caret"></span
+        ></a>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+          <li
+            id="currentyearid"
+            data-broj="<%= current_company_year %>"
+            data-id="<%= years.indexOf(current_company_year) %>"
+            class="item"
+          >
+            <%= current_company_year %>
+          </li>
+          <li role="separator" class="divider"></li>
+          <% for(let i =0; i< years.length - 1; i++) { %> <% if (years[i] ==
+          current_company_year) { %> <% continue %> <% } %>
+          <li
+            class="item"
+            onclick="change_year()"
+            data-broj="<%= years[i] %>"
+            data-id="<%= i %>"
+          >
+            <%= years[i] %>
+          </li>
+          <% } %>
+        </ul>
+      </li>
+    </ul>
+
+    <ul class="nav navbar-nav moje_right">
+      <li>
+        <a href="/logout" class="logout_link">Logout</a>
+      </li>
+
+      <li>
+        <span id="settings_dugme" class="fa fa-2x fa-cog settings_dugme"></span>
+      </li>
+
+      <li>
+        <div id="settings_placeholder"></div>
+      </li>
+    </ul>
+  </div>
+  <!-- sledeca tri scripta mi trebaju zbog bootstrapa, a on mi treba zbog dropdown-a -->
+  <script
+    src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"
+  ></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"
+  ></script>
+  <script
+    src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"
+  ></script>
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      var cog = document.getElementById("settings_dugme");
+      cog.onclick = function() {
+        cog.classList.remove("fa-spin-settings");
+        //loadPreferences();
+        setTimeout(function() {
+          cog.classList.add("fa-spin-settings");
+        }, 200);
+        cog.classList.remove("fa-spin-settings");
+      };
+    });
+
+    $(document)
+      .off("click", "#settings_dugme")
+      .on("click", "#settings_dugme", function() {
+        var dugme = $(this);
+        if (dugme.data("requestRunning")) {
+          return;
+        }
+        dugme.data("requestRunning", true);
+        $.ajax({
+          url: "/settings",
+          type: "get",
+          data: { "": "" },
+          dataType: "html",
+          complete: function() {
+            dugme.data("requestRunning", false);
+          },
+          success: function(html) {
+            $("#settings_placeholder").html(html);
+          }
+        });
+      });
+    //function loadPreferences() {
+    //fetch("http://localhost:3000/settings")
+    //  .then(function(response) {
+    //    return response;
+    //  })
+    //  .then(function(html) {
+    //    //var parser = new DOMParser();
+    //    //var divdoc = parser.parseFromString(html, "text/html");
+    //    //var doc = divdoc.getRootNode().body;
+    //    //html.getRootNode();
+    //    console.log(html);
+    //    var responsePlaceholder = document.getElementById(
+    //      "settings_placeholder"
+    //    );
+    //    //var elem = doc.documentElement.childNodes;
+    //    //responsePlaceholder.innerHTML = html;
+    //    responsePlaceholder.insertAdjacentElement("afterbegin", doc);
+    //    //var elem = doc.documentElement;
+    //    while (responsePlaceholder.hasChildNodes()) {
+    //      responsePlaceholder.removeChild(responsePlaceholder.lastChild);
+    //    }
+    //    //responsePlaceholder.removeChild(elem);
+    //    responsePlaceholder.appendChild(doc);
+    //    //sad trebada da ga removujem i onda appendujem
+    //    console.log(doc);
+    //  });
+    //var request = new XMLHttpRequest();
+    //var responsePlaceholder = document.getElementById("settings_placeholder");
+    //request.open("GET", "/settings", true);
+    //var company_id = document
+    //  .getElementById("currentcompanyid")
+    //  .getAttribute("data-id");
+    //var body = { company_id: company_id };
+    //request.onload = res => {
+    //responsePlaceholder.innerHTML = doc;
+    //  //var modal = document.getElementById("settings_dialog");
+    //  //modal.style.display = "block";
+    //};
+    //request.send(body);
+    //}
+
+    //// bulma
+    //'use strict';
+    //document.addEventListener('DOMContentLoaded', function () {
+    //// Dropdowns
+    //var $dropdowns = getAll('.dropdown:not(.is-hoverable)');
+    //if ($dropdowns.length > 0) {
+    //  $dropdowns.forEach(function ($el) {
+    //    $el.addEventListener('click', function (event) {
+    //      event.stopPropagation();
+    //      $el.classList.toggle('is-active');
+    //    });
+    //  });
+    //  document.addEventListener('click', function (event) {
+    //    closeDropdowns();
+    //  });
+    //}
+    //function closeDropdowns() {
+    //  $dropdowns.forEach(function ($el) {
+    //    $el.classList.remove('is-active');
+    //  });
+    //}
+    //// Close dropdowns if ESC pressed
+    //document.addEventListener('keydown', function (event) {
+    //  var e = event || window.event;
+    //  if (e.keyCode === 27) {
+    //    closeDropdowns();
+    //  }
+    //});
+    //// Functions
+    //function getAll(selector) {
+    //  return Array.prototype.slice.call(document.querySelectorAll(selector), 0);
+    //}
+    //});
+    //bulma
+
+    //function change_company() {
+    //
+    //  var x = event.target.getAttribute('data-id');
+    //  var y = document.getElementById("currentyearid").getAttribute('data-broj');
+    //            $.ajax({
+    //            url: "/",
+    //            type: "GET",
+    //            data: { login_company_id: x, login_year_broj: y },
+    //            dataType: "script"}
+    //            );
+    //            /* NE MOZE OVAKO JE JE ID SACUVAN OD PRETHODNE KOMPANIJE */
+    //            /* AKO JE KOMPANIJA DA SALJEM ID< I BROJ, AKO JE BROJ DA SALJEM ID I NAZIV? */
+    //
+    //}
+    //function change_year() {
+    //  var x = document.getElementById("currentcompanyid").getAttribute('data-id');
+    //  var y = event.target.getAttribute('data-id');
+    //
+    //            $.ajax({
+    //            url: "/",
+    //            type: "GET",
+    //            data: { login_company_id: x, login_year_id: y },
+    //            dataType: "script"}
+    //            );
+    //
+    //}
+    //$(document).off('click', 'button.settings_dugme').on('click', 'button.settings_dugme', function()
+    //
+    //    {
+    //        var cog = $("span.fa-cog");
+    //        var dugme = $(this);
+    //
+    //        if (dugme.data('requestRunning'))
+    //            { return; }
+    //
+    //        dugme.data('requestRunning', true);
+    //        cog.addClass("fa-spin-settings");
+    //
+    //         $.ajax({
+    //                 url: "/settings",
+    //                 type: "get",
+    //                 data: {"" : ""},
+    //                 dataType: "script",
+    //                 complete: function() {
+    //                          dugme.data('requestRunning', false);
+    //                                    },
+    //                 success: function(){
+    //                       //cog.removeClass("fa-spin-settings");
+    //
+    //                 }
+    //         });
+    //
+    //    }
+    //);
+  </script>
+</nav>

@@ -1,0 +1,170 @@
+.dashboard {
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+  font-size: 13px;
+  width: 900px;
+  display: grid;
+  height: 555px;
+  grid-column-gap: 0px;
+  grid-template-columns: 100px 100px 100px 100px 100px 100px 100px 100px 100px;
+  grid-template-rows: 100px 100px 100px 100px 100px;
+  /*background-image: -webkit-linear-gradient(
+    top,
+    white 0%,
+    #d8d9ea 100%
+  ); /* belo */
+  background-image: -webkit-linear-gradient(top, #bab9be 0%, #f8f8f8 100%);
+  border: 2px solid #4e4765;
+  box-shadow: 0 8px 26px 0 rgba(0, 0, 0, 0.3);
+}
+
+.dashboard > div {
+  text-align: center;
+  position: relative;
+}
+
+.dashboard_image_icon {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+p.text_slike {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  text-align: center;
+  width: 100%;
+  color: #6d687e;
+  font-weight: 600;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+.newNalogBanke {
+}
+.newNalogBanke:hover {
+  background-image: url(../images/dashboard/bank1glow.png);
+  background-repeat: no-repeat;
+  background-size: 80px;
+  background-position: center;
+  cursor: pointer;
+}
+.newNalogKomitent {
+}
+.newNalogKomitent:hover {
+  background-image: url(../images/dashboard/kompanija1glow.png);
+  background-repeat: no-repeat;
+  background-size: 80px;
+  background-position: center;
+  cursor: pointer;
+}
+.newNalogOpsti {
+}
+.newNalogOpsti:hover {
+  background-image: url(../images/dashboard/opstinalog1glow.png);
+  background-repeat: no-repeat;
+  background-size: 80px;
+  background-position: center;
+  cursor: pointer;
+}
+.newNalogFaktura {
+}
+.newNalogFaktura:hover {
+  background-image: url(../images/dashboard/faktura1glow.png);
+  background-repeat: no-repeat;
+  background-size: 80px;
+  background-position: center;
+  cursor: pointer;
+}
+
+.dnevnik_slika {
+}
+.dnevnik_slika:hover {
+  background-image: url(../images/dashboard/dnevnik1glow.png);
+  background-repeat: no-repeat;
+  background-size: 80px;
+  background-position: center;
+  cursor: pointer;
+}
+.newNalogPDV {
+}
+.newNalogPDV:hover {
+  background-image: url(../images/dashboard/pdv1glow.png);
+  background-repeat: no-repeat;
+  background-size: 80px;
+  background-position: center;
+  cursor: pointer;
+}
+.newNalogNabavka {
+}
+.newNalogNabavka:hover {
+  background-image: url(../images/dashboard/kompanija1glow.png);
+  background-repeat: no-repeat;
+  background-size: 80px;
+  background-position: center;
+  cursor: pointer;
+}
+.newNalogZarada {
+}
+.newNalogZarada:hover {
+  background-image: url(../images/dashboard/person1glow.png);
+  background-repeat: no-repeat;
+  background-size: 80px;
+  background-position: center;
+  cursor: pointer;
+}
+.reports_slika {
+}
+.reports_slika:hover {
+  background-image: url(../images/dashboard/reports1glow.png);
+  background-repeat: no-repeat;
+  background-size: 80px;
+  background-position: center;
+  cursor: pointer;
+}
+
+.item-13 {
+  background-image: url(../images/dashboard/11down1.png);
+  background-repeat: no-repeat;
+  background-size: 80px;
+  background-position: center;
+}
+
+.item-13 {
+  background-image: url(../images/dashboard/11.png);
+  background-repeat: no-repeat;
+  background-size: 80px;
+  background-position: center;
+}
+.item-25 {
+  background-image: url(../images/dashboard/11up2.png);
+  background-repeat: no-repeat;
+  background-size: 80px;
+  background-position: center;
+}
+
+.item-21 {
+  background-image: url(../images/dashboard/linija.png);
+  background-repeat: no-repeat;
+  background-size: 80px;
+  background-position: center;
+}
+.item-22 {
+  background-image: url(../images/dashboard/1.png);
+  background-repeat: no-repeat;
+  background-size: 80px;
+  background-position: center;
+}
+.item-24 {
+  background-image: url(../images/dashboard/11.png);
+  background-repeat: no-repeat;
+  background-size: 80px;
+  background-position: center;
+}
+.item-31 {
+  background-image: url(../images/dashboard/11up2.png);
+  background-repeat: no-repeat;
+  background-size: 80px;
+  background-position: center;
+}

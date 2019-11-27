@@ -1,0 +1,122 @@
+<link rel="stylesheet" href="/css/stanje-obaveza.css" />
+
+<div id="stanje_obaveza_okvir_div" style="position:relative">
+  <div class="tab">
+    <button class="tablinks" onclick="openCity(event, 'Dužnici')">
+      Dužnici
+    </button>
+    <button class="tablinks" onclick="openCity(event, 'Poverioci')">
+      Poverioci
+    </button>
+    <button class="tablinks" onclick="openCity(event, 'Banke')">Banke</button>
+    <button style="float:right" class="refresh_dugme">
+      <i
+        id="refresh_dugme"
+        class="fa fa-sync"
+        style="display:inline-block;margin:2px;"
+      ></i>
+      </button>
+    </button>
+  </div>
+  <!-- Tab content -->
+  <div id="Dužnici" class="tabcontent prvi">
+    <table class="stanje_obaveza_okvir_table">
+      <tbody>
+        <!-- @komitenti_koji_duguju.first(10).each do |red|  -->
+        <tr class="stanje_obaveza_okvir_table">
+          <td class="stanje_obaveza_okvir_table">
+            <!-- link_to "#{red[0].name}", controller: "komitent", action:
+            "show", komitent_id: red[0].id, remote: true -->
+          </td>
+          <td class="stanje_obaveza_okvir_table">
+            <!-- number_to_currency(red[1][2], unit: "", separator: ",",
+            delimiter: ".") -->
+          </td>
+        </tr>
+        <!-- end -->
+      </tbody>
+    </table>
+  </div>
+
+  <div id="Poverioci" class="tabcontent">
+    <table class="stanje_obaveza_okvir_table">
+      <tbody>
+        <!-- @komitenti_koji_potrazuju.first(10).each do |red| -->
+        <tr class="stanje_obaveza_okvir_table">
+          <td class="stanje_obaveza_okvir_table">
+            <!-- link_to "#{red[0].name}", controller: "komitent", action:
+            "show", komitent_id: red[0].id, remote: true -->
+          </td>
+          <td class="stanje_obaveza_okvir_table">
+            <!-- number_to_currency(red[1][2], unit: "", separator: ",",
+            delimiter: ".", negative_format: '-%n') -->
+          </td>
+        </tr>
+        <!-- end  -->
+      </tbody>
+    </table>
+  </div>
+
+  <div id="Banke" class="tabcontent">
+    <table class="stanje_obaveza_okvir_table">
+      <tbody>
+        <!-- unless @samo_banke == nil  @samo_banke.first(10).each do |banka|
+        -->
+        <tr class="stanje_obaveza_okvir_table">
+          <td class="stanje_obaveza_okvir_table">
+            <!-- link_to "#{banka.name}", controller: "komitent", action: "show",
+            komitent_id: banka.id, remote: true-->
+          </td>
+          <td class="stanje_obaveza_okvir_table">
+            <!-- number_to_currency(red[1][2], unit: "", separator: ",",
+            delimiter: ".", negative_format: '-%n') -->
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <script>
+    function openCity(evt, cityName) {
+      // Declare all variables
+      var i, tabcontent, tablinks;
+
+      // Get all elements with class="tabcontent" and hide them
+      tabcontent = document.getElementsByClassName("tabcontent");
+
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+
+      // Get all elements with class="tablinks" and remove the class "active"
+      tablinks = document.getElementsByClassName("tablinks");
+      for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+
+      // Show the current tab, and add an "active" class to the button that opened the tab
+      document.getElementById(cityName).style.display = "block";
+      evt.currentTarget.className += " active";
+    }
+
+    $(document)
+      .off("click", "button.refresh_dugme")
+      .on("click", "button.refresh_dugme", function() {
+        var me = $("#refresh_dugme");
+        me.addClass("fa-spin");
+
+        $.ajax({
+          url: "/refresh_stanje_obaveza",
+          type: "get",
+          data: { "": "" },
+          dataType: "script",
+          success: function() {
+            me.removeClass("fa-spin");
+          }
+        });
+      });
+  </script>
+
+  <div class="desni_grafik" style="position:absolute;bottom: 51px;">
+    <!-- desni_grafik  render "static/graphs/revenue_expenses" -->
+  </div>
+</div>
