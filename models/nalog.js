@@ -7,44 +7,40 @@ const nalogSchema = new Schema({
     type: Number,
     required: true
   },
-  type: {
-    type: String,
-    required: true
-  },
-  duguje: {
-      type: Number,
-      required:true
-    },
-  potrazuje: {
-    type: Number,
-    required:true
-  },
-  year: 
-    {
-    type: Number,
-    required: true
-  }
-, date: {
-    type: Date,
-    required: true
-},
   opis: {
     type: String,
+    default: "no description"
+  },
+  duguje: {
+    type: Number,
+    default: 0,
+    required: true
+  },
+  potrazuje: {
+    type: Number,
+    default: 0,
+    required: true
+  },
+  year: {
+    type: Number,
+    required: true
+  },
+  date: {
+    type: Date,
     required: true
   },
   locked: {
-      type: Boolean,
-      required: true
+    type: Boolean,
+    required: true
   },
   stavovi: [
     {
-       stav: {
-            type: Schema.Types.ObjectId,
-            ref: "Stav",
-            required: true
-        }
+      stav: {
+        type: Schema.Types.ObjectId,
+        ref: "Stav"
+      }
     }
-  ],  
+  ],
   user: {
     type: Schema.Types.ObjectId,
     ref: "User",

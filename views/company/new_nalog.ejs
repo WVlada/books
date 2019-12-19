@@ -34,16 +34,14 @@
         <% } %>  
 </div>
 
-<div id = "nalog_dijalog">
-        <!---->
-<!-- form_tag("/novinalog", method: "post", remote: true, id: "novinalog") do-->
-<form class="new_nalog_form" action="/new_nalog" method="POST">
+<div id="nalog_dijalog">
+<form id="new_nalog_form" class="new_nalog_form" action="/new_nalog" method="POST">
     <div class = "container-fluid">
         <div class = "prvi_row"> 
             <div class="vrsta_naloga_div">
                 <div class="form-control">
                     <span>Vrsta:</span>
-                    <select class="novi_nalog_input" name = "vrsta" id="vrstaNaloga" onchange="Pronadji_brojeve_naloga()">
+                    <select class="novi_nalog_input" name="vrsta_naloga" id="vrstaNaloga" onchange="Pronadji_brojeve_naloga()">
                         
                         <% for(let i = 0; i <= vrste_naloga.length - 1; i++) { %>
                             <option <%= vrste_naloga[i] === "N" ? "selected" : null %>><%= vrste_naloga[i] %></option>
@@ -55,96 +53,304 @@
                   <div id="broj_naloga">
                       <span>Broj:</span>
                       <select class="novi_nalog_input" name= "broj_naloga" id="broj_naloga_select">
-                          <!-- @brojevi.each do |x|-->
-                              <option></option> <!--value="#{x}"%>>"#{x}"%></option>
-                           end -->
+                          <% for(let i=0; i< brojevi.length-1; i++) { %>
+                            <option value="<%= brojevi[i] %>"><%= brojevi[i] %></option> 
+                          <% } %>
                       </select>
                   </div>
             </div>
-            <div class="opis_naloga_div"> 
-              
-                  
-                  <div class="form-control">
-                      <span>Opis naloga:</span>
-                    <input class="novi_nalog_input opis_naloga_input" type="text"/>
-                  </div>
-                    <!-- text_field_tag(:opis, "" , :size => "80")-->
-              
+            <div class="opis_naloga_div">
+              <span class="opis_naloga_span">Opis naloga:</span> 
+              <div class="form-control">
+                <input name="opis_naloga" class="novi_nalog_input opis_naloga_input" type="text"/>
+              </div>
           </div>
            
         </div>
 
-        <div class = "drugi_row"> 
-            <div class="">
-                <div>  
-                  DATUM
-                      <!-- label_tag(:datum, "Datum:")--></br>
-                      <!-- date_field(:nalog, :datum, :size => "40", :value => Time.now.strftime('%Y-%m-%d'))-->
-                </div>
+        <div class = "drugi_row drugi_row_grid-container"> 
+            <div class="form-control">
+                  <span>Datum:</span>
+                  <input name="datum_naloga" id="nalog_date" type="date" class="novi_nalog_input" value="<%= nalog_date %>">
             </div>
+        </div>
             
-        </div>   
-        <div class="treci_row">
-
+      </div>   
+        <div class="treci_row treci_row_grid-container">
+            <div class="grid-item">Opis stava:</div>
+            <div class="grid-item">Šifra komitenta:</div>
+            <div class="grid-item">Poziv na broj:</div>
+            <div class="grid-item">Broj konta: <i class="fa fa-plus-square dodaj_racun" style="display:inline-block;margin-top:5px;cursor: pointer;"></i> <div id="dijalog_za_konta" style="display: none;" ></div></div>
+            <div class="grid-item">Duguje:</div>
+            <div class="grid-item">Potražuje:</div>
+            <div class="grid-item">Valuta:</div>
+        </div>
+         
+        <div class="cetvrti_row cetvrti_row_grid-container">
             <div class="grid-item">
-                <!-- label_tag(:opis_stav, "Opis stava:")--></br>
-                <!--# ovde multiple true ne radi, pa se mora dodati []-->
-                <!--# label_tag(1, nil, class: "label")-->
-                <!-- text_field_tag("opis_stav[]", "", :size => "35")-->
+              <div class="form-control novi_nalog_form-control">
+                <input id="opis_stava_input-0" name="opis_stava[]" class="novi_nalog_input opis_stava_input" type="text"/>
+              </div>
             </div>
-            
             <div class="grid-item">
-                <!-- label_tag(:sifra_komitenta, "Šifra k.")-->
-                <select data-placeholder="Select..." class="chosen-select" name="sifre_komitenata[]">
-                    <!-- @sifre.each do |x|-->
-                        <option></option>
-                        <option><!-- x[0]--> | <!-- x[1]--></option>
-                    <!-- end-->
-                </select>
+              <div class="form-control novi_nalog_form-control">
+                  <input id="sifra_komitenta-0" name="sifra_komitenta[]" list="sifra_komitenta_list" class="sifra_komitenta_input"/>
+                  <datalist id="sifra_komitenta_list">
+                    <% for(let i=0; i <= sifra_komitenta_array.length - 1; i++) { %>
+                      <option value="<%= sifra_komitenta_array[i] %>">
+                    <% } %>
+                    </datalist>
+              </div>
             </div>
-            
             <div class="grid-item">
-                <!-- label_tag(:poziv, "Poziv:")-->
-                <!-- search_field_tag('poziv[]', nil, class: "konto")-->
+              <div class="form-control novi_nalog_form-control">
+                  <input id="poziv_na_broj-0" name="poziv_na_broj[]" list="poziv_na_broj" class="poziv_na_broj_input"/>
+                  <datalist id="poziv_na_broj">
+                    <% for(let i=0; i <= poziv_na_broj_array.length - 1; i++) { %>
+                      <option value="<%= poziv_na_broj_array[i] %>">
+                    <% } %>
+                  </datalist>
+              </div>
             </div>
-            
             <div class="grid-item">
-                <!-- label_tag(:konto, "Konto:")--> <i class="fa fa-plus-square dodaj_racun" style="display:inline-block;margin-top:5px;cursor: pointer;"></i> <div id="dijalog_za_konta" style="display: none;" ></div>       
-                <!--# search_field_tag('konto[]', nil, class: "konto")-->
-                <input type="text" list="konto[]" class="konto" size="15" oninput="skinitekst(this)" name="konto[]" autocomplete="off">
-                <datalist id="konto[]">
-                    <!-- @konta.each do |x|-->
-                    <option></option> <!--value=" x[0] + " | " + x[1]-->">
-                        <!-- end-->
-                </datalist>
+              <div class="form-control novi_nalog_form-control">
+                  <input id="konto-0" name="konto[]" list="konto" class="konto_input"/>
+                  <datalist id="konto">
+                    <% for(let i=0; i <= broj_konta_array.length - 1; i++) { %>
+                      <option value="<%= broj_konta_array[i] %>">
+                    <% } %>
+                  </datalist>
+              </div>
             </div>
-            
-            <div class="grid-item dugipot">
-                <!-- label_tag(:duguje, "Duguje:")-->
-                <!--# multiple true magija, za polja sa istim imenom-->
-                <!-- number_field(:stav, :duguje, step: 0.01, multiple: true, :value => 0.0)-->
-            </div>
-            
-            <div class="grid-item dugipot">
-                <!-- label_tag(:potrazuje, "Potražuje:")-->
-                <!-- number_field(:stav, :potrazuje, step: 0.01, multiple: true, :value => 0.0)-->
-            </div>
-            
-            <div class="grid-item valuta">
-                <!-- label_tag(:valuta, "Valuta:")-->
-                <!-- date_field(:stav, :datum, :size => "20", multiple: true)-->
-            </div>
-            
             <div class="grid-item">
-                <!--# <div class="dodaj_button" onclick="dodaj_red()">&plus;</div>-->
+              <div class="form-control novi_nalog_form-control">
+                <input id="duguje-0" name="duguje[]" class="duguje_input" type="number" value="0.00" step="0.01" />
+              </div>
             </div>
-
+            <div class="grid-item">
+              <div class="form-control novi_nalog_form-control">
+                <input id="potrazuje-0" name="potrazuje[]" class="potrazuje_input" type="number" value="0.00" step="0.01"/>
+              </div>
+            </div>
+            <div class="grid-item">
+              <div class="form-control novi_nalog_form-control">
+                <input id="valuta-0" name="valuta[]" class="valuta_input" type="date"/>
+              </div>
+            </div>
+        </div>
+        
+        <div class="cetvrti_row cetvrti_row_grid-container">
+            <div class="grid-item">
+              <div class="form-control novi_nalog_form-control">
+                <input id="opis_stava_input-1" name="opis_stava[]" class="novi_nalog_input opis_stava_input" type="text"/>
+              </div>
+            </div>
+            <div class="grid-item">
+              <div class="form-control novi_nalog_form-control">
+                  <input id="sifra_komitenta-1" name="sifra_komitenta[]" list="sifra_komitenta_list" class="sifra_komitenta_input"/>
+                  <datalist id="sifra_komitenta_list">
+                    <% for(let i=0; i <= sifra_komitenta_array.length - 1; i++) { %>
+                      <option value="<%= sifra_komitenta_array[i] %>">
+                    <% } %>
+                    </datalist>
+              </div>
+            </div>
+            <div class="grid-item">
+              <div class="form-control novi_nalog_form-control">
+                  <input id="poziv_na_broj-1" name="poziv_na_broj[]" list="poziv_na_broj" class="poziv_na_broj_input"/>
+                  <datalist id="poziv_na_broj">
+                    <% for(let i=0; i <= poziv_na_broj_array.length - 1; i++) { %>
+                      <option value="<%= poziv_na_broj_array[i] %>">
+                    <% } %>
+                  </datalist>
+              </div>
+            </div>
+            <div class="grid-item">
+              <div class="form-control novi_nalog_form-control">
+                  <input id="konto-1" name="konto[]" list="konto" class="konto_input"/>
+                  <datalist id="konto">
+                    <% for(let i=0; i <= broj_konta_array.length - 1; i++) { %>
+                      <option value="<%= broj_konta_array[i] %>">
+                    <% } %>
+                  </datalist>
+              </div>
+            </div>
+            <div class="grid-item">
+              <div class="form-control novi_nalog_form-control">
+                <input id="duguje-1"name="duguje[]" class="duguje_input" type="number" value="0.00" step="0.01"/>
+              </div>
+            </div>
+            <div class="grid-item">
+              <div class="form-control novi_nalog_form-control">
+                <input id="potrazuje-1" name="potrazuje[]" class="potrazuje_input" type="number" value="0.00" step="0.01"/>
+              </div>
+            </div>
+            <div class="grid-item">
+              <div class="form-control novi_nalog_form-control">
+                <input id="valuta-1" name="valuta[]" class="valuta_input" type="date"/>
+              </div>
+            </div>
+           
         </div>
 
-    </div>
+        <div class="cetvrti_row cetvrti_row_grid-container">
+            <div class="grid-item">
+              <div class="form-control novi_nalog_form-control">
+                <input id="opis_stava_input-2" name="opis_stava[]" class="novi_nalog_input opis_stava_input" type="text"/>
+              </div>
+            </div>
+            <div class="grid-item">
+              <div class="form-control novi_nalog_form-control">
+                  <input id="sifra_komitenta-2" name="sifra_komitenta[] list="sifra_komitenta_list" class="sifra_komitenta_input"/>
+                  <datalist id="sifra_komitenta_list">
+                    <% for(let i=0; i <= sifra_komitenta_array.length - 1; i++) { %>
+                      <option value="<%= sifra_komitenta_array[i] %>">
+                    <% } %>
+                    </datalist>
+              </div>
+            </div>
+            <div class="grid-item">
+              <div class="form-control novi_nalog_form-control">
+                  <input id="poziv_na_broj-2" name="poziv_na_broj[]" list="poziv_na_broj" class="poziv_na_broj_input"/>
+                  <datalist id="poziv_na_broj">
+                    <% for(let i=0; i <= poziv_na_broj_array.length - 1; i++) { %>
+                      <option value="<%= poziv_na_broj_array[i] %>">
+                    <% } %>
+                  </datalist>
+              </div>
+            </div>
+            <div class="grid-item">
+              <div class="form-control novi_nalog_form-control">
+                  <input id="konto-2" name="konto[]" list="konto" class="konto_input"/>
+                  <datalist id="konto">
+                    <% for(let i=0; i <= broj_konta_array.length - 1; i++) { %>
+                      <option value="<%= broj_konta_array[i] %>">
+                    <% } %>
+                  </datalist>
+              </div>
+            </div>
+            <div class="grid-item">
+              <div class="form-control novi_nalog_form-control">
+                <input id="duguje-2" name="duguje[]" class="duguje_input" type="number" value="0.00" step="0.01" />
+              </div>
+            </div>
+            <div class="grid-item">
+              <div class="form-control novi_nalog_form-control">
+                <input id="potrazuje-2" name="potrazuje[]" class="potrazuje_input" type="number" value="0.00" step="0.01"/>
+              </div>
+            </div>
+            <div class="grid-item">
+              <div class="form-control novi_nalog_form-control">
+                <input id="valuta-2" name="valuta[]" class="valuta_input" type="date"/>
+              </div>
+            </div>
+            
+            <div class="grid-item samo_plus_item">
+                <i class="fas fa-plus-circle" onclick="dodaj_red(this)"></i>
+            </div>
+           
+        </div>
 
 
-</form>    
-</div><!-- nalog dijalog-->
+       
+        <hr id="ruler" class="modal_form_hr">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+  </form>
+
+  <div class="modal_footer">
+    <hr class="modal_footer_hr">
+      <div class="modal_footer_button_set">
+          <button id="submit_form_button" >
+              OK
+        </button>
+        <button id="cancel_form_button">
+            Cancel
+      </button>
+      </div>
+      
+      </div>    
+
+</div>
+
+<script>
+function oduzmi_red(element) {
+  parent = document.getElementById(element.id).parentNode.parentNode.parentNode
+  parent.removeChild(element.parentNode.parentNode)
+  dodeli_id();
+}
+
+function dodaj_red(element) {
+  var stavovi = document.getElementsByClassName('cetvrti_row');
+  var poslednji_stav = stavovi[stavovi.length -1 ];
+  var parent = poslednji_stav.parentNode;
+  var ruler = document.getElementById("ruler");
+  parent.insertBefore(poslednji_stav.cloneNode(true), ruler);
+  
+  var dodaj_red_buttons = document.getElementsByClassName('fa-plus-circle')
+  
+  let oduzmi_red_elem = document.createElement('i')
+  oduzmi_red_elem.className = "fas fa-minus-circle"
+  // passing params to function defined up
+  oduzmi_red_elem.onclick = function(){oduzmi_red(oduzmi_red_elem)};
+  dodaj_red_buttons[0].replaceWith(oduzmi_red_elem)
+  
+  dodeli_id();
+
+}
+function dodeli_id() {
+  var oduzmi_red_buttons = document.getElementsByClassName('fa-minus-circle')
+  var opis_stava_inputs = document.getElementsByClassName('opis_stava_input')
+  var sifra_komitenta_inputs = document.getElementsByClassName('sifra_komitenta_input')
+  var poziv_na_broj_inputs = document.getElementsByClassName('poziv_na_broj_input')
+  var konto_inputs = document.getElementsByClassName('konto_input')
+  var duguje_inputs = document.getElementsByClassName('duguje_input')
+  var potrazuje_inputs = document.getElementsByClassName('potrazuje_input')
+  var valuta_inputs = document.getElementsByClassName('valuta_input')
+  
+  for (let i = 0; i <= oduzmi_red_buttons.length-1; i++){
+    oduzmi_red_buttons[i].id = `minus-${i}`;
+  }
+  for (let i = 0; i <= opis_stava_inputs.length-1; i++){
+    opis_stava_inputs[i].id = `opis_stava-${i}`;
+  }
+  for (let i = 0; i <= sifra_komitenta_inputs.length-1; i++){
+    sifra_komitenta_inputs[i].id = `sifra_komitenta-${i}`;
+  }
+  for (let i = 0; i <= poziv_na_broj_inputs.length-1; i++){
+    poziv_na_broj_inputs[i].id = `poziv_na_broj-${i}`;
+  }
+  for (let i = 0; i <= konto_inputs.length-1; i++){
+    konto_inputs[i].id = `konto-${i}`;
+  }
+  for (let i = 0; i <= duguje_inputs.length-1; i++){
+    duguje_inputs[i].id = `duguje-${i}`;
+  }
+  for (let i = 0; i <= potrazuje_inputs.length-1; i++){
+    potrazuje_inputs[i].id = `potrazuje-${i}`;
+  }
+  for (let i = 0; i <= valuta_inputs.length-1; i++){
+    valuta_inputs[i].id = `valuta-${i}`;
+  }
+}
+$(document).off('click', '#submit_form_button').on('click', '#submit_form_button', function()        
+    { var me = $(this);
+      var cancel_button = document.getElementById("cancel_form_button")
+
+      if (me.data('requestRunning')) 
+        { return; }
+        me.data('requestRunning', true);
+        cancel_button.setAttribute('requestRunning', true);
+        var form = document.getElementById("new_nalog_form")
+        form.submit();}
+);
+$(document).off('click', '#cancel_form_button').on('click', '#cancel_form_button', function()        
+    { 
+      var modal_placeholder = document.getElementById("nalog_placeholder")
+      modal_placeholder.innerHTML = "";
+    }
+);
+</script>
+
+
 
 </div>

@@ -14,11 +14,11 @@ const stavSchema = new Schema({
   },
   duguje: {
     type: Number,
-    required: true
+    default: 0,
   },
   potrazuje: {
     type: Number,
-    required: true
+    default: 0
   },
   date: {
     type: Date,
@@ -26,7 +26,7 @@ const stavSchema = new Schema({
   },
   opis: {
     type: String,
-    required: true
+    default: 'no description'
   },
   pozivnabroj: {
     type: String

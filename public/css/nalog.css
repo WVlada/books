@@ -11,9 +11,10 @@
 }
 .modal_placeholder {
   position: absolute;
-  left: 10%;
+  margin-left: 2%;
+  margin-right: auto;
   height: auto;
-  width: 80%;
+  width: 1100px;
   top: 100px;
   z-index: 101;
   border: 1px solid #c5c5c5;
@@ -21,11 +22,7 @@
   outline: 0;
   opacity: 1 !important;
   background-color: #f8f8f8;
-  background-image: -webkit-linear-gradient(top, rgb(255, 253, 247) 0%, #bab9be 100%);
-  border-top-left-radius: 2px;
-  border-top-right-radius: 2px;
-  border-bottom-right-radius: 2px;
-  border-bottom-left-radius: 2px;
+
   min-width: 600px;
 }
 .modal_title_bar {
@@ -48,21 +45,35 @@
 
   border-top: 1px solid #ddd;
 }
-.modal_bottom_buttons_panel_buttonset {
-  margin-top: 8px;
-  margin-bottom: 8px;
-  padding: 5;
-  float: right;
-  margin-right: 10px;
+#nalog_dijalog {
+  background-image: -webkit-linear-gradient(
+    top,
+    #cdcdce 0%,
+    rgb(255, 254, 250) 100%
+  );
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  border-bottom-right-radius: 2px;
+  border-bottom-left-radius: 2px;
 }
+
 .form-control {
   font-size: 13px;
   border: none;
   background-color: transparent;
+  height: auto !important;
+}
+.novi_nalog_form-control {
+  padding: 2px;
+}
+.opis_naloga_span {
+  width: 90px;
+  margin-top: 8px;
 }
 .novi_nalog_input {
   border-radius: 2px;
-  border: 2px solid #D8D9EA;
+  border: 2px solid #d8d9ea;
+  font-size: 13px;
 }
 .prvi_row {
   font-size: 13px;
@@ -81,16 +92,121 @@
   width: 600px;
   display: flex;
 }
-.opis_naloga_input {
-  width: 400px;
+#nalog_date {
+  width: 125px;
 }
 .drugi_row {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: left;
 }
 .treci_row {
+  margin-top: 5px;
   display: flex;
   flex-wrap: wrap;
   align-items: left;
+  font-size: 13px;
+}
+.treci_row_grid-container {
+  padding-left: 27px;
+  display: grid;
+  grid-column-gap: 5px;
+  grid-template-columns: 250px 100px 100px 100px 150px 150px 130px;
+}
+.cetvrti_row_grid-container {
+  padding-left: 23px;
+  display: grid;
+  grid-column-gap: 5px;
+  grid-template-columns: 250px 100px 100px 100px 150px 150px 130px 50px;
+}
+.opis_naloga_input {
+  width: inherit;
+}
+.opis_stava_input {
+  width: inherit;
+  border-radius: 2px;
+  border: 2px solid #d8d9ea;
+  font-size: 13px;
+}
+.sifra_komitenta_input {
+  width: inherit;
+  border-radius: 2px;
+  border: 2px solid #d8d9ea;
+  font-size: 13px;
+}
+.poziv_na_broj_input {
+  width: inherit;
+  border-radius: 2px;
+  border: 2px solid #d8d9ea;
+  font-size: 13px;
+}
+.konto_input {
+  width: inherit;
+  border-radius: 2px;
+  border: 2px solid #d8d9ea;
+  font-size: 13px;
+}
+.duguje_input {
+  width: inherit;
+  border-radius: 2px;
+  border: 2px solid #d8d9ea;
+  font-size: 13px;
+  text-align: right;
+  padding-right: 5px;
+}
+.potrazuje_input {
+  width: inherit;
+  border-radius: 2px;
+  border: 2px solid #d8d9ea;
+  font-size: 13px;
+  text-align: right;
+  padding-right: 5px;
+}
+.valuta_input {
+  width: inherit;
+  border-radius: 2px;
+  border: 2px solid #d8d9ea;
+  font-size: 13px;
+  height: 23px;
+}
+.modal_footer {
+  background-color: whitesmoke;
+  border-radius: 2px;
+}
+.modal_form_hr {
+  margin-bottom: 0px;
+}
+.modal_footer_hr {
+  margin-top: 6px;
+  margin-bottom: 3px;
+}
+.modal_footer_button_set {
+  margin-top: 4px;
+  margin-bottom: 4px;
+  margin-right: 20px;
+  float: right;
+  font-size: 13px;
+}
+.modal_footer_button_set button {
+  padding: 2px 8px;
+  margin-right: 10px;
+  line-height: initial;
+}
+.dodaj_racun {
+  cursor: pointer;
+  color: #49435b;
+}
+.fa-plus-circle {
+  margin: 6px;
+  cursor: pointer;
+  color: #49435b;
+}
+.fa-minus-circle {
+  margin: 6px;
+  cursor: pointer;
+  color: #49435b;
+}
+input[type="number"]::-webkit-inner-spin-button {
+  padding-right: 5px;
+  margin-left: 5px;
 }

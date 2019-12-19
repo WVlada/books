@@ -58,6 +58,19 @@ router.post(
 );
 
 router.get("/dnevnik_naloga", isAuth, companyController.getDnevnikNaloga);
-router.get("/novi_nalog", isAuth, companyController.getNalog);
+router.get("/new_nalog", isAuth, companyController.getNalog);
+router.post("/new_nalog", [
+  check("opis_stava")
+      .isArray()
+      .custom(array=>{
+        let i = 0;
+        array.every((elem)=>{
+          if (elem.length >= 0){i++;}
+          else {i++; msg=`Opis stava broj "${i}" mora biti duzi od 1 karaktera`;throw new Error(msg);}
+        })
+        return true
+      })
+], isAuth, companyController.postNalog);
 
 module.exports = router;
+0
