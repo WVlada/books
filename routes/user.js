@@ -8,7 +8,7 @@ const bcrypt = require("bcryptjs");
 const userController = require("../controllers/user");
 
 router.get("/", userController.getRoot);
-//router.get("/login", userController.getRoot);
+router.get("/login", userController.getRoot);
 router.get("/signup", userController.getSignUp);
 router.post(
   "/login",
