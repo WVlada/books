@@ -1,38 +1,35 @@
 <link rel="stylesheet" href="/css/main.css" />
 <link rel="stylesheet" href="/css/login.css" />
-<link rel="icon" href="/public/images/favicon.png" />
+<title>FinBooks NodeJS version</title>
 <div class="background-image"></div>
 
 <% if (validationErrors.length > 0) { %>
-  <div id="user-message" class="user-message-div">
-      <div class="user-message user-message--error">
-          <ul class="user-message-error-list">
-            <% validationErrors.forEach(error=>{ %>
-              <li><%= error.msg %></li>
-            <% }) %>
-          </ul>
-      </div>
+<div id="user-message" class="user-message-div">
+  <div class="user-message user-message--error">
+    <ul class="user-message-error-list">
+      <% validationErrors.forEach(error=>{ %>
+      <li><%= error.msg %></li>
+      <% }) %>
+    </ul>
   </div>
-  <% } %>
-
-  <% if (successMessage) { %>
-    <div id="user-message" class="user-message-div">
-        <div class="user-message user-message--success">
-            <ul class="user-message-error-list">
-                <li><%= successMessage %></li>
-            </ul>
-        </div>
-    </div>
-    <% } %>
-    <% if (infoMessage) { %>
-      <div id="user-message" class="user-message-div">
-          <div class="user-message user-message--info">
-              <ul class="user-message-error-list">
-                  <li><%= infoMessage %></li>
-              </ul>
-          </div>
-      </div>
-      <% } %>
+</div>
+<% } %> <% if (successMessage) { %>
+<div id="user-message" class="user-message-div">
+  <div class="user-message user-message--success">
+    <ul class="user-message-error-list">
+      <li><%= successMessage %></li>
+    </ul>
+  </div>
+</div>
+<% } %> <% if (infoMessage) { %>
+<div id="user-message" class="user-message-div">
+  <div class="user-message user-message--info">
+    <ul class="user-message-error-list">
+      <li><%= infoMessage %></li>
+    </ul>
+  </div>
+</div>
+<% } %>
 
 <div class="slika-container">
   <div id="login_slika" class="col-md-6">

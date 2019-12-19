@@ -1,17 +1,17 @@
 <link rel="stylesheet" href="/css/main.css" />
 <link rel="stylesheet" href="/css/signup.css" />
-<link rel="icon" href="/public/images/favicon.png" />
+<title>FinBooks NodeJS version</title>
 <div class="background-image"></div>
 
 <% if (validationErrors.length > 0) { %>
 <div id="user-message" class="user-message-div">
-    <div class="user-message user-message--error">
-        <ul class="user-message-error-list">
-          <% validationErrors.forEach(error=>{ %>
-            <li><%= error.msg %></li>
-          <% }) %>
-        </ul>
-    </div>
+  <div class="user-message user-message--error">
+    <ul class="user-message-error-list">
+      <% validationErrors.forEach(error=>{ %>
+      <li><%= error.msg %></li>
+      <% }) %>
+    </ul>
+  </div>
 </div>
 <% } %>
 
