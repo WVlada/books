@@ -1,6 +1,5 @@
-const email = (token) =>
-{
-    let html = `
+const email = token => {
+  let html = `
     <table style="background-color: #ecf0f5;width: 100%; font-family: Arial sans-serif;padding:10 0">
     <tbody style="width:500; background-image: -webkit-linear-gradient(top, #fff9e8 0%, #d8d9ea 100%);display: block !important;max-width: 600px !important;margin: 0 auto !important;clear: both !important;">
 <tr>
@@ -36,7 +35,7 @@ const email = (token) =>
                                 
                                 <tr>
                                     <td style="text-align: center;">
-                                        <a href="http://localhost:3000/confirm-email/${token}" style="color:white;background-color: #767688;border: 1px solid rgb(118, 118, 136);border-width: 10px 20px;">Confirm email address</a>
+                                        <a href="${process.env.HOST}/confirm-email/${token}" style="color:white;background-color: #767688;border: 1px solid rgb(118, 118, 136);border-width: 10px 20px;">Confirm email address</a>
                                     </td>
                                 </tr>
 				<tr>
@@ -54,7 +53,7 @@ const email = (token) =>
                         
                     
                 </div>
-`
-    return html
-}
-module.exports =  email;
+`;
+  return html;
+};
+module.exports = email;
