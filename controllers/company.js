@@ -9,9 +9,6 @@ exports.getCompany = (req, res, next) => {
   const user = req.user;
   const current_company_id = req.current_company_id;
   const current_company_year = req.current_company_year;
-  console.log("**********");
-  console.log("Show company controller");
-  console.log("**********");
   Company.find({ user: user._id })
     .then(result => {
       if (result.length === 0) {
@@ -287,17 +284,19 @@ exports.postNalog = (req, res, next) => {
           nalog.stavovi.push(stav);
         }
         nalog.save();
-        Nalog.find({company_id: company_id, year: current_company_year}).then(nalozi=>{
-          return res.status(200).render("company/dnevnik", {
-            pageTitle: "",
-            path: "/dnevnik",
-            hasError: false,
-            nalozi: nalozi,
-            successMessage: null,
-            infoMessage: `Nalog ${nalog.broj} has been saved.`,
-            validationErrors: []
-          });
-        }) 
+        Nalog.find({ company_id: company_id, year: current_company_year }).then(
+          nalozi => {
+            return res.status(200).render("company/dnevnik", {
+              pageTitle: "",
+              path: "/dnevnik",
+              hasError: false,
+              nalozi: nalozi,
+              successMessage: null,
+              infoMessage: `Nalog ${nalog.broj} has been saved.`,
+              validationErrors: []
+            });
+          }
+        );
       })
       .catch(err => {
         console.log(err);

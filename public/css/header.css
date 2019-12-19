@@ -1,6 +1,8 @@
 nav {
   font-family: "Helvetica Neue";
   font-size: 13px;
+  max-width: 1600px;
+  margin: 0 auto;
 }
 .navbar {
   margin-bottom: 6px;
