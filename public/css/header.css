@@ -111,7 +111,7 @@ li.item:hover {
 }
 
 /*#settings_dialog {*/
-.modal_placeholder {
+.settings_modal_placeholder {
   position: absolute;
   left: 10%;
   height: auto;
@@ -132,7 +132,7 @@ li.item:hover {
   background-image: -webkit-linear-gradient(top, #6d687e 0%, #49435b 100%);
   color: white;
   font-weight: 700;
-  font: 13px;
+  font-size: 13px;
   padding: 7 3;
   cursor: move;
   border-top-left-radius: 2px;

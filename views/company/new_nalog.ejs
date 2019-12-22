@@ -1,8 +1,8 @@
-<link rel="stylesheet" href="/css/nalog.css" />
-
 <div id="novi_nalog_modal_background"></div>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.min.css">
 
-<div class="modal_placeholder">
+
+<div class="nalog_modal_placeholder">
   <div class="modal_title_bar">
     <span class="modal_title_bar_span">Korisnik: <%= user.email %></span>
     <% if (infoMessage) { %>
@@ -40,7 +40,7 @@
         <div class = "prvi_row"> 
             <div class="vrsta_naloga_div">
                 <div class="form-control">
-                    <span>Vrsta:</span>
+                    <span>Vrsta naloga:</span>
                     <select class="novi_nalog_input" name="vrsta_naloga" id="vrstaNaloga" onchange="Pronadji_brojeve_naloga()">
                         
                         <% for(let i = 0; i <= vrste_naloga.length - 1; i++) { %>
@@ -51,7 +51,7 @@
             </div>
             <div class="broj_naloga_div">
                   <div id="broj_naloga">
-                      <span>Broj:</span>
+                      <span>Broj naloga:</span>
                       <select class="novi_nalog_input" name= "broj_naloga" id="broj_naloga_select">
                           <% for(let i=0; i< brojevi.length-1; i++) { %>
                             <option value="<%= brojevi[i] %>"><%= brojevi[i] %></option> 
@@ -94,42 +94,46 @@
             </div>
             <div class="grid-item">
               <div class="form-control novi_nalog_form-control">
-                  <input id="sifra_komitenta-0" name="sifra_komitenta[]" list="sifra_komitenta_list" class="sifra_komitenta_input"/>
-                  <datalist id="sifra_komitenta_list">
+                  <!--<input  id="sifra_komitenta-0" name="sifra_komitenta[]" list="sifra_komitenta_list" class="chosen-select"/>-->
+                  <select data-placeholder="Select..." name="sifra_komitenta[]" id="sifra_komitenta-0" class="chosen-select sifra_komitenta_input">
                     <% for(let i=0; i <= sifra_komitenta_array.length - 1; i++) { %>
-                      <option value="<%= sifra_komitenta_array[i] %>">
+                      <option></option>
+                      <option><%= sifra_komitenta_array[i] %> </option>
                     <% } %>
-                    </datalist>
+                  </select>
               </div>
             </div>
             <div class="grid-item">
               <div class="form-control novi_nalog_form-control">
                   <input id="poziv_na_broj-0" name="poziv_na_broj[]" list="poziv_na_broj" class="poziv_na_broj_input"/>
-                  <datalist id="poziv_na_broj">
-                    <% for(let i=0; i <= poziv_na_broj_array.length - 1; i++) { %>
-                      <option value="<%= poziv_na_broj_array[i] %>">
-                    <% } %>
-                  </datalist>
+                  <!--<select data-placeholder="Select..." name="poziv_na_broj[]" id="poziv_na_broj-0" class="chosen-select poziv_na_broj_input">-->
+                    <datalist id="poziv_na_broj">
+                      <% for(let i=0; i <= poziv_na_broj_array.length - 1; i++) { %>
+                        <option></option>
+                        <option><%= poziv_na_broj_array[i] %></option> 
+                      <% } %>
+                    </datalist>
               </div>
             </div>
             <div class="grid-item">
               <div class="form-control novi_nalog_form-control">
-                  <input id="konto-0" name="konto[]" list="konto" class="konto_input"/>
-                  <datalist id="konto">
+                  <!--<input id="konto-0" name="konto[]" list="konto" class="konto_input"/>-->
+                  <select data-placeholder="Select..." name="konto[]" id="konto-0" class="chosen-select konto_input">
                     <% for(let i=0; i <= broj_konta_array.length - 1; i++) { %>
-                      <option value="<%= broj_konta_array[i] %>">
+                      <option></option>
+                      <option><%= broj_konta_array[i] %></option>
                     <% } %>
-                  </datalist>
+                  </select>
               </div>
             </div>
             <div class="grid-item">
               <div class="form-control novi_nalog_form-control">
-                <input id="duguje-0" name="duguje[]" class="duguje_input" type="number" value="0.00" step="0.01" />
+                <input id="duguje-0" name="duguje[]" class="duguje_input number-separator" type="text" value="0.00"/>
               </div>
             </div>
             <div class="grid-item">
               <div class="form-control novi_nalog_form-control">
-                <input id="potrazuje-0" name="potrazuje[]" class="potrazuje_input" type="number" value="0.00" step="0.01"/>
+                <input id="potrazuje-0" name="potrazuje[]" class="potrazuje_input number-separator" type="text" value="0.00"/>
               </div>
             </div>
             <div class="grid-item">
@@ -147,42 +151,40 @@
             </div>
             <div class="grid-item">
               <div class="form-control novi_nalog_form-control">
-                  <input id="sifra_komitenta-1" name="sifra_komitenta[]" list="sifra_komitenta_list" class="sifra_komitenta_input"/>
-                  <datalist id="sifra_komitenta_list">
+                  <!--<input id="sifra_komitenta-1" name="sifra_komitenta[]" list="sifra_komitenta_list" class="sifra_komitenta_input"/>-->
+                  <select data-placeholder="Select..." name="sifra_komitenta[]" id="sifra_komitenta-1" class="chosen-select sifra_komitenta_input">
                     <% for(let i=0; i <= sifra_komitenta_array.length - 1; i++) { %>
-                      <option value="<%= sifra_komitenta_array[i] %>">
+                      <option></option>
+                      <option><%= sifra_komitenta_array[i] %> </option>
                     <% } %>
-                    </datalist>
+                  </select>
               </div>
             </div>
             <div class="grid-item">
               <div class="form-control novi_nalog_form-control">
                   <input id="poziv_na_broj-1" name="poziv_na_broj[]" list="poziv_na_broj" class="poziv_na_broj_input"/>
-                  <datalist id="poziv_na_broj">
-                    <% for(let i=0; i <= poziv_na_broj_array.length - 1; i++) { %>
-                      <option value="<%= poziv_na_broj_array[i] %>">
-                    <% } %>
-                  </datalist>
+                  <!--<select data-placeholder="Select..." name="poziv_na_broj[]" id="poziv_na_broj-1" class="chosen-select poziv_na_broj_input">-->
               </div>
             </div>
             <div class="grid-item">
               <div class="form-control novi_nalog_form-control">
-                  <input id="konto-1" name="konto[]" list="konto" class="konto_input"/>
-                  <datalist id="konto">
+                  <!--<input id="konto-1" name="konto[]" list="konto" class="konto_input"/>-->
+                  <select data-placeholder="Select..." name="konto[]" id="konto-1" class="chosen-select konto_input">
                     <% for(let i=0; i <= broj_konta_array.length - 1; i++) { %>
-                      <option value="<%= broj_konta_array[i] %>">
+                      <option></option>
+                      <option><%= broj_konta_array[i] %></option>
                     <% } %>
-                  </datalist>
+                  </select>
               </div>
             </div>
             <div class="grid-item">
               <div class="form-control novi_nalog_form-control">
-                <input id="duguje-1"name="duguje[]" class="duguje_input" type="number" value="0.00" step="0.01"/>
+                <input id="duguje-1"name="duguje[]" class="duguje_input number-separator" type="text" value="0.00"/>
               </div>
             </div>
             <div class="grid-item">
               <div class="form-control novi_nalog_form-control">
-                <input id="potrazuje-1" name="potrazuje[]" class="potrazuje_input" type="number" value="0.00" step="0.01"/>
+                <input id="potrazuje-1" name="potrazuje[]" class="potrazuje_input number-separator" type="text" value="0.00"/>
               </div>
             </div>
             <div class="grid-item">
@@ -201,42 +203,40 @@
             </div>
             <div class="grid-item">
               <div class="form-control novi_nalog_form-control">
-                  <input id="sifra_komitenta-2" name="sifra_komitenta[] list="sifra_komitenta_list" class="sifra_komitenta_input"/>
-                  <datalist id="sifra_komitenta_list">
+                  <!--<input id="sifra_komitenta-2" name="sifra_komitenta[]" list="sifra_komitenta_list" class="sifra_komitenta_input"/>-->
+                  <select data-placeholder="Select..." name="sifra_komitenta[]" id="sifra_komitenta-2" class="chosen-select sifra_komitenta_input">
                     <% for(let i=0; i <= sifra_komitenta_array.length - 1; i++) { %>
-                      <option value="<%= sifra_komitenta_array[i] %>">
+                      <option></option>
+                      <option><%= sifra_komitenta_array[i] %> </option>
                     <% } %>
-                    </datalist>
+                  </select>
               </div>
             </div>
             <div class="grid-item">
               <div class="form-control novi_nalog_form-control">
                   <input id="poziv_na_broj-2" name="poziv_na_broj[]" list="poziv_na_broj" class="poziv_na_broj_input"/>
-                  <datalist id="poziv_na_broj">
-                    <% for(let i=0; i <= poziv_na_broj_array.length - 1; i++) { %>
-                      <option value="<%= poziv_na_broj_array[i] %>">
-                    <% } %>
-                  </datalist>
+                  <!--<select data-placeholder="Select..." name="poziv_na_broj[]" id="poziv_na_broj-2" class="chosen-select poziv_na_broj_input">-->
               </div>
             </div>
             <div class="grid-item">
               <div class="form-control novi_nalog_form-control">
-                  <input id="konto-2" name="konto[]" list="konto" class="konto_input"/>
-                  <datalist id="konto">
+                  <!--<input id="konto-2" name="konto[]" list="konto" class="konto_input"/>-->
+                  <select data-placeholder="Select..." name="konto[]" id="konto-2" class="chosen-select konto_input">
                     <% for(let i=0; i <= broj_konta_array.length - 1; i++) { %>
-                      <option value="<%= broj_konta_array[i] %>">
+                      <option></option>
+                      <option><%= broj_konta_array[i] %></option>
                     <% } %>
-                  </datalist>
+                  </select>
               </div>
             </div>
             <div class="grid-item">
               <div class="form-control novi_nalog_form-control">
-                <input id="duguje-2" name="duguje[]" class="duguje_input" type="number" value="0.00" step="0.01" />
+                <input id="duguje-2" name="duguje[]" class="duguje_input number-separator" type="text" value="0.00" />
               </div>
             </div>
             <div class="grid-item">
               <div class="form-control novi_nalog_form-control">
-                <input id="potrazuje-2" name="potrazuje[]" class="potrazuje_input" type="number" value="0.00" step="0.01"/>
+                <input id="potrazuje-2" name="potrazuje[]" class="potrazuje_input number-separator" type="text" value="0.00" />
               </div>
             </div>
             <div class="grid-item">
@@ -258,7 +258,7 @@
   </form>
 
   <div class="modal_footer">
-    <hr class="modal_footer_hr">
+    <!--<hr class="modal_footer_hr">-->
       <div class="modal_footer_button_set">
           <button id="submit_form_button" >
               OK
@@ -273,6 +273,11 @@
 </div>
 
 <script>
+// da bih stavio chosen() na novi element, moram imati njegov klon pre postavljanja inicijalnog chosena  
+const stavovi = document.getElementsByClassName('cetvrti_row');
+const poslednji_stav = stavovi[stavovi.length -1 ];
+const cist_stav = poslednji_stav.cloneNode(true)
+
 function oduzmi_red(element) {
   parent = document.getElementById(element.id).parentNode.parentNode.parentNode
   parent.removeChild(element.parentNode.parentNode)
@@ -280,11 +285,15 @@ function oduzmi_red(element) {
 }
 
 function dodaj_red(element) {
-  var stavovi = document.getElementsByClassName('cetvrti_row');
-  var poslednji_stav = stavovi[stavovi.length -1 ];
   var parent = poslednji_stav.parentNode;
   var ruler = document.getElementById("ruler");
-  parent.insertBefore(poslednji_stav.cloneNode(true), ruler);
+  var clone = cist_stav.cloneNode(true);
+  parent.insertBefore(clone, ruler);
+  // chosen mora biti stavljen na cist select
+  var clone_select_sifra_komitenta = $( "div.cetvrti_row").last().children().first().next().children().children();
+  var clone_select_konto = $( "div.cetvrti_row").last().children().first().next().next().next().children().children(); 
+  clone_select_sifra_komitenta.chosen({allow_single_deselect: true});
+  clone_select_konto.chosen({allow_single_deselect: true});
   
   var dodaj_red_buttons = document.getElementsByClassName('fa-plus-circle')
   
@@ -293,9 +302,7 @@ function dodaj_red(element) {
   // passing params to function defined up
   oduzmi_red_elem.onclick = function(){oduzmi_red(oduzmi_red_elem)};
   dodaj_red_buttons[0].replaceWith(oduzmi_red_elem)
-  
   dodeli_id();
-
 }
 function dodeli_id() {
   var oduzmi_red_buttons = document.getElementsByClassName('fa-minus-circle')
@@ -349,6 +356,30 @@ $(document).off('click', '#cancel_form_button').on('click', '#cancel_form_button
       modal_placeholder.innerHTML = "";
     }
 );
+/*$(document).ready(function() {
+  $(".chosen-select").chosen()
+});*/
+$(document).ready(function(){
+  $(".chosen-select").chosen({allow_single_deselect: true})
+});
+$(document).on('change', '.chosen-select', function(e, params) {
+    
+    var s = $(this).val();
+    
+    if (s.includes("|"))
+        {
+        var x = s.substring(0, s.indexOf('|')).trim();
+        // mora se dodati vrednost u <options> da bi mogla biti selektovana
+        $(this).append('<option value='+ x +'></option>');
+        $(this).val(x).trigger("liszt:updated"); // sad ispadne da imam staru verziju chodena?!?!
+        
+        // ne radi mi triger:update pa moram ovako
+        $(this).next().children(":first").children(":first").text(x);
+        // da skinem crveni okvir ako je pre toga bio
+        $(this).next().removeClass('sifra_komitenta_input_bez_sifre');
+        }
+    else {}
+});
 </script>
 
 

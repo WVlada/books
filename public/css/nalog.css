@@ -9,10 +9,9 @@
   opacity: 0.3;
   text-align: center;
 }
-.modal_placeholder {
-  position: absolute;
-  margin-left: 2%;
-  margin-right: auto;
+.nalog_modal_placeholder {
+  position: relative;
+  margin: 0px auto;
   height: auto;
   width: 1100px;
   top: 100px;
@@ -22,29 +21,21 @@
   outline: 0;
   opacity: 1 !important;
   background-color: #f8f8f8;
-
-  min-width: 600px;
-}
-.modal_title_bar {
-  background-image: -webkit-linear-gradient(top, #6d687e 0%, #49435b 100%);
-  color: white;
-  font-weight: 500;
-  font-size: 13px;
-  padding: 7 3;
-  cursor: move;
   border-top-left-radius: 2px;
   border-top-right-radius: 2px;
   border-bottom-right-radius: 2px;
   border-bottom-left-radius: 2px;
 }
-.modal_title_bar_span {
-  margin-left: 10px;
+#nalog_placeholder {
+  position: absolute;
+  margin: 0px auto;
+  top: 100px;
+  width: 100%;
 }
-.modal_bottom_buttons_panel {
-  border-width: 1px 0 0 0;
+.new_nalog_form {
+  padding-top: 10px;
+}
 
-  border-top: 1px solid #ddd;
-}
 #nalog_dijalog {
   background-image: -webkit-linear-gradient(
     top,
@@ -74,6 +65,7 @@
   border-radius: 2px;
   border: 2px solid #d8d9ea;
   font-size: 13px;
+  height: 25px;
 }
 .prvi_row {
   font-size: 13px;
@@ -121,30 +113,67 @@
 }
 .opis_naloga_input {
   width: inherit;
+  height: 25px;
 }
 .opis_stava_input {
   width: inherit;
   border-radius: 2px;
   border: 2px solid #d8d9ea;
   font-size: 13px;
+  height: 25px;
 }
 .sifra_komitenta_input {
   width: inherit;
   border-radius: 2px;
   border: 2px solid #d8d9ea;
   font-size: 13px;
+  padding-left: 4px;
+  color: #999;
+  cursor: pointer;
+  background: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    color-stop(20%, #fff),
+    color-stop(50%, #f6f6f6),
+    color-stop(52%, #eee),
+    to(#f4f4f4)
+  );
+}
+.chosen-single {
+  width: inherit !important;
+  border-radius: 2px !important;
+  border: 2px solid #d8d9ea !important;
+  font-size: 13px !important;
+  color: #999 !important;
+}
+.chosen-with-drop {
+  width: 150px !important;
+}
+.chosen-drop {
+  background-color: #f8f8f8 !important;
+}
+.chosen-results {
+}
+li.highlighted {
+  background-image: unset !important;
+  background-color: #6d687e !important;
+  color: white !important;
+  border-radius: 2px !important;
 }
 .poziv_na_broj_input {
   width: inherit;
   border-radius: 2px;
   border: 2px solid #d8d9ea;
   font-size: 13px;
+  height: 25px;
 }
 .konto_input {
   width: inherit;
   border-radius: 2px;
   border: 2px solid #d8d9ea;
   font-size: 13px;
+  height: 25px;
 }
 .duguje_input {
   width: inherit;
@@ -153,6 +182,7 @@
   font-size: 13px;
   text-align: right;
   padding-right: 5px;
+  height: 25px;
 }
 .potrazuje_input {
   width: inherit;
@@ -161,30 +191,33 @@
   font-size: 13px;
   text-align: right;
   padding-right: 5px;
+  height: 25px;
 }
 .valuta_input {
   width: inherit;
   border-radius: 2px;
   border: 2px solid #d8d9ea;
   font-size: 13px;
-  height: 23px;
+  height: 25px;
 }
 .modal_footer {
   background-color: whitesmoke;
   border-radius: 2px;
+  margin-top: 12px;
+  margin-bottom: 8px;
 }
 .modal_form_hr {
   margin-bottom: 0px;
 }
-.modal_footer_hr {
+/*.modal_footer_hr {
   margin-top: 6px;
   margin-bottom: 3px;
-}
+}*/
 .modal_footer_button_set {
   margin-top: 4px;
   margin-bottom: 4px;
   margin-right: 20px;
-  float: right;
+  text-align: right;
   font-size: 13px;
 }
 .modal_footer_button_set button {
@@ -209,4 +242,7 @@
 input[type="number"]::-webkit-inner-spin-button {
   padding-right: 5px;
   margin-left: 5px;
+}
+input[list] {
+  text-align: right;
 }
