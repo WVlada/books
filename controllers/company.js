@@ -245,11 +245,23 @@ exports.postNalog = (req, res, next) => {
   const duguje_array = req.body.duguje;
   const potrazuje_array = req.body.potrazuje;
   const valuta_array = req.body.valuta;
-  const duguje_sum = duguje_array.reduce((a, b) => a + b, 0);
-  const potrazuje_sum = potrazuje_array.reduce((a, b) => a + b, 0);
+  const duguje_sum = duguje_array.reduce(
+    (a, b) =>
+      Math.round(Number(String(a).replace(/,/g, "")) * 100) / 100 +
+      Math.round(Number(String(b).replace(/,/g, "")) * 100) / 100,
+    0
+  );
+
+  const potrazuje_sum = potrazuje_array.reduce(
+    (a, b) =>
+      Math.round(Number(String(a).replace(/,/g, "")) * 100) / 100 +
+      Math.round(Number(String(b).replace(/,/g, "")) * 100) / 100,
+    0
+  );
   let nalog;
 
   Company.findOne({ _id: company_id }).then(result => {
+    const current_company = result;
     Nalog.create({
       company: company_id,
       user: user,
@@ -272,8 +284,12 @@ exports.postNalog = (req, res, next) => {
             sifra_komitenta: sifra_komitenta_array[i],
             poziv_na_broj: poziv_na_broj_array[i],
             konto: konto_array[i],
-            duguje: Number(duguje_array[i]),
-            potrazuje: Number(potrazuje_array[i]),
+            duguje: Number(
+              Number(duguje_array[i].replace(/,/g, "")).toFixed(2)
+            ),
+            potrazuje: Number(
+              Number(potrazuje_array[i].replace(/,/g, "")).toFixed(2)
+            ),
             valuta: valuta_array[i],
             number: i,
             nalog_id: result._id,
@@ -286,10 +302,12 @@ exports.postNalog = (req, res, next) => {
         nalog.save();
         Nalog.find({ company_id: company_id, year: current_company_year }).then(
           nalozi => {
-            return res.status(200).render("company/dnevnik", {
+            return res.status(200).render("company/show_company", {
               pageTitle: "",
               path: "/dnevnik",
               hasError: false,
+              current_company: current_company,
+              current_company_year: current_company_year,
               nalozi: nalozi,
               successMessage: null,
               infoMessage: `Nalog ${nalog.broj} has been saved.`,
