@@ -302,36 +302,37 @@ exports.postNalog = (req, res, next) => {
           stav.save();
           nalog.stavovi.push(stav);
         }
-        nalog.save();
-        Nalog.find({ company: company_id, year: current_company_year }).then(
-          result => {
-            nalozi = result;
-          }).then(result => {
-            Company.find({user: user._id}).then(result=>{
-              companies = result;
-          }) 
-          .then(result =>{
-              return res.status(200).render("company/show_company", {
-                pageTitle: "",
-                path: "/dnevnik",
-                hasError: false,
-                user: user,
-                current_company: current_company,
-                current_company_year: current_company_year,
-                years: years,
-                companies: companies,
-                nalozi: nalozi,
-                successMessage: `Nalog ${nalog.type} ${nalog.number} has been saved.`,
-                infoMessage: null,
-                validationErrors: []
+        nalog.save();})
+        .then(result =>{
+          Nalog.find({ company: company_id, year: current_company_year }).then(
+            result => {
+              nalozi = result;
+            }).then(result => {
+              Company.find({user: user._id}).then(result=>{
+                companies = result;
+            }) 
+            .then(result =>{
+                return res.status(200).render("company/show_company", {
+                  pageTitle: "",
+                  path: "/dnevnik",
+                  hasError: false,
+                  user: user,
+                  current_company: current_company,
+                  current_company_year: current_company_year,
+                  years: years,
+                  companies: companies,
+                  nalozi: nalozi,
+                  successMessage: `Nalog ${nalog.type} ${nalog.number} has been saved.`,
+                  infoMessage: null,
+                  validationErrors: []
+                });
+              }).catch(err => {
+                console.log(err);
               });
-            }).catch(err => {
-              console.log(err);
-            });
-            
-          }
-        );
-      })
+            }
+          );
+
+        })
       .catch(err => {
         console.log(err);
       });
