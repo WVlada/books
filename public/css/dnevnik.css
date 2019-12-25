@@ -1,0 +1,117 @@
+table.dnevnik_naloga {
+	table-layout: auto;
+    margin: auto;
+    border-spacing: 0;
+    width: 100%;
+    border-collapse: separate;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+	white-space: nowrap;
+}
+th.dnevnik_naloga {
+    border-left: 1px solid #7e798c;
+	border-right: 1px solid #4e4765;
+	border-top: 1px solid #4e4765;
+	padding: 6px;
+	display: table-cell;
+	font-weight: 300;
+	background-image: -webkit-linear-gradient(top, #6d687e 0%, #49435b 100%);
+	color: white;
+	vertical-align: middle;
+  	text-align: center;
+}
+th.dnevnik_naloga:nth-child(1)
+{
+	width: 50px;
+}
+th.dnevnik_naloga:nth-child(2)
+{
+	width: 50px;
+}
+th.dnevnik_naloga:nth-child(3)
+{
+	width: 500px;
+}
+th.dnevnik_naloga:nth-child(4) 
+{
+	width: 160px;
+}
+th.dnevnik_naloga:nth-child(5) 
+{
+	width: 80px;
+}
+th.dnevnik_naloga:nth-child(6) 
+{
+	width: 60px;
+}
+th.dnevnik_naloga:first-child {
+	-webkit-border-top-left-radius: 3px;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+th.dnevnik_naloga:last-child {
+	-webkit-border-top-right-radius: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    -moz-border-radius-topright: 3px;
+}
+td.dnevnik_naloga {
+	border-top: 1px solid #fff !important;
+	border-left: 1px solid #dfdce3;
+	line-height: 1;
+	padding: 4px;
+	color: #000;
+    border-bottom: 1px solid #ebe9ee;
+}
+td.dnevnik_naloga:nth-child(1), td.dnevnik_naloga:nth-child(2) 
+{
+	text-align: center;
+}
+td.dnevnik_naloga:nth-child(4), td.dnevnik_naloga:nth-child(5) 
+{
+	text-align: right;
+}
+td.dnevnik_naloga:nth-child(6) 
+{
+	text-align: center;
+}
+td.dnevnik_naloga:last-child {
+	border-right: 1px solid #dfdce3;
+}
+tr.dnevnik_naloga:last-child > td.dnevnik_naloga:first-child {
+	 border-bottom-left-radius: 5px;
+}
+tr.dnevnik_naloga:last-child > td.dnevnik_naloga:last-child {
+    border-bottom-right-radius: 5px;
+}
+tr.dnevnik_naloga {
+	background: #fafafa;
+}
+tr.dnevnik_naloga {
+	cursor: pointer;
+}
+tr.dnevnik_naloga:nth-child(even) {
+    background: #f6f5f8;
+}
+tr.dnevnik_naloga:last-child > td {
+    border-bottom-width: 1;
+}
+tr.dnevnik_naloga:hover,tr.dnevnik_naloga:nth-child(even):hover {
+	background: #dfdce3;
+}
+
+.table_dnevnik_naloga_donji_deo {
+  bottom: 0px; 
+  background-color: rgba(254,248,224,0.96);
+  height: 38px;
+  margin-top: 5px;
+  position: absolute;
+  border: 1px solid;
+  border-color: #6d687e;
+  border-radius: 3px;
+  padding: 5px;
+  width: 100%;
+}
+.crven {
+	color: red !important;
+}

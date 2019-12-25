@@ -4,8 +4,8 @@
   <table class="dnevnik_naloga">
     <thead>
       <tr class="dnevnik_naloga">
-        <th class="dnevnik_naloga">Tip naloga</th>
-        <th class="dnevnik_naloga">Broj naloga</th>
+        <th class="dnevnik_naloga">Tip</th>
+        <th class="dnevnik_naloga">Broj</th>
         <th class="dnevnik_naloga">Opis</th>
         <th class="dnevnik_naloga">Iznos</th>
         <th class="dnevnik_naloga">Datum</th>
@@ -13,33 +13,33 @@
       </tr>
     </thead>
     <tbody>
-      <% for(let i = 0; i < nalozi.length -1; i++ { %>
+      <% for(let i = 0; i < nalozi.length -1; i++) { %>
       
         <tr id="<%= nalozi[i].broj %>" class="dnevnik_naloga">
-        <!-- if x.duguje == x.potrazuje -->
+        <% if (nalozi[i].duguje == nalozi[i].potrazuje) { %>
         <!--# ovo je test da mi je nalog balansiran -->
-        <td class="dnevnik_naloga"><!--= x.tipnaloga.oznaka --></td>
-        <td class="dnevnik_naloga"><!--= x.broj --></td>
-        <td class="dnevnik_naloga"><!--= x.opis --></td>
+        <td class="dnevnik_naloga"><%= nalozi[i].type %></td>
+        <td class="dnevnik_naloga"><%= nalozi[i].broj %></td>
+        <td class="dnevnik_naloga"><%= nalozi[i].opis %></td>
         <td class="dnevnik_naloga">
-          <!--= number_to_currency(x.potrazuje, :locale => "sr") -->
+          <%= nalozi[i].potrazuje %>
         </td>
         <td class="dnevnik_naloga">
-          <!--= l(x.datum, :format => '%d/%m/%Y') -->
+          <%= nalozi[i].datum %>
         </td>
-        <td class="dnevnik_naloga"><!--= x.zakljucan --></td>
-        <!-- else -->
-        <td class="dnevnik_naloga crven"><!--= x.tipnaloga.oznaka --></td>
-        <td class="dnevnik_naloga crven"><!--= x.broj --></td>
-        <td class="dnevnik_naloga crven "><!--= x.opis --></td>
+        <td class="dnevnik_naloga"><%= nalozi[i].locked %></td>
+        <% } else { %>
+        <td class="dnevnik_naloga crven"><%= nalozi[i].type %></td>
+        <td class="dnevnik_naloga crven"><%= nalozi[i].broj %></td>
+        <td class="dnevnik_naloga crven "><%= nalozi[i].opis %></td>
         <td class="dnevnik_naloga crven">
-          <!--= number_to_currency(x.potrazuje, :locale => "sr") -->
+          <%= nalozi[i].potrazuje %>
         </td>
         <td class="dnevnik_naloga crven ">
-          <!--= l(x.datum, :format => '%d/%m/%Y') -->
+          <%= nalozi[i].datum %>
         </td>
-        <td class="dnevnik_naloga crven "><!--= x.zakljucan --></td>
-        <!-- end -->
+        <td class="dnevnik_naloga crven "><%= nalozi[i].locked %></td>
+        <% } %>
       </tr>
       <% } %>
     </tbody>
@@ -52,6 +52,7 @@
   </div>
 
   <script>
+    window.history.pushState("", "", '/company');
     //$(document)
     //  .off("dblclick", "tr.dnevnik_naloga")
     //  .on("dblclick", "tr.dnevnik_naloga", function() {

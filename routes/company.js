@@ -73,4 +73,3 @@ router.post("/new_nalog", [
 ], isAuth, companyController.postNalog);
 
 module.exports = router;
-0

@@ -33,6 +33,10 @@ const nalogSchema = new Schema({
     type: Boolean,
     required: true
   },
+  type: {
+    type: String,
+    required: true
+  },
   stavovi: [
     {
       stav: {

@@ -28,7 +28,7 @@ exports.getCompany = (req, res, next) => {
           years: current_company.year,
           current_company_year: current_company_year,
           pageTitle: `Company: ${current_company.name}`,
-          path: "/show_company",
+          path: "/tok_dokumentacije",
           infoMessage: null,
           validationErrors: [],
           successMessage: null
@@ -211,7 +211,7 @@ exports.postNalog = (req, res, next) => {
   const company_id = req.current_company_id;
   const current_company_year = req.current_company_year;
   const errors = validationResult(req);
-
+  //console.log(res)
   if (!errors.isEmpty()) {
     console.log(errors);
     return res.status(422).render("company/new_nalog", {
@@ -259,9 +259,12 @@ exports.postNalog = (req, res, next) => {
     0
   );
   let nalog;
+  let nalozi;
+  let companies;
 
   Company.findOne({ _id: company_id }).then(result => {
     const current_company = result;
+    const years = result.year;
     Nalog.create({
       company: company_id,
       user: user,
@@ -300,19 +303,32 @@ exports.postNalog = (req, res, next) => {
           nalog.stavovi.push(stav);
         }
         nalog.save();
-        Nalog.find({ company_id: company_id, year: current_company_year }).then(
-          nalozi => {
-            return res.status(200).render("company/show_company", {
-              pageTitle: "",
-              path: "/dnevnik",
-              hasError: false,
-              current_company: current_company,
-              current_company_year: current_company_year,
-              nalozi: nalozi,
-              successMessage: null,
-              infoMessage: `Nalog ${nalog.broj} has been saved.`,
-              validationErrors: []
+        Nalog.find({ company: company_id, year: current_company_year }).then(
+          result => {
+            nalozi = result;
+          }).then(result => {
+            Company.find({user: user._id}).then(result=>{
+              companies = result;
+          }) 
+          .then(result =>{
+              return res.status(200).render("company/show_company", {
+                pageTitle: "",
+                path: "/dnevnik",
+                hasError: false,
+                user: user,
+                current_company: current_company,
+                current_company_year: current_company_year,
+                years: years,
+                companies: companies,
+                nalozi: nalozi,
+                successMessage: `Nalog ${nalog.type} ${nalog.number} has been saved.`,
+                infoMessage: null,
+                validationErrors: []
+              });
+            }).catch(err => {
+              console.log(err);
             });
+            
           }
         );
       })
