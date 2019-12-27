@@ -3,7 +3,7 @@ const Company = require("../models/company");
 const Nalog = require("../models/nalog");
 const Stav = require("../models/stav");
 
-const { validationResult } = require("express-validator/check");
+const { validationResult } = require("express-validator");
 
 exports.getCompany = (req, res, next) => {
   const user = req.user;
@@ -302,16 +302,19 @@ exports.postNalog = (req, res, next) => {
           stav.save();
           nalog.stavovi.push(stav);
         }
-        nalog.save();})
-        .then(result =>{
-          Nalog.find({ company: company_id, year: current_company_year }).then(
-            result => {
-              nalozi = result;
-            }).then(result => {
-              Company.find({user: user._id}).then(result=>{
+        nalog.save();
+      })
+      .then(result => {
+        Nalog.find({ company: company_id, year: current_company_year })
+          .then(result => {
+            nalozi = result;
+          })
+          .then(result => {
+            Company.find({ user: user._id })
+              .then(result => {
                 companies = result;
-            }) 
-            .then(result =>{
+              })
+              .then(result => {
                 return res.status(200).render("company/show_company", {
                   pageTitle: "",
                   path: "/dnevnik",
@@ -326,13 +329,12 @@ exports.postNalog = (req, res, next) => {
                   infoMessage: null,
                   validationErrors: []
                 });
-              }).catch(err => {
+              })
+              .catch(err => {
                 console.log(err);
               });
-            }
-          );
-
-        })
+          });
+      })
       .catch(err => {
         console.log(err);
       });

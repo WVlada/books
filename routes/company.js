@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const isAuth = require("../middleware/isAuth");
-const { check, body } = require("express-validator/check");
+const { check, body } = require("express-validator");
 const User = require("../models/user");
 const Company = require("../models/user");
 
@@ -59,17 +59,27 @@ router.post(
 
 router.get("/dnevnik_naloga", isAuth, companyController.getDnevnikNaloga);
 router.get("/new_nalog", isAuth, companyController.getNalog);
-router.post("/new_nalog", [
-  check("opis_stava")
+router.post(
+  "/new_nalog",
+  [
+    check("opis_stava")
       .isArray()
-      .custom(array=>{
+      .custom(array => {
         let i = 0;
-        array.every((elem)=>{
-          if (elem.length >= 0){i++;}
-          else {i++; msg=`Opis stava broj "${i}" mora biti duzi od 1 karaktera`;throw new Error(msg);}
-        })
-        return true
+        array.every(elem => {
+          if (elem.length >= 0) {
+            i++;
+          } else {
+            i++;
+            msg = `Opis stava broj "${i}" mora biti duzi od 1 karaktera`;
+            throw new Error(msg);
+          }
+        });
+        return true;
       })
-], isAuth, companyController.postNalog);
+  ],
+  isAuth,
+  companyController.postNalog
+);
 
 module.exports = router;
