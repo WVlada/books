@@ -44,11 +44,18 @@ $(document).on("click", "#kontni_plan", function() {
   });
 });
 $(document).on("click", "#dnevnik_naloga", function() {
+  var dnevnik_naloga_dugme = $(this);
   $.ajax({
     url: "/dnevnik_naloga",
     type: "get",
     data: { "": "" },
-    dataType: "script"
+    dataType: "html",
+    complete: function() {
+      dnevnik_naloga_dugme.data("requestRunning", false);
+    },
+    success: function(html) {
+      $("div.centar").html(html);
+    }
   });
 });
 $(document).on("click", "#tok_dokumentacije", function() {

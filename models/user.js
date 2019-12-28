@@ -36,7 +36,13 @@ const userSchema = new Schema({
   current_company_year: {
     type: String,
     required: false
-  }
+  },
+  current_company_years: [
+    {
+      type: String,
+      required: false
+    }
+  ]
 });
 
 userSchema.methods.addCompany = function(company) {
@@ -48,15 +54,15 @@ userSchema.methods.addCompany = function(company) {
   });
   if (counter === 0) {
     this.company.push(company);
-    
   }
   return this.save();
 };
 
-userSchema.methods.setActiveCompany = function(company){
+userSchema.methods.setActiveCompany = function(company) {
   this.current_company = company;
   this.current_company_year = company.year[0];
+  this.current_company_years.push(company.year[0]);
   return this.save();
-}
+};
 
 module.exports = mongoose.model("User", userSchema);

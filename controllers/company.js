@@ -9,6 +9,13 @@ exports.getCompany = (req, res, next) => {
   const user = req.user;
   const current_company_id = req.current_company_id;
   const current_company_year = req.current_company_year;
+  const current_company_years = req.current_company_years;
+  console.log("/show_company");
+  console.log(user);
+  console.log(current_company_id);
+  console.log(current_company_year);
+  console.log(current_company_years);
+  console.log("/show_company");
   Company.find({ user: user._id })
     .then(result => {
       if (result.length === 0) {
@@ -133,31 +140,54 @@ exports.postNewCompanyRoot = (req, res, next) => {
       return res.redirect("/company");
     });
 };
-
+// AJAX
 exports.getDnevnikNaloga = (req, res, next) => {
-  const company_id = req.query.current_company;
-  const current_company_year = req.query.current_year;
-  console.log(req.query);
-  //const user = req.user;
-  //const company_id = req.current_company_id;
-  //let companies;
-  //let company;
-  //Company.find({ user: user._id })
-  //  .then(result => {
-  //    companies = result;
-  //    return companies;
-  //  })
-  //  .then(result => {
-  //    Company.findById({ _id: company_id }).then(result => {
-  //      company = result;
-  return res.render("includes/dashboard/dnevnik_naloga", {
-    path: "/includes/dashboard/dnevnik_naloga"
-    //user: user,
-    //company: company,
-    //companies: companies
-    //      });
-    //    });
-  });
+  const user = req.user;
+  const current_company_id = req.current_company_id;
+  const current_company_year = req.current_company_year;
+  const current_company_years = req.current_company_years;
+  console.log("/get_dnevnik");
+  console.log(user);
+  console.log(current_company_id);
+  console.log(current_company_year);
+  console.log(current_company_years);
+  console.log("/get_dnevnik");
+
+  Nalog.find({ company: current_company_id, year: current_company_year })
+    .then(result => {
+      nalozi = result;
+      console.log("33333");
+      console.log(nalozi);
+      console.log("33333");
+    })
+    .then(result => {
+      Company.find({ user: user._id })
+        .then(result => {
+          companies = result;
+        })
+        .then(com => {
+          current_company = user.current_company;
+        })
+        .then(result => {
+          return res.status(200).render("includes/dashboard/dnevnik", {
+            pageTitle: "",
+            path: "/dnevnik",
+            hasError: false,
+            user: user,
+            current_company: current_company,
+            current_company_year: current_company_year,
+            years: current_company_years,
+            companies: companies,
+            nalozi: nalozi,
+            successMessage: null,
+            infoMessage: null,
+            validationErrors: []
+          });
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    });
 };
 exports.getNalog = (req, res, next) => {
   const user = req.user;

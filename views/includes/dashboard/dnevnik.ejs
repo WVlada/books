@@ -1,5 +1,3 @@
-<link rel="stylesheet" href="/css/dnevnik.css" />
-
 <div id="table">
   <table class="dnevnik_naloga">
     <thead>
@@ -13,30 +11,29 @@
       </tr>
     </thead>
     <tbody>
-      <% for(let i = 0; i < nalozi.length -1; i++) { %>
-      
-        <tr id="<%= nalozi[i].broj %>" class="dnevnik_naloga">
+      <% for(let i = 0; i <= nalozi.length -1; i++) { %>
+      <tr id="<%= nalozi[i].broj %>" class="dnevnik_naloga">
         <% if (nalozi[i].duguje == nalozi[i].potrazuje) { %>
         <!--# ovo je test da mi je nalog balansiran -->
         <td class="dnevnik_naloga"><%= nalozi[i].type %></td>
-        <td class="dnevnik_naloga"><%= nalozi[i].broj %></td>
+        <td class="dnevnik_naloga"><%= nalozi[i].number %></td>
         <td class="dnevnik_naloga"><%= nalozi[i].opis %></td>
         <td class="dnevnik_naloga">
           <%= nalozi[i].potrazuje %>
         </td>
         <td class="dnevnik_naloga">
-          <%= nalozi[i].datum %>
+          <%= nalozi[i].date.toLocaleDateString("en-US") %>
         </td>
         <td class="dnevnik_naloga"><%= nalozi[i].locked %></td>
         <% } else { %>
         <td class="dnevnik_naloga crven"><%= nalozi[i].type %></td>
-        <td class="dnevnik_naloga crven"><%= nalozi[i].broj %></td>
+        <td class="dnevnik_naloga crven"><%= nalozi[i].number %></td>
         <td class="dnevnik_naloga crven "><%= nalozi[i].opis %></td>
         <td class="dnevnik_naloga crven">
           <%= nalozi[i].potrazuje %>
         </td>
         <td class="dnevnik_naloga crven ">
-          <%= nalozi[i].datum %>
+          <%= nalozi[i].date.toLocaleDateString("en-US") %>
         </td>
         <td class="dnevnik_naloga crven "><%= nalozi[i].locked %></td>
         <% } %>
@@ -52,7 +49,7 @@
   </div>
 
   <script>
-    window.history.pushState("", "", '/company');
+    window.history.pushState("", "", "/company");
     //$(document)
     //  .off("dblclick", "tr.dnevnik_naloga")
     //  .on("dblclick", "tr.dnevnik_naloga", function() {
@@ -61,7 +58,7 @@
     //      .replace(/[\t\n]+/g, " ")
     //      .trim();
     //    //x = this.id;
-//
+    //
     //    $.ajax({
     //      url: "/nalog_show",
     //      type: "get",
