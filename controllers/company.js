@@ -70,6 +70,7 @@ exports.postNewCompanyRoot = (req, res, next) => {
   const email = req.body.email;
   const telephone = req.body.telephone;
   const user = req.user;
+  const checkbox = req.body.checkbox_hidden;
 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -135,6 +136,12 @@ exports.postNewCompanyRoot = (req, res, next) => {
       user.addCompany(company).then(result => {
         user.setActiveCompany(company);
       });
+    })
+    .then(result => {
+      if (checkbox) {
+        console.log("checkbox true");
+        company.createDefaultTransactions(user);
+      }
     })
     .then(result => {
       return res.redirect("/company");

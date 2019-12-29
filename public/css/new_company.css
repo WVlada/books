@@ -281,3 +281,16 @@ div.text {
 .new_company_inline_div {
   margin-left: 20px;
 }
+.default_transactions_text {
+  font-size: 12px;
+  font-weight: 500;
+  color: #919094;
+
+  display: inline-block;
+
+  padding-left: 0;
+}
+.new_company_input_checkbox {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}

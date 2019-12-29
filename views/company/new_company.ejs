@@ -1,5 +1,9 @@
 <link rel="stylesheet" href="/css/main.css" />
 <link rel="stylesheet" href="/css/new_company.css" />
+<script
+  src="https://kit.fontawesome.com/ca144eb439.js"
+  crossorigin="anonymous"
+></script>
 <div class="background-image"></div>
 
 <% if (infoMessage) { %>
@@ -81,7 +85,7 @@
             <input
               class="new_company_input new_company_input_mb <%= validationErrors.find(e => e.param ==='mb') ? 'invalid' : ''%>"
               type="mb"
-              placeholder="mb"
+              placeholder="mb: 8 digits"
               name="mb"
               id="mb"
               value="<%= oldInput.mb %>"
@@ -91,7 +95,7 @@
             <input
               class="new_company_input new_company_input_pib <%= validationErrors.find(e => e.param ==='pib') ? 'invalid' : ''%>"
               type="pib"
-              placeholder="pib"
+              placeholder="pib: 9 digits"
               name="pib"
               id="pib"
               value="<%= oldInput.pib %>"
@@ -127,6 +131,27 @@
             name="telephone"
             id="telephone"
             value="<%= oldInput.telephone %>"
+          />
+        </div>
+        <div class="form-control">
+          <p class="default_transactions_text">
+            Create default business transactions:
+          </p>
+          <input
+            class="new_company_input_checkbox <%= validationErrors.find(e => e.param ==='checkbox') ? 'invalid' : ''%>"
+            type="checkbox"
+            placeholder=""
+            name="checkbox"
+            id="checkbox"
+            checked
+            disabled
+          />
+          <input
+            class=""
+            type="hidden"
+            name="checkbox_hidden"
+            id="checkbox_hidden"
+            value="true"
           />
         </div>
         <button class="new_company_button" type="submit">Create company</button>
