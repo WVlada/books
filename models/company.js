@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Nalog = require("./nalog");
+const seedNalogs = require("./seeds/new_company_nalogs_seed");
 
 const Schema = mongoose.Schema;
 
@@ -36,21 +37,6 @@ const companySchema = new Schema({
 });
 
 companySchema.methods.createDefaultTransactions = function(user) {
-  console.log("****");
-  Nalog.create({
-    company: this._id,
-    user: user,
-    locked: false,
-    number: 1,
-    duguje: 10000,
-    potrazuje: 10000,
-    opis: "Otvaranje knjiga",
-    date: new Date(this.current_company_year, 0, 1),
-    type: "R",
-    year: this.current_company_year
-  }).then(result => {
-    console.log("****");
-    return;
-  });
+  seedNalogs(this, user);
 };
 module.exports = mongoose.model("Company", companySchema);

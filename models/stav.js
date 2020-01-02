@@ -8,13 +8,12 @@ const stavSchema = new Schema({
     required: true
   },
   type: {
-    type: Schema.Types.ObjectId,
-    ref: "nalogtype",
+    type: String,
     required: true
   },
   duguje: {
     type: Number,
-    default: 0,
+    default: 0
   },
   potrazuje: {
     type: Number,
@@ -24,9 +23,13 @@ const stavSchema = new Schema({
     type: Date,
     required: true
   },
+  konto: {
+    type: Schema.Types.ObjectId,
+    ref: "Racun"
+  },
   opis: {
     type: String,
-    default: 'no description'
+    default: "no description"
   },
   pozivnabroj: {
     type: String

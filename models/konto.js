@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-const racunSchema = new Schema({
+const kontoSchema = new Schema({
   number: {
     type: String,
     required: true
@@ -22,4 +22,4 @@ const racunSchema = new Schema({
   }
 });
 
-module.exports = mongoose.model("Racun", racunSchema);
+module.exports = mongoose.model("Konto", kontoSchema);
