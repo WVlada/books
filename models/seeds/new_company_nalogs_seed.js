@@ -4,7 +4,7 @@ const Konto = require("../konto");
 
 function seedNalogs(company, user) {
   let nalog;
-  let stavovi;
+  let stavovi = [];
   Nalog.create({
     company: company._id,
     user: user,
@@ -18,6 +18,7 @@ function seedNalogs(company, user) {
     year: company.year[0]
   })
     .then(result => {
+      // nalog kreiran
       nalog = result;
       Konto.create({
         number: "1000",
@@ -25,6 +26,7 @@ function seedNalogs(company, user) {
         type: "A",
         company: company._id
       }).then(konto => {
+        //konto kreiran
         Stav.create({
           user: user,
           company: company._id,
@@ -40,7 +42,11 @@ function seedNalogs(company, user) {
           date: nalog.date,
           type: nalog.type
         }).then(stav => {
-          stavovi.push(stav);
+          //stav kreiran
+          stavovi.push({ _id: stav._id });
+          console.log("--");
+          console.log(stavovi);
+          console.log("--");
         });
       });
       Konto.create({
@@ -64,7 +70,10 @@ function seedNalogs(company, user) {
           date: nalog.date,
           type: nalog.type
         }).then(stav => {
-          stavovi.push(stav);
+          stavovi.push({ _id: stav._id });
+          console.log("--");
+          console.log(stavovi);
+          console.log("--");
         });
       });
       Konto.create({
@@ -88,7 +97,10 @@ function seedNalogs(company, user) {
           date: nalog.date,
           type: nalog.type
         }).then(stav => {
-          stavovi.push(stav);
+          stavovi.push({ _id: stav._id });
+          console.log("--");
+          console.log(stavovi);
+          console.log("--");
         });
       });
       Konto.create({
@@ -111,14 +123,39 @@ function seedNalogs(company, user) {
           nalog_id: nalog._id,
           date: nalog.date,
           type: nalog.type
-        }).then(stav => {
-          stavovi.push(stav);
-        });
+        })
+          .then(stav => {
+            stavovi.push({ _id: stav._id });
+            console.log("--");
+            console.log(stavovi);
+            console.log("--");
+          })
+          .then(result => {
+            console.log("*");
+            console.log(stavovi);
+            console.log("*");
+            Nalog.findOne({ _id: nalog._id })
+              .then(res => {
+                console.log(1);
+                console.log(res);
+                res.stavovi.push(...stavovi);
+                console.log(res.stavovi);
+                console.log(2);
+                res.save();
+              })
+              .catch(err => {
+                console.log("***");
+                console.log(err);
+                console.log("***");
+              });
+          });
       });
     })
-    .then(result => {
-      nalog.stavovi = stavovi;
-      nalog.save();
+
+    .catch(err => {
+      console.log(3);
+      console.log(err);
+      console.log(4);
     });
 }
 

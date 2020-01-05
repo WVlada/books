@@ -2,6 +2,7 @@ const User = require("../models/user");
 const Company = require("../models/company");
 const Nalog = require("../models/nalog");
 const Stav = require("../models/stav");
+const Konto = require("../models/konto");
 
 const { validationResult } = require("express-validator");
 
@@ -163,9 +164,6 @@ exports.getDnevnikNaloga = (req, res, next) => {
   Nalog.find({ company: current_company_id, year: current_company_year })
     .then(result => {
       nalozi = result;
-      console.log("33333");
-      console.log(nalozi);
-      console.log("33333");
     })
     .then(result => {
       Company.find({ user: user._id })
@@ -401,3 +399,51 @@ exports.postNalog = (req, res, next) => {
   //    });
   //  });
 };
+exports.getEditNalog = async (req, res, next) => {
+  const user = req.user;
+  const company_id = req.current_company_id;
+  const current_company_year = req.current_company_year;
+  const nalog_number = req.query.nalog_number;
+  const nalog_type = req.query.nalog_type;
+  const nalog_index_page = req.query.nalog_index_page;
+  const sifra_komitenta_array = [1, 2, 3];
+  const poziv_na_broj_array = [1, 2, 3];
+  console.log(req.query);
+  const broj_konta_array = await Konto.find({
+    company: company_id
+  }).select("number");
+
+  console.log(broj_konta_array);
+  const brojevi = [];
+  const current_company = await Company.findOne({ _id: company_id });
+  const nalog = await Nalog.findOne({
+    company: company_id,
+    type: nalog_type,
+    number: Number(nalog_number)
+  });
+  console.log("****");
+  const stavovi = await Stav.find({ _id: nalog.stavovi });
+  console.log("****");
+  //const nalog = Nalog.findOne({
+  //  company: company_id,
+  //  type: nalog_type,
+  //  number: Number(nalog_number)
+  //}).then(result => {
+  return res.render("company/edit_nalog", {
+    path: "/edit_nalog",
+    user: user,
+    current_company: current_company,
+    current_company_year: current_company_year,
+    vrste_naloga: current_company.vrste_naloga,
+    sifra_komitenta_array: sifra_komitenta_array,
+    poziv_na_broj_array: poziv_na_broj_array,
+    broj_konta_array: broj_konta_array,
+    brojevi: brojevi,
+    stavovi: stavovi,
+    nalog: nalog,
+    successMessage: null,
+    infoMessage: null,
+    validationErrors: []
+  });
+};
+exports.updateNalog = (res, req, next) => {};

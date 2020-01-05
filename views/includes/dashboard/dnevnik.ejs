@@ -12,7 +12,12 @@
     </thead>
     <tbody>
       <% for(let i = 0; i <= nalozi.length -1; i++) { %>
-      <tr id="<%= nalozi[i].broj %>" class="dnevnik_naloga">
+      <tr
+        data-id="<%= nalozi[i].number %>"
+        data-type="<%= nalozi[i].type %>"
+        id="<%= nalozi[i].number %>"
+        class="dnevnik_naloga"
+      >
         <% if (nalozi[i].duguje == nalozi[i].potrazuje) { %>
         <!--# ovo je test da mi je nalog balansiran -->
         <td class="dnevnik_naloga"><%= nalozi[i].type %></td>
@@ -50,21 +55,39 @@
 
   <script>
     window.history.pushState("", "", "/company");
-    //$(document)
-    //  .off("dblclick", "tr.dnevnik_naloga")
-    //  .on("dblclick", "tr.dnevnik_naloga", function() {
-    //    page = $("span.current")
-    //      .text()
-    //      .replace(/[\t\n]+/g, " ")
-    //      .trim();
-    //    //x = this.id;
-    //
-    //    $.ajax({
-    //      url: "/nalog_show",
-    //      type: "get",
-    //      data: {},
-    //      dataType: "script"
-    //    });
-    //  });
+
+    $(document)
+      .off("dblclick", "tr.dnevnik_naloga")
+      .on("dblclick", "tr.dnevnik_naloga", function() {
+        page = $("span.current")
+          .text()
+          .replace(/[\t\n]+/g, " ")
+          .trim();
+        var me = $(this);
+        var type = this.getAttribute("data-type");
+
+        if (me.data("requestRunning")) {
+          return;
+        }
+
+        me.data("requestRunning", true);
+
+        $.ajax({
+          url: "/edit_nalog",
+          type: "get",
+          data: {
+            nalog_number: me.data("id"),
+            nalog_type: type,
+            nalog_index_page: page
+          },
+          dataType: "html",
+          complete: function() {
+            me.data("requestRunning", false);
+          },
+          success: function(html) {
+            $("div.centar").html(html);
+          }
+        });
+      });
   </script>
 </div>

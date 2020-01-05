@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const Nalog = require("./nalog");
+
 const seedNalogs = require("./seeds/new_company_nalogs_seed");
 
 const Schema = mongoose.Schema;
