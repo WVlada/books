@@ -414,13 +414,45 @@ exports.getEditNalog = async (req, res, next) => {
   }).select("number");
 
   console.log(broj_konta_array);
-  const brojevi = [];
+
   const current_company = await Company.findOne({ _id: company_id });
   const nalog = await Nalog.findOne({
     company: company_id,
     type: nalog_type,
     number: Number(nalog_number)
   });
+  const brojevi = [];
+  await Nalog.find({
+    company_id: company_id,
+    type: nalog_type,
+    year: nalog.year
+  }).then(result => {
+    for (let i = 0; i <= result.length - 1; i++) {
+      if (i === result.broj) {
+      } else {
+        brojevi.push(i);
+      }
+    }
+    let j = 1;
+    while (brojevi.length < 10) {
+      brojevi.push(result.length + j);
+      j++;
+    }
+  });
+  console.log(nalog.date.getFullYear());
+  const date =
+    nalog.date.getFullYear() +
+    "-" +
+    nalog.date
+      .getMonth()
+      .toString()
+      .padStart(2, 0) +
+    "-" +
+    nalog.date
+      .getDay()
+      .toString()
+      .padStart(2, 0);
+  console.log(date);
   console.log("****");
   const stavovi = await Stav.find({ _id: nalog.stavovi });
   console.log("****");
@@ -438,6 +470,7 @@ exports.getEditNalog = async (req, res, next) => {
     sifra_komitenta_array: sifra_komitenta_array,
     poziv_na_broj_array: poziv_na_broj_array,
     broj_konta_array: broj_konta_array,
+    date: date,
     brojevi: brojevi,
     stavovi: stavovi,
     nalog: nalog,

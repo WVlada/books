@@ -13,7 +13,7 @@ function seedNalogs(company, user) {
     duguje: 10000,
     potrazuje: 10000,
     opis: "Otvaranje knjiga",
-    date: new Date(company.year[0], 0, 1).toISOString(),
+    date: new Date(Date.UTC(company.year[0], 0, 1)),
     type: "R",
     year: company.year[0]
   })

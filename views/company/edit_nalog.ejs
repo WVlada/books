@@ -44,7 +44,7 @@
                     <select class="novi_nalog_input" name="vrsta_naloga" id="vrstaNaloga" onchange="Pronadji_brojeve_naloga()">
                         
                         <% for(let i = 0; i <= vrste_naloga.length - 1; i++) { %>
-                            <option <%= vrste_naloga[i] === "N" ? "selected" : null %>><%= vrste_naloga[i] %></option>
+                            <option <%= vrste_naloga[i] === nalog.type ? "selected" : null %>><%= vrste_naloga[i] %></option>
                          <% } %>
                     </select>
                 </div>
@@ -54,7 +54,7 @@
                       <span>Broj naloga:</span>
                       <select class="novi_nalog_input" name= "broj_naloga" id="broj_naloga_select">
                           <% for(let i=0; i< brojevi.length-1; i++) { %>
-                            <option value="<%= brojevi[i] %>"><%= brojevi[i] %></option> 
+                            <option <%= brojevi[i] === nalog.number ? "selected" : null %>><%= brojevi[i] %></option> 
                           <% } %>
                       </select>
                   </div>
@@ -62,7 +62,7 @@
             <div class="opis_naloga_div">
               <span class="opis_naloga_span">Opis naloga:</span> 
               <div class="form-control">
-                <input name="opis_naloga" class="novi_nalog_input opis_naloga_input" type="text"/>
+                <input value="<%= nalog.opis %>" name="opis_naloga" class="novi_nalog_input opis_naloga_input" type="text"/>
               </div>
           </div>
            
@@ -71,7 +71,7 @@
         <div class = "drugi_row drugi_row_grid-container"> 
             <div class="form-control">
                   <span>Datum:</span>
-                  <input name="datum_naloga" id="nalog_date" type="date" class="novi_nalog_input" value="<%= nalog.date %>">
+                  <input name="datum_naloga" id="nalog_date" type="date" class="novi_nalog_input" value="<%= date %>">
             </div>
         </div>
             
@@ -153,10 +153,14 @@
          <!-- kraj -->
          <% } %>
         
-        
-        <div>
-        
-
+        <div id="edit_row" class="cetvrti_row cetvrti_row_grid-container">
+          <div class="grid-item"></div>
+          <div class="grid-item"></div>
+          <div class="grid-item"></div>
+          <div class="grid-item"></div>
+          <div class="grid-item"></div>
+          <div class="grid-item"></div>
+          <div class="grid-item"></div>
           
             <div class="grid-item samo_plus_item">
                 <i class="fas fa-plus-circle" onclick="dodaj_red(this)"></i>
@@ -164,8 +168,6 @@
            
         </div>
 
-
-       
         <hr id="ruler" class="modal_form_hr">
         <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
   </form>
@@ -188,7 +190,7 @@
 <script>
 // da bih stavio chosen() na novi element, moram imati njegov klon pre postavljanja inicijalnog chosena  
 const stavovi = document.getElementsByClassName('cetvrti_row');
-const poslednji_stav = stavovi[stavovi.length -1 ];
+const poslednji_stav = stavovi[stavovi.length - 2 ];
 const cist_stav = poslednji_stav.cloneNode(true)
 
 function oduzmi_red(element) {
@@ -200,8 +202,9 @@ function oduzmi_red(element) {
 function dodaj_red(element) {
   var parent = poslednji_stav.parentNode;
   var ruler = document.getElementById("ruler");
+  var edit_row = document.getElementById("edit_row");
   var clone = cist_stav.cloneNode(true);
-  parent.insertBefore(clone, ruler);
+  parent.insertBefore(clone, edit_row);
   // chosen mora biti stavljen na cist select
   var clone_select_sifra_komitenta = $( "div.cetvrti_row").last().children().first().next().children().children();
   var clone_select_konto = $( "div.cetvrti_row").last().children().first().next().next().next().children().children(); 
@@ -210,11 +213,11 @@ function dodaj_red(element) {
   
   var dodaj_red_buttons = document.getElementsByClassName('fa-plus-circle')
   
-  let oduzmi_red_elem = document.createElement('i')
-  oduzmi_red_elem.className = "fas fa-minus-circle"
-  // passing params to function defined up
-  oduzmi_red_elem.onclick = function(){oduzmi_red(oduzmi_red_elem)};
-  dodaj_red_buttons[0].replaceWith(oduzmi_red_elem)
+  //let oduzmi_red_elem = document.createElement('i')
+  //oduzmi_red_elem.className = "fas fa-minus-circle"
+  //// passing params to function defined up
+  //oduzmi_red_elem.onclick = function(){oduzmi_red(oduzmi_red_elem)};
+  //dodaj_red_buttons[0].replaceWith(oduzmi_red_elem)
   dodeli_id();
 }
 function dodeli_id() {
