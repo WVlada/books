@@ -2,10 +2,11 @@ const Nalog = require("../nalog");
 const Stav = require("../stav");
 const Konto = require("../konto");
 
-function seedNalogs(company, user) {
+async function seedNalogs(company, user) {
+  console.log("Seeding database....");
   let nalog;
   let stavovi = [];
-  Nalog.create({
+  await Nalog.create({
     company: company._id,
     user: user,
     locked: false,
@@ -39,14 +40,11 @@ function seedNalogs(company, user) {
           valuta: null,
           number: 1,
           nalog_id: nalog._id,
-          date: nalog.date,
+          nalog_date: nalog.date,
           type: nalog.type
         }).then(stav => {
           //stav kreiran
           stavovi.push({ _id: stav._id });
-          console.log("--");
-          console.log(stavovi);
-          console.log("--");
         });
       });
       Konto.create({
@@ -67,13 +65,10 @@ function seedNalogs(company, user) {
           valuta: null,
           number: 2,
           nalog_id: nalog._id,
-          date: nalog.date,
+          nalog_date: nalog.date,
           type: nalog.type
         }).then(stav => {
           stavovi.push({ _id: stav._id });
-          console.log("--");
-          console.log(stavovi);
-          console.log("--");
         });
       });
       Konto.create({
@@ -91,16 +86,13 @@ function seedNalogs(company, user) {
           konto: konto3._id,
           duguje: 0,
           potrazuje: 10000,
-          valuta: null,
+          valuta: new Date(Date.UTC(company.year[0], 0, 1)),
           number: 3,
           nalog_id: nalog._id,
-          date: nalog.date,
+          nalog_date: nalog.date,
           type: nalog.type
         }).then(stav => {
           stavovi.push({ _id: stav._id });
-          console.log("--");
-          console.log(stavovi);
-          console.log("--");
         });
       });
       Konto.create({
@@ -121,41 +113,28 @@ function seedNalogs(company, user) {
           valuta: null,
           number: 4,
           nalog_id: nalog._id,
-          date: nalog.date,
+          nalog_date: nalog.date,
           type: nalog.type
         })
           .then(stav => {
             stavovi.push({ _id: stav._id });
-            console.log("--");
-            console.log(stavovi);
-            console.log("--");
           })
           .then(result => {
-            console.log("*");
-            console.log(stavovi);
-            console.log("*");
             Nalog.findOne({ _id: nalog._id })
-              .then(res => {
-                console.log(1);
-                console.log(res);
+              .then(async res => {
                 res.stavovi.push(...stavovi);
-                console.log(res.stavovi);
-                console.log(2);
-                res.save();
+                await res.save();
+                console.log("Seeding completed.");
+                return Promise.resolve();
               })
               .catch(err => {
-                console.log("***");
                 console.log(err);
-                console.log("***");
               });
           });
       });
     })
-
     .catch(err => {
-      console.log(3);
       console.log(err);
-      console.log(4);
     });
 }
 

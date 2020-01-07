@@ -139,14 +139,12 @@ exports.postNewCompanyRoot = (req, res, next) => {
         user.setActiveCompany(company);
       });
     })
-    .then(result => {
+    .then(async result => {
       if (checkbox) {
         console.log("checkbox true");
-        company.createDefaultTransactions(user);
+        await company.createDefaultTransactions(user);
+        return res.redirect("/company");
       }
-    })
-    .then(result => {
-      return res.redirect("/company");
     });
 };
 // AJAX
@@ -414,8 +412,6 @@ exports.getEditNalog = async (req, res, next) => {
     company: company_id
   }).select("number");
 
-  console.log(broj_konta_array);
-
   const current_company = await Company.findOne({ _id: company_id });
   const nalog = await Nalog.findOne({
     company: company_id,
@@ -440,24 +436,46 @@ exports.getEditNalog = async (req, res, next) => {
       j++;
     }
   });
-  console.log(nalog.date.getFullYear());
   const date =
     nalog.date.getFullYear() +
     "-" +
     (nalog.date.getMonth() + 1).toString().padStart(2, 0) +
     "-" +
     (nalog.date.getDay() + 1).toString().padStart(2, 0);
-  console.log(date);
-  console.log("****");
   const stavovi = await Stav.find({ _id: nalog.stavovi });
-  console.log("****");
+  // svaki preracun stava cu uraditi u kontroleru
+  // za sada: datum, duguje, potrazuje
+  var new_stavovi = stavovi.map(stav => {
+    let new_stav = {};
+    new_stav.duguje = accounting.formatNumber(stav["duguje"]);
+    new_stav.potrazuje = accounting.formatNumber(stav["potrazuje"]);
+    new_stav.number = stav["number"];
+    new_stav.konto = stav["konto"];
+    new_stav.opis = stav["opis"];
+    new_stav._id = stav["_id"];
+    new_stav.user = stav["user"];
+    new_stav.company = stav["company"];
+    new_stav.type = stav["type"];
+    new_stav.nalog_date = stav["nalog_date"];
+    if (stav["valuta"]) {
+      let valuta =
+        stav["valuta"].getFullYear() +
+        "-" +
+        (stav["valuta"].getMonth() + 1).toString().padStart(2, 0) +
+        "-" +
+        (stav["valuta"].getDay() + 1).toString().padStart(2, 0);
+      new_stav.valuta = valuta;
+    }
+
+    return new_stav;
+  });
   //const nalog = Nalog.findOne({
   //  company: company_id,
   //  type: nalog_type,
   //  number: Number(nalog_number)
   //}).then(result => {
   return res.render("company/edit_nalog", {
-    accounting: accounting, //passing library to ejs view
+    //accounting: accounting, //passing library to ejs view
     path: "/edit_nalog",
     user: user,
     current_company: current_company,
@@ -468,7 +486,7 @@ exports.getEditNalog = async (req, res, next) => {
     broj_konta_array: broj_konta_array,
     date: date,
     brojevi: brojevi,
-    stavovi: stavovi,
+    stavovi: new_stavovi,
     nalog: nalog,
     successMessage: null,
     infoMessage: null,

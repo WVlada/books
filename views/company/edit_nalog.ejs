@@ -129,17 +129,17 @@
             </div>
             <div class="grid-item">
               <div class="form-control novi_nalog_form-control">
-                <input id="duguje-<%= i %>" name="duguje[]" class="duguje_input number-separator" type="text" value="<%= accounting.formatNumber(stavovi[i].duguje) %>"/>
+                <input id="duguje-<%= i %>" name="duguje[]" class="duguje_input number-separator" type="text" value="<%= stavovi[i].duguje %>"/>
               </div>
             </div>
             <div class="grid-item">
               <div class="form-control novi_nalog_form-control">
-                <input value="<%= accounting.formatNumber(stavovi[i].potrazuje) %>" id="potrazuje-<%= i %>" name="potrazuje[]" class="potrazuje_input number-separator" type="text"/>
+                <input value="<%= stavovi[i].potrazuje %>" id="potrazuje-<%= i %>" name="potrazuje[]" class="potrazuje_input number-separator" type="text"/>
               </div>
             </div>
             <div class="grid-item">
               <div class="form-control novi_nalog_form-control">
-                <input id="valuta-<%= i %>" name="valuta[]" class="valuta_input" type="date"/>
+                <input value="<%= stavovi[i].valuta %>" id="valuta-<%= i %>" name="valuta[]" class="valuta_input" type="date"/>
               </div>
             </div>
               <div class="grid-item samo_minus_item">

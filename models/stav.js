@@ -19,7 +19,7 @@ const stavSchema = new Schema({
     type: Number,
     default: 0
   },
-  date: {
+  nalog_date: {
     type: Date,
     required: true
   },
@@ -37,6 +37,9 @@ const stavSchema = new Schema({
   sifrakomitenta: {
     type: Schema.Types.ObjectId,
     ref: "Komitent"
+  },
+  valuta: {
+    type: Date
   },
   user: {
     type: Schema.Types.ObjectId,
