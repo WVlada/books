@@ -3,6 +3,7 @@ const Company = require("../models/company");
 const Nalog = require("../models/nalog");
 const Stav = require("../models/stav");
 const Konto = require("../models/konto");
+const accounting = require("accounting-js");
 
 const { validationResult } = require("express-validator");
 
@@ -456,6 +457,7 @@ exports.getEditNalog = async (req, res, next) => {
   //  number: Number(nalog_number)
   //}).then(result => {
   return res.render("company/edit_nalog", {
+    accounting: accounting, //passing library to ejs view
     path: "/edit_nalog",
     user: user,
     current_company: current_company,

@@ -1,7 +1,5 @@
 <div id="novi_nalog_modal_background"></div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.min.css">
-
-
 <div class="nalog_modal_placeholder">
   <div class="modal_title_bar">
     <span class="modal_title_bar_span">Korisnik: <%= user.email %></span>
@@ -131,12 +129,12 @@
             </div>
             <div class="grid-item">
               <div class="form-control novi_nalog_form-control">
-                <input value="<%= stavovi[i].duguje %>" id="duguje-<%= i %>" name="duguje[]" class="duguje_input number-separator" type="text" value="0.00"/>
+                <input id="duguje-<%= i %>" name="duguje[]" class="duguje_input number-separator" type="text" value="<%= accounting.formatNumber(stavovi[i].duguje) %>"/>
               </div>
             </div>
             <div class="grid-item">
               <div class="form-control novi_nalog_form-control">
-                <input value="<%= stavovi[i].potrazuje %>" id="potrazuje-<%= i %>" name="potrazuje[]" class="potrazuje_input number-separator" type="text" value="0.00"/>
+                <input value="<%= accounting.formatNumber(stavovi[i].potrazuje) %>" id="potrazuje-<%= i %>" name="potrazuje[]" class="potrazuje_input number-separator" type="text"/>
               </div>
             </div>
             <div class="grid-item">
@@ -308,6 +306,7 @@ $(document).on('change', '.chosen-select', function(e, params) {
     else {}
 });
 </script>
+
 
 
 
