@@ -274,9 +274,9 @@
 
 <script>
 // da bih stavio chosen() na novi element, moram imati njegov klon pre postavljanja inicijalnog chosena  
-const stavovi = document.getElementsByClassName('cetvrti_row');
-const poslednji_stav = stavovi[stavovi.length -1 ];
-const cist_stav = poslednji_stav.cloneNode(true)
+var stavovi = document.getElementsByClassName('cetvrti_row');
+var poslednji_stav = stavovi[stavovi.length -1 ];
+var cist_stav = poslednji_stav.cloneNode(true)
 
 function oduzmi_red(element) {
   parent = document.getElementById(element.id).parentNode.parentNode.parentNode
@@ -285,6 +285,11 @@ function oduzmi_red(element) {
 }
 
 function dodaj_red(element) {
+  // rikalkulejt
+  stavovi = document.getElementsByClassName('cetvrti_row');
+  poslednji_stav = stavovi[stavovi.length -1 ];
+  //cist_stav = poslednji_stav.cloneNode(true)
+  //
   var parent = poslednji_stav.parentNode;
   var ruler = document.getElementById("ruler");
   var clone = cist_stav.cloneNode(true);

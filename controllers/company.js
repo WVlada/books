@@ -443,15 +443,9 @@ exports.getEditNalog = async (req, res, next) => {
   const date =
     nalog.date.getFullYear() +
     "-" +
-    nalog.date
-      .getMonth()
-      .toString()
-      .padStart(2, 0) +
+    (nalog.date.getMonth() + 1).toString().padStart(2, 0) +
     "-" +
-    nalog.date
-      .getDay()
-      .toString()
-      .padStart(2, 0);
+    (nalog.date.getDay() + 1).toString().padStart(2, 0);
   console.log(date);
   console.log("****");
   const stavovi = await Stav.find({ _id: nalog.stavovi });

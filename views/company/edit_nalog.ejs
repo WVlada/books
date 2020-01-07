@@ -86,19 +86,19 @@
             <div class="grid-item">Valuta:</div>
         </div>
 
-        <% for (let i=0; i<=stavovi.length -1; i++) {  %>
+        <% for (let i=0; i <= stavovi.length -1; i++) {  %>
          
         <div class="cetvrti_row cetvrti_row_grid-container">
           <!-- pocetak -->
             <div class="grid-item">
               <div class="form-control novi_nalog_form-control">
-                <input id="opis_stava_input-0" name="opis_stava[]" class="novi_nalog_input opis_stava_input" type="text"/>
+                <input value="<%= stavovi[i].opis%>" id="opis_stava_input-<%= i %>" name="opis_stava[]" class="novi_nalog_input opis_stava_input" type="text"/>
               </div>
             </div>
             <div class="grid-item">
               <div class="form-control novi_nalog_form-control">
                   <!--<input  id="sifra_komitenta-0" name="sifra_komitenta[]" list="sifra_komitenta_list" class="chosen-select"/>-->
-                  <select data-placeholder="Select..." name="sifra_komitenta[]" id="sifra_komitenta-0" class="chosen-select sifra_komitenta_input">
+                  <select value="<%= stavovi[i].sifrakomitenta %>" data-placeholder="Select..." name="sifra_komitenta[]" id="sifra_komitenta-<%= i %>" class="chosen-select sifra_komitenta_input">
                     <% for(let i=0; i <= sifra_komitenta_array.length - 1; i++) { %>
                       <option></option>
                       <option><%= sifra_komitenta_array[i] %> </option>
@@ -108,7 +108,7 @@
             </div>
             <div class="grid-item">
               <div class="form-control novi_nalog_form-control">
-                  <input id="poziv_na_broj-0" name="poziv_na_broj[]" list="poziv_na_broj" class="poziv_na_broj_input"/>
+                  <input value="<%= stavovi[i].pozivnabroj %>" id="poziv_na_broj-<%= i %>" name="poziv_na_broj[]" list="poziv_na_broj" class="poziv_na_broj_input"/>
                   <!--<select data-placeholder="Select..." name="poziv_na_broj[]" id="poziv_na_broj-0" class="chosen-select poziv_na_broj_input">-->
                     <datalist id="poziv_na_broj">
                       <% for(let i=0; i <= poziv_na_broj_array.length - 1; i++) { %>
@@ -121,7 +121,7 @@
             <div class="grid-item">
               <div class="form-control novi_nalog_form-control">
                   <!--<input id="konto-0" name="konto[]" list="konto" class="konto_input"/>-->
-                  <select data-placeholder="Select..." name="konto[]" id="konto-0" class="chosen-select konto_input">
+                  <select data-placeholder="Select..." name="konto[]" id="konto-<%= i %>" class="chosen-select konto_input">
                     <% for(let i=0; i <= broj_konta_array.length - 1; i++) { %>
                       <option></option>
                       <option><%= broj_konta_array[i] %></option>
@@ -131,17 +131,17 @@
             </div>
             <div class="grid-item">
               <div class="form-control novi_nalog_form-control">
-                <input id="duguje-0" name="duguje[]" class="duguje_input number-separator" type="text" value="0.00"/>
+                <input value="<%= stavovi[i].duguje %>" id="duguje-<%= i %>" name="duguje[]" class="duguje_input number-separator" type="text" value="0.00"/>
               </div>
             </div>
             <div class="grid-item">
               <div class="form-control novi_nalog_form-control">
-                <input id="potrazuje-0" name="potrazuje[]" class="potrazuje_input number-separator" type="text" value="0.00"/>
+                <input value="<%= stavovi[i].potrazuje %>" id="potrazuje-<%= i %>" name="potrazuje[]" class="potrazuje_input number-separator" type="text" value="0.00"/>
               </div>
             </div>
             <div class="grid-item">
               <div class="form-control novi_nalog_form-control">
-                <input id="valuta-0" name="valuta[]" class="valuta_input" type="date"/>
+                <input id="valuta-<%= i %>" name="valuta[]" class="valuta_input" type="date"/>
               </div>
             </div>
               <div class="grid-item samo_minus_item">
@@ -189,25 +189,39 @@
 
 <script>
 // da bih stavio chosen() na novi element, moram imati njegov klon pre postavljanja inicijalnog chosena  
-const stavovi = document.getElementsByClassName('cetvrti_row');
-const poslednji_stav = stavovi[stavovi.length - 2 ];
-const cist_stav = poslednji_stav.cloneNode(true)
+var stavovi = document.getElementsByClassName('cetvrti_row');
+var poslednji_stav = stavovi[0];
+var cist_stav = poslednji_stav.cloneNode(true)
 
 function oduzmi_red(element) {
   parent = document.getElementById(element.id).parentNode.parentNode.parentNode
   parent.removeChild(element.parentNode.parentNode)
+  //
+  //var stavovi = document.getElementsByClassName('cetvrti_row');
+  //var poslednji_stav = stavovi[0];
+  //var cist_stav = poslednji_stav.cloneNode(true)
+  //
   dodeli_id();
 }
 
 function dodaj_red(element) {
+  // rikalkulejt
+  stavovi = document.getElementsByClassName('cetvrti_row');
+  poslednji_stav = stavovi[0];
+  //cist_stav = poslednji_stav.cloneNode(true)
+  //
+  
   var parent = poslednji_stav.parentNode;
   var ruler = document.getElementById("ruler");
   var edit_row = document.getElementById("edit_row");
   var clone = cist_stav.cloneNode(true);
   parent.insertBefore(clone, edit_row);
   // chosen mora biti stavljen na cist select
-  var clone_select_sifra_komitenta = $( "div.cetvrti_row").last().children().first().next().children().children();
-  var clone_select_konto = $( "div.cetvrti_row").last().children().first().next().next().next().children().children(); 
+  //var clone_select_sifra_komitenta = $( "div.cetvrti_row").last().children().first().next().children().children();
+  //var clone_select_konto = $( "div.cetvrti_row").last().children().first().next().next().next().children().children(); 
+  var clone_select_sifra_komitenta = $(clone).children().first().next().children().children();
+  var clone_select_konto = $(clone).children().first().next().next().next().children().children(); 
+  
   clone_select_sifra_komitenta.chosen({allow_single_deselect: true});
   clone_select_konto.chosen({allow_single_deselect: true});
   
@@ -272,9 +286,6 @@ $(document).off('click', '#cancel_form_button').on('click', '#cancel_form_button
       modal_placeholder.innerHTML = "";
     }
 );
-/*$(document).ready(function() {
-  $(".chosen-select").chosen()
-});*/
 $(document).ready(function(){
   $(".chosen-select").chosen({allow_single_deselect: true})
 });
