@@ -18,17 +18,17 @@ async function seedNalogs(company, user) {
     type: "R",
     year: company.year[0]
   })
-    .then(result => {
+    .then(async result => {
       // nalog kreiran
       nalog = result;
-      Konto.create({
+      await Konto.create({
         number: "1000",
         name: "stalna imovina",
         type: "A",
         company: company._id
-      }).then(konto => {
+      }).then(async konto => {
         //konto kreiran
-        Stav.create({
+        await Stav.create({
           user: user,
           company: company._id,
           opis: "Otvaranje knjiga",
@@ -47,13 +47,13 @@ async function seedNalogs(company, user) {
           stavovi.push({ _id: stav._id });
         });
       });
-      Konto.create({
+      await Konto.create({
         number: "2000",
         name: "obrtna imovina",
         type: "A",
         company: company._id
-      }).then(konto2 => {
-        Stav.create({
+      }).then(async konto2 => {
+        await Stav.create({
           user: user,
           company: company._id,
           opis: "Otvaranje knjiga",
@@ -71,13 +71,13 @@ async function seedNalogs(company, user) {
           stavovi.push({ _id: stav._id });
         });
       });
-      Konto.create({
+      await Konto.create({
         number: "3000",
         name: "sopstveni kapital",
         type: "B",
         company: company._id
-      }).then(konto3 => {
-        Stav.create({
+      }).then(async konto3 => {
+        await Stav.create({
           user: user,
           company: company._id,
           opis: "Otvaranje knjiga",
@@ -95,13 +95,13 @@ async function seedNalogs(company, user) {
           stavovi.push({ _id: stav._id });
         });
       });
-      Konto.create({
+      await Konto.create({
         number: "4000",
         name: "dugorocne obaveze",
         type: "B",
         company: company._id
-      }).then(konto4 => {
-        Stav.create({
+      }).then(async konto4 => {
+        await Stav.create({
           user: user,
           company: company._id,
           opis: "Otvaranje knjiga",
@@ -119,8 +119,8 @@ async function seedNalogs(company, user) {
           .then(stav => {
             stavovi.push({ _id: stav._id });
           })
-          .then(result => {
-            Nalog.findOne({ _id: nalog._id })
+          .then(async result => {
+            await Nalog.findOne({ _id: nalog._id })
               .then(async res => {
                 res.stavovi.push(...stavovi);
                 await res.save();
