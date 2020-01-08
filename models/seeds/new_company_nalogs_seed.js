@@ -1,6 +1,8 @@
 const Nalog = require("../nalog");
 const Stav = require("../stav");
 const Konto = require("../konto");
+const Komitent = require("../komitent");
+const Komitenttype = require("../komitenttype");
 
 async function seedNalogs(company, user) {
   console.log("Seeding database....");
@@ -124,6 +126,125 @@ async function seedNalogs(company, user) {
               .then(async res => {
                 res.stavovi.push(...stavovi);
                 await res.save();
+                // tipovi
+                const bankatype = await Komitenttype.create({
+                  user: user,
+                  company: company,
+                  name: "Banka",
+                  type: "B",
+                  number: 0
+                });
+                const kupactype = await Komitenttype.create({
+                  user: user,
+                  company: company,
+                  name: "Kupac",
+                  type: "K",
+                  number: 1
+                });
+                const dobavljactype = await Komitenttype.create({
+                  user: user,
+                  company: company,
+                  name: "Dobavljač",
+                  type: "D",
+                  number: 2
+                });
+                // tipovi
+                // komitenti
+                const komitent1 = await Komitent.create({
+                  user: user,
+                  company: company,
+                  type: kupactype,
+                  number: 0,
+                  adress: "Vojvodjanski bulevar 1",
+                  pib: "123456987",
+                  name: "Microsoft",
+                  sifra: "kpcMicro"
+                });
+                const komitent2 = await Komitent.create({
+                  user: user,
+                  company: company,
+                  type: kupactype,
+                  number: 1,
+                  adress: "Prvomajska 3",
+                  pib: "321456987",
+                  name: "Google inc.",
+                  sifra: "kpcGoogle"
+                });
+                const komitent3 = await Komitent.create({
+                  user: user,
+                  company: company,
+                  type: kupactype,
+                  number: 2,
+                  adress: "Otona Zupancica 123",
+                  pib: "123654987",
+                  name: "Apple inc.",
+                  sifra: "kpcApple"
+                });
+                const komitent4 = await Komitent.create({
+                  user: user,
+                  company: company,
+                  type: bankatype,
+                  number: 3,
+                  adress: "Milutina Mihajlovica 2",
+                  pib: "321654987",
+                  name: "Banca Intesa",
+                  sifra: "bnkIntesa"
+                });
+                const komitent5 = await Komitent.create({
+                  user: user,
+                  company: company,
+                  type: dobavljactype,
+                  number: 4,
+                  adress: "Vojvodjanski bulevar 56",
+                  pib: "123456978",
+                  name: "Elektroprivreda Srbije",
+                  sifra: "dobEPS"
+                });
+                const komitent6 = await Komitent.create({
+                  user: user,
+                  company: company,
+                  type: dobavljactype,
+                  number: 5,
+                  adress: "Vojvodjanski bulevar 57",
+                  pib: "124356987",
+                  name: "JKP Vodovod",
+                  sifra: "dobVodovod"
+                });
+                // komitenti
+                // nalozi N i I
+                const nalogN1 = await Nalog.create({
+                  company: company._id,
+                  user: user,
+                  locked: false,
+                  number: 1,
+                  duguje: 50000,
+                  potrazuje: 50000,
+                  opis: "Nabavka opreme",
+                  date: new Date(Date.UTC(company.year[0], 0, 5)),
+                  type: "N",
+                  year: company.year[0]
+                });
+                const stavN11 = await Stav.create({});
+                const stavN12 = await Stav.create({});
+                const stavN13 = await Stav.create({});
+                const nalogN2 = await Nalog.create({
+                  company: company._id,
+                  user: user,
+                  locked: false,
+                  number: 2,
+                  duguje: 100000,
+                  potrazuje: 100000,
+                  opis: "Nabavka vozila",
+                  date: new Date(Date.UTC(company.year[0], 0, 10)),
+                  type: "N",
+                  year: company.year[0]
+                });
+                const stavN21 = await Stav.create({});
+                const stavN22 = await Stav.create({});
+                const stavN23 = await Stav.create({});
+                const stavN24 = await Stav.create({});
+                const stavN25 = await Stav.create({});
+                // nalozi N i I
                 console.log("Seeding completed.");
                 return Promise.resolve();
               })

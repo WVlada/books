@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-const komitentSchema = new Schema({
+const komitenttypeSchema = new Schema({
   number: {
     type: Number,
     required: true
@@ -11,21 +11,8 @@ const komitentSchema = new Schema({
     type: String,
     required: true
   },
-  adress: {
-    type: String,
-    required: true
-  },
-  pib: {
-    type: String,
-    required: true
-  },
-  sifra: {
-    type: String,
-    required: true
-  },
   type: {
-    type: Schema.Types.ObjectId,
-    ref: "komitenttype",
+    type: String,
     required: true
   },
   user: {
@@ -40,4 +27,4 @@ const komitentSchema = new Schema({
   }
 });
 
-module.exports = mongoose.model("Komitent", komitentSchema);
+module.exports = mongoose.model("Komitenttype", komitenttypeSchema);
