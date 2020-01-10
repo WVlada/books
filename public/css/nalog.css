@@ -85,6 +85,7 @@
   display: flex;
 }
 #nalog_date {
+  padding-left: 2px;
   width: 125px;
 }
 .drugi_row {
@@ -112,10 +113,12 @@
   grid-template-columns: 250px 100px 100px 100px 150px 150px 130px 50px;
 }
 .opis_naloga_input {
+  padding-left: 2px;
   width: inherit;
   height: 25px;
 }
 .opis_stava_input {
+  padding-left: 2px;
   width: inherit;
   border-radius: 2px;
   border: 2px solid #d8d9ea;
@@ -194,6 +197,7 @@ li.highlighted {
   height: 25px;
 }
 .valuta_input {
+  padding-left: 2px;
   width: inherit;
   border-radius: 2px;
   border: 2px solid #d8d9ea;
