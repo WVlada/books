@@ -213,3 +213,14 @@ div.text {
   font-size: 12px;
   margin: 0 auto;
 }
+.linked_in_p {
+  margin-top: 10;
+  display: flex;
+}
+.linked_in_a {
+  margin-left: auto;
+  margin-right: auto;
+}
+.linked_in_slika:hover {
+  cursor: pointer;
+}

@@ -89,5 +89,7 @@ router.get("/create_company", userController.createCompany);
 
 router.get("/logout", userController.getLogout);
 router.get("/settings", userController.getSettings);
+router.get("/auth/linkedin/callback", userController.getLinkedin);
+router.get("/back_to_login", userController.getBackToLogin);
 
 module.exports = router;

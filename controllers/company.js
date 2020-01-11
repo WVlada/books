@@ -118,34 +118,34 @@ exports.postNewCompanyRoot = (req, res, next) => {
           validationErrors: []
         });
       } else {
+        const company = new Company({
+          name: name,
+          year: year,
+          mb: mb,
+          pib: pib,
+          adress: adress,
+          email: email,
+          telephone: telephone,
+          user: user,
+          vrste_naloga: ["R", "N", "I", "Z"]
+        });
+        company
+          .save()
+          .then(result => {
+            user.addCompany(company).then(result => {
+              user.setActiveCompany(company);
+            });
+          })
+          .then(async result => {
+            if (checkbox) {
+              console.log("checkbox true");
+              await company.createDefaultTransactions(user);
+              return res.redirect("/company");
+            }
+          });
       }
     })
     .catch();
-  const company = new Company({
-    name: name,
-    year: year,
-    mb: mb,
-    pib: pib,
-    adress: adress,
-    email: email,
-    telephone: telephone,
-    user: user,
-    vrste_naloga: ["R", "N", "I", "Z"]
-  });
-  company
-    .save()
-    .then(result => {
-      user.addCompany(company).then(result => {
-        user.setActiveCompany(company);
-      });
-    })
-    .then(async result => {
-      if (checkbox) {
-        console.log("checkbox true");
-        await company.createDefaultTransactions(user);
-        return res.redirect("/company");
-      }
-    });
 };
 // AJAX
 exports.getDnevnikNaloga = (req, res, next) => {
@@ -175,6 +175,7 @@ exports.getDnevnikNaloga = (req, res, next) => {
         .then(result => {
           return res.status(200).render("includes/dashboard/dnevnik", {
             pageTitle: "",
+            accounting: accounting,
             path: "/dnevnik",
             hasError: false,
             user: user,

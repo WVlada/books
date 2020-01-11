@@ -42,7 +42,10 @@ const userSchema = new Schema({
       type: String,
       required: false
     }
-  ]
+  ],
+  fromLinkedIn: {
+    type: Boolean
+  }
 });
 
 userSchema.methods.addCompany = function(company) {

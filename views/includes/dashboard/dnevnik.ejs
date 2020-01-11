@@ -24,7 +24,7 @@
         <td class="dnevnik_naloga"><%= nalozi[i].number %></td>
         <td class="dnevnik_naloga"><%= nalozi[i].opis %></td>
         <td class="dnevnik_naloga">
-          <%= nalozi[i].potrazuje %>
+          <%= accounting.formatNumber(nalozi[i].potrazuje) %>
         </td>
         <td class="dnevnik_naloga">
           <%= nalozi[i].date.toLocaleDateString("en-US") %>
@@ -35,7 +35,7 @@
         <td class="dnevnik_naloga crven"><%= nalozi[i].number %></td>
         <td class="dnevnik_naloga crven "><%= nalozi[i].opis %></td>
         <td class="dnevnik_naloga crven">
-          <%= nalozi[i].potrazuje %>
+          <%= accounting.formatNumber(nalozi[i].potrazuje) %>
         </td>
         <td class="dnevnik_naloga crven ">
           <%= nalozi[i].date.toLocaleDateString("en-US") %>
