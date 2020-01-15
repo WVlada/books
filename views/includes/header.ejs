@@ -44,9 +44,10 @@
             <%= current_company.name %>
           </li>
           <li role="separator" class="divider"></li>
-          <% for(let i=0; i < companies.length - 1 ; i++) { %>
+          <% for(let i=0; i <= companies.length - 1 ; i++) { %>
           <li class="item" onclick="change_company()" data-id="<%= i %>">
-            <% companies[i].name %>
+            <% if (current_company.name != companies[i].name) { %> <%=
+            companies[i].name %> <% } %>
           </li>
           <% } %>
         </ul>
@@ -73,7 +74,7 @@
             <%= current_company_year %>
           </li>
           <li role="separator" class="divider"></li>
-          <% for(let i =0; i< years.length - 1; i++) { %> <% if (years[i] ==
+          <% for(let i =0; i <= years.length - 1; i++) { %> <% if (years[i] ==
           current_company_year) { %> <% continue %> <% } %>
           <li
             class="item"

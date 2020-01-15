@@ -24,6 +24,7 @@ exports.getCompany = (req, res, next) => {
         res.redirect("/new_company");
       } else {
         let current_company;
+        let companies = result;
         // filter mi ne radi iz nekog razloga....
         result.map(elem => {
           elem["_id"].toString() == current_company_id.toString()
@@ -32,7 +33,7 @@ exports.getCompany = (req, res, next) => {
         });
         return res.render("company/show_company", {
           user: user,
-          companies: result,
+          companies: companies,
           current_company: current_company,
           years: current_company.year,
           current_company_year: current_company_year,

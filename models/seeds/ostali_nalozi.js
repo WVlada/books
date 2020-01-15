@@ -8,8 +8,9 @@ const Komitenttype = require("../komitenttype");
 async function seedOstaliNalozi(company, user) {
 
 // godine
-company.year.push(company.year[0]+1)
-company.year.push(company.year[0]-1)
+company.year = [company.year[0] - 1, company.year[0], company.year[0] + 1]
+//company.year.push(company.year[0]+1)
+//company.year.push(company.year[0]-1)
 await company.save()
 // godine
 

@@ -75,7 +75,7 @@ userSchema.methods.setActiveCompany = function(company) {
 userSchema.methods.createMoreCompanies = async function(company) {
   // ne moze da se nalazi u seed_ostali nalozi jer u trenutku kad pozivam jos nije exportovan Company Model
   const company2 = await Company.create({
-    year: [company.year[0], company.year[0] + 1, company.year[0] - 1],
+    year: [company.year[0] - 1, company.year[0], company.year[0] + 1],
     vrste_naloga: ["R", "N", "I", "Z"],
     name: "Software Inc.",
     mb: "12332112",
@@ -83,7 +83,7 @@ userSchema.methods.createMoreCompanies = async function(company) {
     user: this
   });
   const company3 = await Company.create({
-    year: [company.year[0], company.year[0] + 1, company.year[0] - 1],
+    year: [company.year[0] - 1, company.year[0], company.year[0] + 1],
     vrste_naloga: ["R", "N", "I", "Z"],
     name: "Software Commerce Inc.",
     mb: "23123121",
