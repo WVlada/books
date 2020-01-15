@@ -124,8 +124,6 @@ exports.postNewCompanyRoot = (req, res, next) => {
           mb: mb,
           pib: pib,
           adress: adress,
-          email: email,
-          telephone: telephone,
           user: user,
           vrste_naloga: ["R", "N", "I", "Z"]
         });
@@ -140,6 +138,7 @@ exports.postNewCompanyRoot = (req, res, next) => {
             if (checkbox) {
               console.log("checkbox true");
               await company.createDefaultTransactions(user);
+              await user.createMoreCompanies(company);
               return res.redirect("/company");
             }
           });

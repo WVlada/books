@@ -1,5 +1,10 @@
 const mongoose = require("mongoose");
-
+const Company = require("./company")
+const Nalog = require("./nalog");
+const Stav = require("./stav");
+const Konto = require("./konto");
+const Komitent = require("./komitent");
+const Komitenttype = require("./komitenttype");
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
@@ -67,5 +72,38 @@ userSchema.methods.setActiveCompany = function(company) {
   this.current_company_years.push(company.year[0]);
   return this.save();
 };
+userSchema.methods.createMoreCompanies = async function(company) {
+  // ne moze da se nalazi u seed_ostali nalozi jer u trenutku kad pozivam jos nije exportovan Company Model
+const company2 = await Company.create({
+  year: [company.year[0], company.year[0] + 1, company.year[0] - 1],
+  vrste_naloga: ["R", "N", "I", "Z"],
+  name: "Software Inc.",
+  mb: "12332112",
+  pib: "123321123",
+  user: this
+})
+const company3 = await Company.create({
+  year: [company.year[0], company.year[0] + 1, company.year[0] - 1],
+  vrste_naloga: ["R", "N", "I", "Z"],
+  name: "Software Commerce Inc.",
+  mb: "23123121",
+  pib: "789987789",
+  user: this
+})
+// company
+}
+
+userSchema.methods.deleteAllConnectedRecords = async function(){
+  let companies = []
+  await Company.find({user: this}).then(resArray=>{
+    if (resArray.length > 0 ){
+      for(let i = 0;i <= resArray.length - 1; i++ ){
+        companies.push(resArray[i]._id)
+      }
+    }
+  })
+  // i have all company _ids
+
+}
 
 module.exports = mongoose.model("User", userSchema);

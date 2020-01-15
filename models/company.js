@@ -37,8 +37,11 @@ const companySchema = new Schema({
   ]
 });
 
+
 companySchema.methods.createDefaultTransactions = async function(user) {
   await seedNalogs(this, user);
   await seedOStaliNalozi(this, user);
 };
+
 module.exports = mongoose.model("Company", companySchema);
+
