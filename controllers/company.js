@@ -50,14 +50,32 @@ exports.getCompany = (req, res, next) => {
 };
 
 exports.getNewCompanyRoot = (req, res, next) => {
+  const user = req.user;
+  let name = "";
+  let mb = "";
+  let pib = "";
+  let email = "";
+  let adress = "";
+  let telephone = "";
+  if (user.fromLinkedIn) {
+    name = "Evolve Finance ltd.";
+    mb = "12345678";
+    pib = "123456789";
+    email = "office@evolve-finance.com";
+    adress = "Bulevar Mihajla Pupina 120";
+    telephone = "064555555";
+  }
   res.render("company/new_company", {
     pageTitle: "New company",
     path: "/new_company",
     infoMessage: "Please enter data about the company",
     oldInput: {
-      email: "",
-      password: "",
-      confirmPassword: ""
+      name: name,
+      mb: mb,
+      pib: pib,
+      email: email,
+      adress: adress,
+      telephone: telephone
     },
     successMessage: null,
     validationErrors: []
