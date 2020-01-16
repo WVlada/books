@@ -5,6 +5,7 @@ const Stav = require("./stav");
 const Konto = require("./konto");
 const Komitent = require("./komitent");
 const Komitenttype = require("./komitenttype");
+const Okvir = require("./okvir");
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
@@ -110,6 +111,7 @@ userSchema.methods.deleteAllConnectedRecords = async function() {
     await Konto.deleteMany({ company: companies[j] });
     await Komitenttype.deleteMany({ company: companies[j] });
     await Company.deleteMany({ _id: companies[j] });
+    await Okvir.deleteMany({ _id: companies[j] });
   }
   console.log("All LinkedIn stuff deleted.");
 };

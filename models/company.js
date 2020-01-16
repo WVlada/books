@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 const seedNalogs = require("./seeds/new_company_nalogs_seed");
 const seedOStaliNalozi = require("./seeds/ostali_nalozi");
+const seedOkvir = require("./seeds/seed_okvir");
 
 const Schema = mongoose.Schema;
 
@@ -41,6 +42,7 @@ const companySchema = new Schema({
 companySchema.methods.createDefaultTransactions = async function(user) {
   await seedNalogs(this, user);
   await seedOStaliNalozi(this, user);
+  await seedOkvir(this);
 };
 
 module.exports = mongoose.model("Company", companySchema);
