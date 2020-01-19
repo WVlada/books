@@ -70,8 +70,8 @@ const komitent36 = await Komitent.create({ user: user, company: company, type: d
 
 //nalozi
 const nalogI1 = await Nalog.create({ company: company._id, user: user, locked: false, number: 1, duguje: 50000, potrazuje: 50000, opis: "Uplata pozajmice", date: new Date(Date.UTC(company.year[1], 0, 5)), type: "I", year: company.year[1]});
-const stavI11 = await Stav.create({ user: user, company: company._id, opis: `Izvod 01 01 ${new Date(Date.UTC(company.year[1], 0, 5)).getFullYear()}`, sifra_komitenta: komitent1.sifra, poziv_na_broj: null, konto: kontoDobavljači, duguje: 0, potrazuje: 5000, valuta: null, number: 0, nalog_id: nalogI1._id, nalog_date: nalogI1.date, type: nalogI1.type});
-const stavI12 = await Stav.create({ user: user, company: company._id, opis: `Izvod 01 01 ${new Date(Date.UTC(company.year[1], 0, 5)).getFullYear()}`, sifra_komitenta: komitent1.sifra, poziv_na_broj: null, konto: kontoTekuciRacun1, duguje: 5000, potrazuje: 0, valuta: null, number: 1, nalog_id: nalogI1._id, nalog_date: nalogI1.date, type: nalogI1.type});
+const stavI11 = await Stav.create({ user: user, company: company._id, opis: `Izvod 01 01 ${new Date(Date.UTC(company.year[1], 0, 5)).getFullYear()}`, sifra_komitenta: komitent1.sifra, poziv_na_broj: null, konto: kontoDobavljači, duguje: 0, potrazuje: 50000, valuta: null, number: 0, nalog_id: nalogI1._id, nalog_date: nalogI1.date, type: nalogI1.type});
+const stavI12 = await Stav.create({ user: user, company: company._id, opis: `Izvod 01 01 ${new Date(Date.UTC(company.year[1], 0, 5)).getFullYear()}`, sifra_komitenta: komitent1.sifra, poziv_na_broj: null, konto: kontoTekuciRacun1, duguje: 50000, potrazuje: 0, valuta: null, number: 1, nalog_id: nalogI1._id, nalog_date: nalogI1.date, type: nalogI1.type});
 nalogI1.stavovi = [ {_id: stavI11._id}, {_id: stavI12._id} ]
 await nalogI1.save()
 const nalogI2 = await Nalog.create({ company: company._id, user: user, locked: false, number: 2, duguje: 500000, potrazuje: 500000, opis: "Uplata pozajmice", date: new Date(Date.UTC(company.year[1], 0, 8)), type: "I", year: company.year[1]});
@@ -81,7 +81,7 @@ nalogI2.stavovi = [ {_id: stavI21._id}, {_id: stavI22._id} ]
 await nalogI2.save()
 
 
-const nalogN1 = await Nalog.create({ company: company._id,  user: user,  locked: false,  number: 1,  duguje: 3000,  potrazuje: 3000,  opis: `Izvod 01 02 ${new Date(Date.UTC(company.year[1], 0, 5) ).getFullYear()}`,  date: new Date(Date.UTC(company.year[0], 0, 20)),  type: "N",  year: company.year[1]});
+const nalogN1 = await Nalog.create({ company: company._id,  user: user,  locked: false,  number: 1,  duguje: 3000,  potrazuje: 3000,  opis: `Izvod 01 02 ${new Date(Date.UTC(company.year[1], 0, 5) ).getFullYear()}`,  date: new Date(Date.UTC(company.year[1], 0, 20)),  type: "N",  year: company.year[1]});
 const stavN11 = await Stav.create({  user: user,  company: company._id,  opis: "Prenos na drugi tekuci racun",  sifra_komitenta: null,  poziv_na_broj: null,  konto: kontoTekuciRacun2,  duguje: 3000,  potrazuje: 0,  valuta: null,  number: 0,  nalog_id: nalogN1._id,  nalog_date: nalogN1.date,  type: nalogN1.type});
 const stavN12 = await Stav.create({  user: user,  company: company._id,  opis: "Prenos na drugi tekuci racun",  sifra_komitenta: null,  poziv_na_broj: null,  konto: kontoTekuciRacun1,  duguje: 0,  potrazuje: 3000,  valuta: null,  number: 1,  nalog_id: nalogN1._id,  nalog_date: nalogN1.date,  type: nalogN1.type});
 nalogN1.stavovi = [ {_id: stavN11._id}, {_id: stavN12._id} ]

@@ -3,6 +3,7 @@ const Company = require("../models/company");
 const Nalog = require("../models/nalog");
 const Stav = require("../models/stav");
 const Konto = require("../models/konto");
+const Komitent = require("../models/komitent");
 const accounting = require("accounting-js");
 
 const { validationResult } = require("express-validator");
@@ -35,7 +36,7 @@ exports.getCompany = (req, res, next) => {
           user: user,
           companies: companies,
           current_company: current_company,
-          years: current_company.year,
+          years: current_company_years,
           current_company_year: current_company_year,
           pageTitle: `Company: ${current_company.name}`,
           path: "/tok_dokumentacije",
@@ -424,13 +425,16 @@ exports.getEditNalog = async (req, res, next) => {
   const nalog_number = req.query.nalog_number;
   const nalog_type = req.query.nalog_type;
   const nalog_index_page = req.query.nalog_index_page;
-  const sifra_komitenta_array = [1, 2, 3];
-  const poziv_na_broj_array = [1, 2, 3];
-  console.log(req.query);
+  // sifre komitenata
+  const sifra_komitenta_array = await Komitent.find({
+    company: company_id
+  }).select("-_id sifra name");
+  // sifre komitenata
+  // broj konta
   const broj_konta_array = await Konto.find({
     company: company_id
-  }).select("number");
-
+  }).select("-_id number name");
+  // broj konta
   const current_company = await Company.findOne({ _id: company_id });
   const nalog = await Nalog.findOne({
     company: company_id,
@@ -455,15 +459,15 @@ exports.getEditNalog = async (req, res, next) => {
       j++;
     }
   });
-  const date =
-    nalog.date.getFullYear() +
-    "-" +
-    (nalog.date.getMonth() + 1).toString().padStart(2, 0) +
-    "-" +
-    (nalog.date.getDay() + 1).toString().padStart(2, 0);
+  const date = nalog.date.toISOString().split("T")[0];
+  // pozivi na broj
+  const svi_stavovi = await Stav.find({ company: company_id });
+  const poziv_na_broj_array = svi_stavovi.map(e => {
+    return e.pozivnabroj;
+  });
+  // pozivi na broj
+  // stavovi
   const stavovi = await Stav.find({ _id: nalog.stavovi });
-  // svaki preracun stava cu uraditi u kontroleru
-  // za sada: datum, duguje, potrazuje
   var new_stavovi = stavovi.map(stav => {
     let new_stav = {};
     new_stav.duguje = accounting.formatNumber(stav["duguje"]);
@@ -485,16 +489,11 @@ exports.getEditNalog = async (req, res, next) => {
         (stav["valuta"].getDay() + 1).toString().padStart(2, 0);
       new_stav.valuta = valuta;
     }
-
     return new_stav;
   });
-  //const nalog = Nalog.findOne({
-  //  company: company_id,
-  //  type: nalog_type,
-  //  number: Number(nalog_number)
-  //}).then(result => {
+  // stavovi
+
   return res.render("company/edit_nalog", {
-    //accounting: accounting, //passing library to ejs view
     path: "/edit_nalog",
     user: user,
     current_company: current_company,
@@ -512,4 +511,120 @@ exports.getEditNalog = async (req, res, next) => {
     validationErrors: []
   });
 };
-exports.updateNalog = (res, req, next) => {};
+exports.updateNalog = async (req, res, next) => {
+  console.log(req.body);
+  const user = req.user;
+  const current_company_id = req.current_company_id;
+  const current_company_year = req.current_company_year;
+  const years = req.current_company_years;
+  const companies = await Company.find({ user: user });
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.log(errors);
+    return res.status(300).render("includes/dashboard/dnevnik", {
+      pageTitle: "",
+      accounting: accounting,
+      path: "/dnevnik",
+      hasError: false,
+      user: user,
+      current_company: current_company,
+      current_company_year: current_company_year,
+      years: years,
+      companies: companies,
+      nalozi: nalozi,
+      successMessage: null,
+      infoMessage: null,
+      validationErrors: []
+    });
+  }
+  console.log(req.body);
+  // nalog update
+  const nalog_id = req.body["_id"];
+  const nalog = await Nalog.findOne({ _id: nalog_id });
+  const vrsta_naloga = req.body.vrsta_naloga;
+  const broj_naloga = req.body.broj_naloga;
+  const opis_naloga = req.body.opis_naloga;
+  const datum_naloga = req.body.datum_naloga;
+  const duguje_array = req.body.duguje;
+  const potrazuje_array = req.body.potrazuje;
+  const valuta_array = req.body.valuta;
+  const duguje_sum = duguje_array.reduce(
+    (a, b) =>
+      Math.round(Number(String(a).replace(/,/g, "")) * 100) / 100 +
+      Math.round(Number(String(b).replace(/,/g, "")) * 100) / 100,
+    0
+  );
+  const potrazuje_sum = potrazuje_array.reduce(
+    (a, b) =>
+      Math.round(Number(String(a).replace(/,/g, "")) * 100) / 100 +
+      Math.round(Number(String(b).replace(/,/g, "")) * 100) / 100,
+    0
+  );
+  await nalog.updateOne({
+    opis: opis_naloga,
+    type: vrsta_naloga,
+    number: broj_naloga,
+    locked: false,
+    date: datum_naloga,
+    stavovi: []
+  });
+  // nalog update
+  // stavovi update
+  const opis_stava_array = req.body.opis_stava;
+  const sifra_komitenta_array = req.body.sifra_komitenta;
+  const poziv_na_broj_array = req.body.poziv_na_broj;
+  const konto_array = req.body.konto;
+  const konto_array_ids = await Konto.find({ number: konto_array }).select(
+    "_id"
+  );
+  const stavovi_old_id_array = nalog.stavovi.map(e => {
+    return e._id;
+  });
+  await Stav.deleteMany({ _id: stavovi_old_id_array });
+  let novi_stavovi = [];
+  for (i = 0; i <= opis_stava_array.length - 1; i++) {
+    novi_stavovi[i] = await Stav.create({
+      user: user,
+      company: current_company_id,
+      opis: opis_stava_array[i],
+      sifra_komitenta: sifra_komitenta_array[i],
+      poziv_na_broj: poziv_na_broj_array[i],
+      konto: konto_array_ids[i],
+      duguje: Number(Number(duguje_array[i].replace(/,/g, "")).toFixed(2)),
+      potrazuje: Number(
+        Number(potrazuje_array[i].replace(/,/g, "")).toFixed(2)
+      ),
+      valuta: valuta_array[i],
+      number: i,
+      nalog_id: nalog._id,
+      nalog_date: datum_naloga,
+      type: nalog.type
+    });
+  }
+  nalog.updateOne({ stavovi: novi_stavovi });
+  // stavovi update
+
+  const nalozi = await Nalog.find({
+    company: current_company_id,
+    year: current_company_year
+  });
+  console.log(current_company);
+  console.log(current_company_year);
+  console.log(years);
+  return res.status(200).render("company/show_company", {
+    pageTitle: "",
+    accounting: accounting,
+    path: "/dnevnik",
+    hasError: false,
+    user: user,
+    companies: companies,
+    current_company: current_company,
+    current_company_year: current_company_year,
+    years: years,
+    companies: companies,
+    nalozi: nalozi,
+    successMessage: null,
+    infoMessage: null,
+    validationErrors: []
+  });
+};

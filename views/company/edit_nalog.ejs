@@ -97,9 +97,9 @@
               <div class="form-control novi_nalog_form-control">
                   <!--<input  id="sifra_komitenta-0" name="sifra_komitenta[]" list="sifra_komitenta_list" class="chosen-select"/>-->
                   <select value="<%= stavovi[i].sifrakomitenta %>" data-placeholder="Select..." name="sifra_komitenta[]" id="sifra_komitenta-<%= i %>" class="chosen-select sifra_komitenta_input">
-                    <% for(let i=0; i <= sifra_komitenta_array.length - 1; i++) { %>
-                      <option></option>
-                      <option><%= sifra_komitenta_array[i] %> </option>
+                    <% for(let j=0; j <= sifra_komitenta_array.length - 1; j++) { %>
+                      <option selected="selected"><%= sifra_komitenta_array[i].sifra %></option>
+                      <option><%= sifra_komitenta_array[j].sifra %> | <%= sifra_komitenta_array[j].name %> </option>
                     <% } %>
                   </select>
               </div>
@@ -109,9 +109,9 @@
                   <input value="<%= stavovi[i].pozivnabroj %>" id="poziv_na_broj-<%= i %>" name="poziv_na_broj[]" list="poziv_na_broj" class="poziv_na_broj_input"/>
                   <!--<select data-placeholder="Select..." name="poziv_na_broj[]" id="poziv_na_broj-0" class="chosen-select poziv_na_broj_input">-->
                     <datalist id="poziv_na_broj">
-                      <% for(let i=0; i <= poziv_na_broj_array.length - 1; i++) { %>
-                        <option></option>
-                        <option><%= poziv_na_broj_array[i] %></option> 
+                      <% for(let m=0; m <= poziv_na_broj_array.length - 1; m++) { %>
+                        <option selected="selected"><%= poziv_na_broj_array[i] %></option>
+                        <option><%= poziv_na_broj_array[m] %></option> 
                       <% } %>
                     </datalist>
               </div>
@@ -120,9 +120,9 @@
               <div class="form-control novi_nalog_form-control">
                   <!--<input id="konto-0" name="konto[]" list="konto" class="konto_input"/>-->
                   <select data-placeholder="Select..." name="konto[]" id="konto-<%= i %>" class="chosen-select konto_input">
-                    <% for(let i=0; i <= broj_konta_array.length - 1; i++) { %>
-                      <option></option>
-                      <option><%= broj_konta_array[i] %></option>
+                    <% for(let k=0; k <= broj_konta_array.length - 1; k++) { %>
+                      <option selected="selected"><%= broj_konta_array[i].number %></option>
+                      <option><%= broj_konta_array[k].number %> | <%= broj_konta_array[k].name %> </option>
                     <% } %>
                   </select>
               </div>
@@ -168,6 +168,7 @@
 
         <hr id="ruler" class="modal_form_hr">
         <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+        <input type="hidden" name="_id" value="<%= nalog._id %>" />
   </form>
 
   <div class="modal_footer">
@@ -287,24 +288,24 @@ $(document).off('click', '#cancel_form_button').on('click', '#cancel_form_button
 $(document).ready(function(){
   $(".chosen-select").chosen({allow_single_deselect: true})
 });
-$(document).on('change', '.chosen-select', function(e, params) {
-    
-    var s = $(this).val();
-    
-    if (s.includes("|"))
-        {
-        var x = s.substring(0, s.indexOf('|')).trim();
-        // mora se dodati vrednost u <options> da bi mogla biti selektovana
-        $(this).append('<option value='+ x +'></option>');
-        $(this).val(x).trigger("liszt:updated"); // sad ispadne da imam staru verziju chodena?!?!
-        
-        // ne radi mi triger:update pa moram ovako
-        $(this).next().children(":first").children(":first").text(x);
-        // da skinem crveni okvir ako je pre toga bio
-        $(this).next().removeClass('sifra_komitenta_input_bez_sifre');
-        }
-    else {}
-});
+//$(document).on('change', '.chosen-select', function(e, params) {
+//    
+//    var s = $(this).val();
+//    
+//    if (s.includes("|"))
+//        {
+//        var x = s.substring(0, s.indexOf('|')).trim();
+//        // mora se dodati vrednost u <options> da bi mogla biti selektovana
+//        $(this).append('<option value='+ x +'></option>');
+//        $(this).val(x).trigger("liszt:updated"); // sad ispadne da imam staru verziju chodena?!?!
+//        
+//        // ne radi mi triger:update pa moram ovako
+//        $(this).next().children(":first").children(":first").text(x);
+//        // da skinem crveni okvir ako je pre toga bio
+//        $(this).next().removeClass('sifra_komitenta_input_bez_sifre');
+//        }
+//    else {}
+//});
 </script>
 
 

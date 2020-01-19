@@ -104,13 +104,13 @@
   padding-left: 27px;
   display: grid;
   grid-column-gap: 5px;
-  grid-template-columns: 250px 100px 100px 100px 150px 150px 130px;
+  grid-template-columns: 250px 130px 100px 100px 135px 135px 130px;
 }
 .cetvrti_row_grid-container {
   padding-left: 23px;
   display: grid;
   grid-column-gap: 5px;
-  grid-template-columns: 250px 100px 100px 100px 150px 150px 130px 50px;
+  grid-template-columns: 250px 130px 100px 100px 135px 135px 130px 50px;
 }
 .opis_naloga_input {
   padding-left: 2px;
@@ -151,7 +151,7 @@
   color: #999 !important;
 }
 .chosen-with-drop {
-  width: 150px !important;
+  width: 250px !important;
 }
 .chosen-drop {
   background-color: #f8f8f8 !important;

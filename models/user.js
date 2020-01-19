@@ -43,12 +43,6 @@ const userSchema = new Schema({
     type: String,
     required: false
   },
-  current_company_years: [
-    {
-      type: String,
-      required: false
-    }
-  ],
   fromLinkedIn: {
     type: Boolean
   }
@@ -70,7 +64,6 @@ userSchema.methods.addCompany = function(company) {
 userSchema.methods.setActiveCompany = function(company) {
   this.current_company = company;
   this.current_company_year = company.year[0];
-  this.current_company_years.push(company.year[0]);
   return this.save();
 };
 userSchema.methods.createMoreCompanies = async function(company) {
