@@ -9,6 +9,7 @@ const accounting = require("accounting-js");
 const { validationResult } = require("express-validator");
 
 exports.getCompany = (req, res, next) => {
+  console.log(req.body);
   const user = req.user;
   const current_company_id = req.current_company_id;
   const current_company_year = req.current_company_year;
@@ -627,4 +628,30 @@ exports.updateNalog = async (req, res, next) => {
     infoMessage: null,
     validationErrors: []
   });
+};
+
+exports.changeCompany = async (req, res, next) => {
+  console.log("change company");
+  console.log(req.query);
+  console.log("change company");
+  const user = req.user;
+  const new_company_id = req.query.company_id;
+  const year = req.query.year_broj;
+  const new_company = await Company.findOne({ _id: new_company_id });
+  const user_model = await User.findOne({ _id: user._id });
+  user_model.current_company = new_company;
+  user_model.current_company_year = year;
+  user_model.save();
+  res.redirect("/");
+};
+exports.changeYear = async (req, res, next) => {
+  console.log("change year");
+  console.log(req.query);
+  console.log("change year");
+  const user = req.user;
+  const new_year = req.query.year_broj;
+  const user_model = await User.findOne({ _id: user._id });
+  user_model.current_company_year = new_year;
+  user_model.save();
+  res.redirect("/");
 };

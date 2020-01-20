@@ -45,7 +45,11 @@
           </li>
           <li role="separator" class="divider"></li>
           <% for(let i=0; i <= companies.length - 1 ; i++) { %>
-          <li class="item" onclick="change_company()" data-id="<%= i %>">
+          <li
+            class="item"
+            onclick="change_company()"
+            data-id="<%= companies[i]._id %>"
+          >
             <% if (current_company.name != companies[i].name) { %> <%=
             companies[i].name %> <% } %>
           </li>
@@ -76,12 +80,7 @@
           <li role="separator" class="divider"></li>
           <% for(let i =0; i <= years.length - 1; i++) { %> <% if (years[i] ==
           current_company_year) { %> <% continue %> <% } %>
-          <li
-            class="item"
-            onclick="change_year()"
-            data-broj="<%= years[i] %>"
-            data-id="<%= i %>"
-          >
+          <li class="item" onclick="change_year()" data-broj="<%= years[i] %>">
             <%= years[i] %>
           </li>
           <% } %>
@@ -237,32 +236,52 @@
     //});
     //bulma
 
-    //function change_company() {
-    //
-    //  var x = event.target.getAttribute('data-id');
-    //  var y = document.getElementById("currentyearid").getAttribute('data-broj');
-    //            $.ajax({
-    //            url: "/",
-    //            type: "GET",
-    //            data: { login_company_id: x, login_year_broj: y },
-    //            dataType: "script"}
-    //            );
-    //            /* NE MOZE OVAKO JE JE ID SACUVAN OD PRETHODNE KOMPANIJE */
-    //            /* AKO JE KOMPANIJA DA SALJEM ID< I BROJ, AKO JE BROJ DA SALJEM ID I NAZIV? */
-    //
-    //}
-    //function change_year() {
-    //  var x = document.getElementById("currentcompanyid").getAttribute('data-id');
-    //  var y = event.target.getAttribute('data-id');
-    //
-    //            $.ajax({
-    //            url: "/",
-    //            type: "GET",
-    //            data: { login_company_id: x, login_year_id: y },
-    //            dataType: "script"}
-    //            );
-    //
-    //}
+    function change_company() {
+      var x = event.target.getAttribute("data-id");
+      var y = document
+        .getElementById("currentyearid")
+        .getAttribute("data-broj");
+      var dugme = $(this);
+      if (dugme.data("requestRunning")) {
+        return;
+      }
+      dugme.data("requestRunning", true);
+      $.ajax({
+        url: "/change_company",
+        type: "GET",
+        //dataType: "json",
+        data: { company_id: x, year_broj: y },
+        complete: function() {
+          dugme.data("requestRunning", false);
+        },
+        success: function(html) {
+          location.reload();
+        }
+      });
+    }
+    function change_year() {
+      var x = document
+        .getElementById("currentcompanyid")
+        .getAttribute("data-id");
+      var y = event.target.getAttribute("data-broj");
+      var dugme = $(this);
+      if (dugme.data("requestRunning")) {
+        return;
+      }
+      dugme.data("requestRunning", true);
+      $.ajax({
+        url: "/change_year",
+        type: "GET",
+        data: { company_id: x, year_broj: y },
+        //dataType: "html",
+        complete: function() {
+          dugme.data("requestRunning", false);
+        },
+        success: function(html) {
+          location.reload();
+        }
+      });
+    }
     //$(document).off('click', 'button.settings_dugme').on('click', 'button.settings_dugme', function()
     //
     //    {

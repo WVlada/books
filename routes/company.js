@@ -84,4 +84,7 @@ router.post(
 router.get("/edit_nalog", isAuth, companyController.getEditNalog);
 router.post("/edit_nalog", [], isAuth, companyController.updateNalog);
 
+router.get("/change_company", isAuth, companyController.changeCompany);
+router.get("/change_year", isAuth, companyController.changeYear);
+
 module.exports = router;
