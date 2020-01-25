@@ -34,7 +34,7 @@ const stavSchema = new Schema({
   pozivnabroj: {
     type: String
   },
-  sifrakomitenta: {
+  sifra_komitenta: {
     type: Schema.Types.ObjectId,
     ref: "Komitent"
   },

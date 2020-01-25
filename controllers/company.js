@@ -5,6 +5,7 @@ const Stav = require("../models/stav");
 const Konto = require("../models/konto");
 const Komitent = require("../models/komitent");
 const accounting = require("accounting-js");
+const ObjectId = require("mongoose").Types.ObjectId;
 
 const { validationResult } = require("express-validator");
 
@@ -474,7 +475,8 @@ exports.getEditNalog = async (req, res, next) => {
     new_stav.duguje = accounting.formatNumber(stav["duguje"]);
     new_stav.potrazuje = accounting.formatNumber(stav["potrazuje"]);
     new_stav.number = stav["number"];
-    new_stav.konto = stav["konto"];
+    new_stav.sifra = stav["sifra_komitenta"];
+    new_stav.konto_id = stav["konto"];
     new_stav.opis = stav["opis"];
     new_stav._id = stav["_id"];
     new_stav.user = stav["user"];
@@ -492,6 +494,21 @@ exports.getEditNalog = async (req, res, next) => {
     }
     return new_stav;
   });
+  // sifre
+  for (let i = 0; i <= new_stavovi.length - 1; i++) {
+    new_stavovi[i].sifra_komitenta = await Komitent.findOne({
+      _id: new_stavovi[i].sifra
+    }).select("-_id name");
+  }
+  // sifre
+  // konta
+  for (let i = 0; i <= new_stavovi.length - 1; i++) {
+    new_stavovi[i].konto = await Konto.findOne({
+      _id: new_stavovi[i].konto_id
+    }).select("-_id number");
+  }
+  // konta
+  console.log(new_stavovi);
   // stavovi
 
   return res.render("company/edit_nalog", {
