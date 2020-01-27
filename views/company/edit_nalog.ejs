@@ -51,8 +51,9 @@
                   <div id="broj_naloga">
                       <span>Broj naloga:</span>
                       <select class="novi_nalog_input" name= "broj_naloga" id="broj_naloga_select">
+                        <option selected="selected"><%= nalog.number %></option>
                           <% for(let i=0; i< brojevi.length-1; i++) { %>
-                            <option <%= brojevi[i] === nalog.number ? "selected" : null %>><%= brojevi[i] %></option> 
+                            <option><%= brojevi[i] %></option> 
                           <% } %>
                       </select>
                   </div>

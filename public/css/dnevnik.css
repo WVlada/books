@@ -122,3 +122,11 @@ tr.dnevnik_naloga:nth-child(even):hover {
 .crven {
   color: red !important;
 }
+section.pagination {
+  padding: 5px;
+}
+section.pagination a {
+  color: #6d687e;
+  font-size: 13px;
+  font-weight: 700;
+}

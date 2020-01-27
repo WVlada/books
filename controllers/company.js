@@ -169,6 +169,7 @@ exports.postNewCompanyRoot = (req, res, next) => {
     .catch();
 };
 // AJAX
+const NALOGS_PER_PAGE = 15;
 exports.getDnevnikNaloga = (req, res, next) => {
   const user = req.user;
   const current_company_id = req.current_company_id;
@@ -180,8 +181,19 @@ exports.getDnevnikNaloga = (req, res, next) => {
   console.log(current_company_year);
   console.log(current_company_years);
   console.log("/get_dnevnik");
-
+  const page = +req.query.page || 1; //page=1 +ga pretvara u broj || ako nije def, onda stavi 1
+  let totalNalogs;
   Nalog.find({ company: current_company_id, year: current_company_year })
+    .countDocuments()
+    .then(numOfProducts => {
+      totalNalogs = numOfProducts;
+      return Nalog.find({
+        company: current_company_id,
+        year: current_company_year
+      })
+        .skip((page - 1) * NALOGS_PER_PAGE) //paginacija
+        .limit(NALOGS_PER_PAGE); //paginacija
+    })
     .then(result => {
       nalozi = result;
     })
@@ -205,6 +217,12 @@ exports.getDnevnikNaloga = (req, res, next) => {
             years: current_company_years,
             companies: companies,
             nalozi: nalozi,
+            currentPage: page,
+            hasNextPage: NALOGS_PER_PAGE * page < totalNalogs,
+            hasPreviousPage: page > 1,
+            nextPage: page + 1,
+            previousPage: page - 1,
+            lastPage: Math.ceil(totalNalogs / NALOGS_PER_PAGE),
             successMessage: null,
             infoMessage: null,
             validationErrors: []
@@ -443,24 +461,25 @@ exports.getEditNalog = async (req, res, next) => {
     type: nalog_type,
     number: Number(nalog_number)
   });
+  // brojevi naloga
+  const brojevi_postojecih_naloga = [];
   const brojevi = [];
-  await Nalog.find({
-    company_id: company_id,
+  const svi_nalozi_firme = await Nalog.find({
+    company: company_id,
     type: nalog_type,
     year: nalog.year
-  }).then(result => {
-    for (let i = 0; i <= result.length - 1; i++) {
-      if (i === result.broj) {
-      } else {
-        brojevi.push(i);
-      }
-    }
-    let j = 1;
-    while (brojevi.length < 10) {
-      brojevi.push(result.length + j);
-      j++;
-    }
   });
+  for (let i = 0; i <= svi_nalozi_firme.length - 1; i++) {
+    brojevi_postojecih_naloga.push(svi_nalozi_firme[i].number);
+  }
+  let j = 1;
+  while (brojevi.length < 10) {
+    if (!brojevi_postojecih_naloga.includes(j))
+      //ako ne sadrzi
+      brojevi.push(j);
+    j++;
+  }
+  // brojevi naloga
   const date = nalog.date.toISOString().split("T")[0];
   // pozivi na broj
   const svi_stavovi = await Stav.find({ company: company_id });
