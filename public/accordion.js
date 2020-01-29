@@ -28,11 +28,19 @@ $(document)
 /* ne stavljam off jer se ovaj deo ne ucitava ponovo  */
 
 $(document).on("click", "#komitenti", function() {
+  var komitenti_dugme = $(this);
   $.ajax({
     url: "/komitenti",
     type: "get",
     data: { "": "" },
-    dataType: "script"
+    dataType: "script",
+    dataType: "html",
+    complete: function() {
+      komitenti_dugme.data("requestRunning", false);
+    },
+    success: function(html) {
+      $("div.centar").html(html);
+    }
   });
 });
 $(document).on("click", "#kontni_plan", function() {

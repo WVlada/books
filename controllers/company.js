@@ -169,7 +169,7 @@ exports.postNewCompanyRoot = (req, res, next) => {
     .catch();
 };
 // AJAX
-const NALOGS_PER_PAGE = 15;
+const NALOGS_PER_PAGE = 22;
 exports.getDnevnikNaloga = (req, res, next) => {
   const user = req.user;
   const current_company_id = req.current_company_id;
@@ -690,4 +690,50 @@ exports.changeYear = async (req, res, next) => {
   user_model.current_company_year = new_year;
   user_model.save();
   res.redirect("/");
+};
+const KOMITENTS_PER_PAGE = 22;
+exports.getPregledKomitenata = async (req, res, next) => {
+  const user = req.user;
+  const companies = await Company.find({ user: user });
+  const current_company = await Company.findOne({
+    _id: req.current_company_id
+  });
+  const page = +req.page || 1;
+  let totalKomitents;
+  const komitenti = await Komitent.find({
+    company: current_company
+  })
+    .countDocuments()
+    .then(numberOfKomitents => {
+      totalKomitents = numberOfKomitents;
+      return Komitent.find({ company: current_company })
+        .skip((page - 1) * KOMITENTS_PER_PAGE) //paginacija
+        .limit(KOMITENTS_PER_PAGE); //paginacija;
+    });
+
+  const current_company_year = req.current_company_year;
+  const years = req.current_company_years;
+  console.log("pregled komitenata");
+  console.log(req.query);
+  console.log("pregled komitenata");
+  return res.status(200).render("includes/dashboard/pregled_komitenata", {
+    pageTitle: "",
+    path: "/pregled_komitenata",
+    hasError: false,
+    komitenti: komitenti,
+    user: user,
+    current_company: current_company,
+    current_company_year: current_company_year,
+    companies: companies,
+    years: years,
+    successMessage: null,
+    infoMessage: null,
+    validationErrors: [],
+    currentPage: page,
+    hasNextPage: KOMITENTS_PER_PAGE * page < totalKomitents,
+    hasPreviousPage: page > 1,
+    nextPage: page + 1,
+    previousPage: page - 1,
+    lastPage: Math.ceil(totalKomitents / KOMITENTS_PER_PAGE)
+  });
 };

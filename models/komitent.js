@@ -15,6 +15,9 @@ const komitentSchema = new Schema({
     type: String,
     required: true
   },
+  email: {
+    type: String
+  },
   pib: {
     type: String,
     required: true

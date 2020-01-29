@@ -51,8 +51,10 @@
 			<%- include('../includes/dashboard/tok_dokumentacije.ejs') %>
 		<% } else if (path === '/dnevnik') { %>
 			<%- include('../includes/dashboard/dnevnik.ejs') %>
+		<% } else if (path === '/pregled_komitenata') { %>
+			<%- include('../includes/dashboard/pregled_komitenata.ejs') %>
 		<% } else { %>
-			<%- include('../includes/dashboard/dnevnik.ejs') %>
+			<%- include('../includes/dashboard/tok_dokumentacije.ejs') %>
 		<% } %>
 
         <div id="novi_komitent_placeholder">

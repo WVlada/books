@@ -4,7 +4,7 @@
   justify-content: center;
   flex-direction: column;
 }
-table.dnevnik_naloga {
+table.pregled_komitenata {
   align-self: center;
   table-layout: auto;
   border-spacing: 0;
@@ -15,7 +15,7 @@ table.dnevnik_naloga {
   white-space: nowrap;
   font-size: 13px;
 }
-th.dnevnik_naloga {
+th.pregled_komitenata {
   border-left: 1px solid #7e798c;
   border-right: 1px solid #4e4765;
   border-top: 1px solid #4e4765;
@@ -28,36 +28,36 @@ th.dnevnik_naloga {
   text-align: center;
   font-size: 13px;
 }
-th.dnevnik_naloga:nth-child(1) {
+th.pregled_komitenata:nth-child(1) {
   width: 50px;
 }
-th.dnevnik_naloga:nth-child(2) {
-  width: 50px;
+th.pregled_komitenata:nth-child(2) {
+  width: 220px;
 }
-th.dnevnik_naloga:nth-child(3) {
-  width: 462px;
+th.pregled_komitenata:nth-child(3) {
+  width: 242px;
 }
-th.dnevnik_naloga:nth-child(4) {
-  width: 160px;
+th.pregled_komitenata:nth-child(4) {
+  width: 195px;
 }
-th.dnevnik_naloga:nth-child(5) {
-  width: 80px;
+th.pregled_komitenata:nth-child(5) {
+  width: 95px;
 }
-th.dnevnik_naloga:nth-child(6) {
+th.pregled_komitenata:nth-child(6) {
   width: 90px;
 }
-th.dnevnik_naloga:first-child {
+th.pregled_komitenata:first-child {
   -webkit-border-top-left-radius: 3px;
   border-top-left-radius: 3px;
   border-bottom-left-radius: 3px;
 }
-th.dnevnik_naloga:last-child {
+th.pregled_komitenata:last-child {
   -webkit-border-top-right-radius: 3px;
   border-top-right-radius: 3px;
   border-bottom-right-radius: 3px;
   -moz-border-radius-topright: 3px;
 }
-td.dnevnik_naloga {
+td.pregled_komitenata {
   border-top: 1px solid #fff !important;
   border-left: 1px solid #dfdce3;
   line-height: 1;
@@ -66,44 +66,45 @@ td.dnevnik_naloga {
   border-bottom: 1px solid #ebe9ee;
   font-size: 13px;
 }
-td.dnevnik_naloga:nth-child(1),
-td.dnevnik_naloga:nth-child(2) {
+td.pregled_komitenata:nth-child(1) {
   text-align: center;
 }
-td.dnevnik_naloga:nth-child(4),
-td.dnevnik_naloga:nth-child(5) {
-  text-align: right;
+td.pregled_komitenata:nth-child(2),
+td.pregled_komitenata:nth-child(3),
+td.pregled_komitenata:nth-child(4),
+td.pregled_komitenata:nth-child(5) {
+  text-align: left;
 }
-td.dnevnik_naloga:nth-child(6) {
+td.pregled_komitenata:nth-child(6) {
   text-align: center;
 }
-td.dnevnik_naloga:last-child {
+td.pregled_komitenata:last-child {
   border-right: 1px solid #dfdce3;
 }
-tr.dnevnik_naloga:last-child > td.dnevnik_naloga:first-child {
+tr.pregled_komitenata:last-child > td.pregled_komitenata:first-child {
   border-bottom-left-radius: 5px;
 }
-tr.dnevnik_naloga:last-child > td.dnevnik_naloga:last-child {
+tr.pregled_komitenata:last-child > td.pregled_komitenata:last-child {
   border-bottom-right-radius: 5px;
 }
-tr.dnevnik_naloga {
+tr.pregled_komitenata {
   background: #fafafa;
 }
-tr.dnevnik_naloga {
+tr.pregled_komitenata {
   cursor: pointer;
 }
-tr.dnevnik_naloga:nth-child(even) {
+tr.pregled_komitenata:nth-child(even) {
   background: #f6f5f8;
 }
-tr.dnevnik_naloga:last-child > td {
+tr.pregled_komitenata:last-child > td {
   border-bottom-width: 1;
 }
-tr.dnevnik_naloga:hover,
-tr.dnevnik_naloga:nth-child(even):hover {
+tr.pregled_komitenata:hover,
+tr.pregled_komitenata:nth-child(even):hover {
   background: #dfdce3;
 }
 
-.table_dnevnik_naloga_donji_deo {
+.table_pregled_komitenata_donji_deo {
   align-self: flex-end;
   /*background-color: rgba(254, 248, 224, 0.96);*/
   background-image: -webkit-linear-gradient(bottom, #f6f5f8 0%, #fafafa 50%);
@@ -114,27 +115,4 @@ tr.dnevnik_naloga:nth-child(even):hover {
   border-radius: 2px;
   padding: 5px;
   width: 100%;
-}
-.crven {
-  color: red !important;
-}
-section.pagination {
-  padding: 2px;
-  width: fit-content;
-}
-section.pagination a {
-  /*color: #6d687e;*/
-}
-form#dnevnik_current_page_form {
-  margin-left: 15px;
-}
-input#dnevnik_current_page_input {
-  width: 50px;
-  height: 22px;
-  color: #6d687e;
-  font-size: 13px;
-  font-weight: 700;
-  border: 2px solid #d8d9ea;
-  border-radius: 2px;
-  padding-left: 5px;
 }

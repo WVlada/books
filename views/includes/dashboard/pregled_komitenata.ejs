@@ -1,0 +1,75 @@
+<div id="table">
+  <table class="pregled_komitenata">
+    <thead>
+      <tr class="pregled_komitenata">
+        <th class="pregled_komitenata">Number</th>
+        <th class="pregled_komitenata">Name of client</th>
+        <th class="pregled_komitenata">Adress</th>
+        <th class="pregled_komitenata">Email</th>
+        <th class="pregled_komitenata">Code</th>
+        <th class="pregled_komitenata">VAT &#8470</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for(let i = 0; i <= komitenti.length -1; i++) { %>
+      <tr
+        data-id="<%= komitenti[i].number %>"
+        data-type="<%= komitenti[i].name %>"
+        id="<%= komitenti[i].number %>"
+        class="pregled_komitenata"
+      >
+        <td class="pregled_komitenata"><%= komitenti[i].number %></td>
+        <td class="pregled_komitenata"><%= komitenti[i].name %></td>
+        <td class="pregled_komitenata"><%= komitenti[i].adress %></td>
+        <td class="pregled_komitenata"><%= komitenti[i].email %></td>
+        <td class="pregled_komitenata"><%= komitenti[i].sifra %></td>
+        <td class="pregled_komitenata"><%= komitenti[i].pib %></td>
+        <% } %>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="table_pregled_komitenata_donji_deo">
+    <%- include('./pagination.ejs', {page_link: "komitenti", currentPage: currentPage, nextPage:
+    nextPage, previousPage: previousPage, lastPage: lastPage, hasNextPage:
+    hasNextPage, hasPreviousPage: hasPreviousPage})%>
+  </div>
+
+  <script>
+    //window.history.pushState("", "", "/company");
+
+    $(document)
+      .off("dblclick", "tr.pregled_komitenata")
+      .on("dblclick", "tr.pregled_komitenata", function() {
+        page = $("span.current")
+          .text()
+          .replace(/[\t\n]+/g, " ")
+          .trim();
+        var me = $(this);
+        var type = this.getAttribute("data-type");
+
+        if (me.data("requestRunning")) {
+          return;
+        }
+
+        me.data("requestRunning", true);
+
+        $.ajax({
+          url: "/edit_komitent",
+          type: "get",
+          data: {
+            komitent_number: me.data("id"),
+            komitent_type: type,
+            komitent_index_page: page
+          },
+          dataType: "html",
+          complete: function() {
+            me.data("requestRunning", false);
+          },
+          success: function(html) {
+            $("#komitent_placeholder").html(html);
+          }
+        });
+      });
+  </script>
+</div>

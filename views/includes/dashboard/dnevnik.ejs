@@ -48,9 +48,9 @@
   </table>
 
   <div class="table_dnevnik_naloga_donji_deo">
-    <%- include('./pagination.ejs', {currentPage: currentPage, nextPage:
-    nextPage, previousPage: previousPage, lastPage: lastPage, hasNextPage:
-    hasNextPage, hasPreviousPage: hasPreviousPage})%>
+    <%- include('./pagination.ejs', { page_link: "dnevnik", currentPage:
+    currentPage, nextPage: nextPage, previousPage: previousPage, lastPage:
+    lastPage, hasNextPage: hasNextPage, hasPreviousPage: hasPreviousPage})%>
     <!-- pre ovog params:, kad naopravim nalog sa dugmetom dole, svi linkovi su
     pamtili /create_nalog metod   paginate @nalozi, remote: true, params:
     {controller: 'nalog', action: 'index'}, window: 2-->

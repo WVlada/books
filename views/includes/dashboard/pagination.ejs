@@ -1,37 +1,127 @@
-<section class="pagination">
-  <% if (currentPage !== 1 && previousPage !== 1) { %>
-  <a data-link="1">1</a>
-  <% } %> <% if (hasPreviousPage) { %>
-  <a href="?page=<%= previousPage %>"><%= previousPage %></a>
-  <% } %>
+<section class="pagination" data-link="<%= page_link %>">
+  <% if (hasPreviousPage) { %>
+  <a data-link="1" class="dnevnik_current_page_change_link" href="/"
+    ><i
+      style="vertical-align:middle;margin: 1px; margin-top:3px;color: #6d687e;"
+      class="fas fa-fast-backward"
+    ></i
+  ></a>
   <a
-    data-link="<%= currentPage %>"
-    href="?page=<%= currentPage %>"
-    class="active"
-    ><%= currentPage %></a
+    data-link="<%= currentPage - 1 %>"
+    class="dnevnik_current_page_change_link"
+    href="/"
   >
+    <i
+      style="vertical-align:middle;margin: 1px;margin-top:3px;color: #6d687e;margin-left: 10px;"
+      class="fas fa-backward"
+      aria-hidden="true"
+    ></i>
+  </a>
+  <% } else { %>
+  <a data-link="ff" class="dnevnik_current_page_change_link" href="#">
+    <i
+      style="vertical-align:middle;margin: 1px; margin-top:3px;color: #6d687e;margin-left: 15px;"
+      class="fas fa-fast-backward"
+    ></i>
+  </a>
+  <i
+    style="vertical-align:middle;margin: 1px;margin-top:3px;color: #6d687e;margin-left: 10px;"
+    class="fas fa-backward"
+    aria-hidden="true"
+  ></i>
+
+  <% } %>
+  <form
+    id="dnevnik_current_page_form"
+    class="dnevnik_current_page_form"
+    action="/"
+    method="GET"
+  >
+    <input
+      id="dnevnik_current_page_input"
+      type="number"
+      value="<%= currentPage%>"
+    />
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+  </form>
   <% if (hasNextPage) { %>
-  <a href="?page=<%= nextPage %>"><%= nextPage %></a>
-  <% } %> <% if (lastPage !== currentPage && nextPage !== lastPage) { %>
-  <a href="?page=<%= lastPage %>"><%= lastPage %></a>
+  <a
+    data-link="<%= currentPage + 1 %>"
+    class="dnevnik_current_page_change_link"
+    href="/"
+    ><i
+      class="fas fa-forward"
+      style="vertical-align:middle;margin: 1px;margin-top:3px;color: #6d687e;margin-left: 10px;"
+    ></i
+  ></a>
+  <a
+    data-link="<%= lastPage %>"
+    class="dnevnik_current_page_change_link"
+    href="/"
+  >
+    <i
+      class="fas fa-fast-forward"
+      style="vertical-align:middle;margin: 1px;margin-top:3px;color: #6d687e;margin-left: 10px;"
+    ></i
+  ></a>
+  <% } else { %>
+  <i
+    class="fas fa-forward"
+    style="vertical-align:middle;margin: 1px;margin-top:3px;color: #6d687e;margin-left: 10px;"
+  ></i>
+  <i
+    class="fas fa-fast-forward"
+    style="vertical-align:middle;margin: 1px;margin-top:3px;color: #6d687e;margin-left: 10px;"
+  ></i>
   <% } %>
   <script>
     $(document)
-      .off("click", "#dnevnik_naloga")
-      .on("click", "#dnevnik_naloga", function() {
-        var dnevnik_naloga_dugme = $(this);
-        $.ajax({
-          url: "/dnevnik_naloga",
-          type: "get",
-          data: { "": "" },
-          dataType: "html",
-          complete: function() {
-            dnevnik_naloga_dugme.data("requestRunning", false);
-          },
-          success: function(html) {
-            $("div.centar").html(html);
-          }
-        });
+      .off("click", ".dnevnik_current_page_change_link")
+      .on("click", ".dnevnik_current_page_change_link", function() {
+        var dugme = $(this)[0];
+        var page = dugme.getAttribute("data-link");
+        if (dugme.getAttribute("requestRunning")) {
+          return;
+        }
+        dugme.setAttribute("requestRunning", true);
+        // page_link
+        var page_link = document
+          .getElementsByClassName("pagination")[0]
+          .getAttribute("data-link");
+        if (page_link === "dnevnik") {
+          $.ajax({
+            url: "/dnevnik_naloga",
+            type: "get",
+            data: { page: page },
+            dataType: "html",
+            complete: function() {
+              dugme.setAttribute("requestRunning", false);
+            },
+            success: function(html) {
+              $("div.centar").html(html);
+            }
+          });
+        }
+        //
+        // page_link
+        var page_link = document
+          .getElementsByClassName("pagination")[0]
+          .getAttribute("data-link");
+        if (page_link === "komitenti") {
+          $.ajax({
+            url: "/komitenti",
+            type: "get",
+            data: { page: page },
+            dataType: "html",
+            complete: function() {
+              dugme.setAttribute("requestRunning", false);
+            },
+            success: function(html) {
+              $("div.centar").html(html);
+            }
+          });
+        }
+        //
       });
   </script>
 </section>
