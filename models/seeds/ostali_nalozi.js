@@ -20,6 +20,7 @@ const kontoDobavljači =     await Konto.create({ number: "4200", name: "Dobavlj
 const kontoTekuciRacun1 =   await Konto.create({ number: "2501", name: "Tekući račun - AIK Banka",    type: "A", company: company._id });
 const kontoTekuciRacun2 =   await Konto.create({ number: "2502", name: "Tekući račun - Banca Intesa", type: "A", company: company._id });
 const kontoIntesaKredit =   await Konto.create({ number: "4401", name: "Dugoročni kredit u zemlji - Banca Intesa", type: "P", company: company._id });
+const kontoIntesaKreditKretkorocniDeo =   await Konto.create({ number: "4601", name: "Deo dugoročnog kredita koji dospeva u toku 1. godine - Banca Intesa", type: "P", company: company._id });
 
 // konta
 
@@ -116,6 +117,16 @@ const stavI81 = await Stav.create({  user: user,  company: company._id,  opis: "
 const stavI82 = await Stav.create({  user: user,  company: company._id,  opis: "Uplata pozajmice",  sifra_komitenta: komitent5,  poziv_na_broj: null,  konto: kontoDobavljači,  duguje: 0,  potrazuje: 50000,  valuta: null,  number: 1,  nalog_id: nalogI8._id,  nalog_date: nalogI8.date,  type: nalogI8.type});
 nalogI8.stavovi = [ {_id: stavI81._id}, {_id: stavI82._id} ]
 await nalogI8.save()
+const nalogI9 = await Nalog.create({ company: company._id,  user: user,  locked: false,  number: 9,  duguje: 10000000,  potrazuje: 10000000,  opis: `Izvod 03 23 ${new Date(Date.UTC(company.year[1], 2, 23) ).getFullYear()}`,  date: new Date(Date.UTC(company.year[1], 2, 23)),  type: "I",  year: company.year[1]});
+const stavI91 = await Stav.create({  user: user,  company: company._id,  opis: "Kredit",  sifra_komitenta: null,  poziv_na_broj: null,  konto: kontoTekuciRacun2,  duguje: 10000000,  potrazuje: 0,  valuta: null,  number: 0,  nalog_id: nalogI9._id,  nalog_date: nalogI9.date,  type: nalogI9.type});
+const stavI92 = await Stav.create({  user: user,  company: company._id,  opis: "Kredit",  sifra_komitenta: komitent4,  poziv_na_broj: "805556.6",  konto: kontoIntesaKredit,  duguje: 0,  potrazuje: 10000000,  valuta: null,  number: 1,  nalog_id: nalogI9._id,  nalog_date: nalogI9.date,  type: nalogI9.type});
+nalogI9.stavovi = [ {_id: stavI91._id}, {_id: stavI92._id} ]
+await nalogI9.save()
+const nalogN2 = await Nalog.create({ company: company._id,  user: user,  locked: false,  number: 1,  duguje: 1000000,  potrazuje: 1000000,  opis: `Preknjizavanje dela kredita`,  date: new Date(Date.UTC(company.year[1], 2, 25)),  type: "N",  year: company.year[1]});
+const stavN21 = await Stav.create({  user: user,  company: company._id,  opis: "Deo kredita koji dospeva do 1 godine",  sifra_komitenta: null,  poziv_na_broj: null,  konto: kontoIntesaKredit,  duguje: 1000000,  potrazuje: 0,  valuta: null,  number: 0,  nalog_id: nalogN2._id,  nalog_date: nalogN2.date,  type: nalogN2.type});
+const stavN22 = await Stav.create({  user: user,  company: company._id,  opis: "Deo kredita koji dospeva do 1 godine",  sifra_komitenta: null,  poziv_na_broj: null,  konto: kontoIntesaKreditKretkorocniDeo,  duguje: 0,  potrazuje: 1000000,  valuta: null,  number: 1,  nalog_id: nalogN2._id,  nalog_date: nalogN2.date,  type: nalogN2.type});
+nalogN2.stavovi = [ {_id: stavN21._id}, {_id: stavN22._id} ]
+await nalogN2.save()
 //nalozi
 console.log("Seeding ostalo completed.")
 }

@@ -44,11 +44,19 @@ $(document).on("click", "#komitenti", function() {
   });
 });
 $(document).on("click", "#kontni_plan", function() {
+  var kontni_plan_dugme = $(this);
   $.ajax({
     url: "/kontni_plan",
     type: "get",
     data: { "": "" },
-    dataType: "script"
+    dataType: "script",
+    dataType: "html",
+    complete: function() {
+      kontni_plan_dugme.data("requestRunning", false);
+    },
+    success: function(html) {
+      $("div.centar").html(html);
+    }
   });
 });
 $(document).on("click", "#dnevnik_naloga", function() {

@@ -74,7 +74,7 @@ async function seedNalogs(company, user) {
       await Konto.create({
         number: "3000",
         name: "sopstveni kapital",
-        type: "B",
+        type: "P",
         company: company._id
       }).then(async konto3 => {
         await Stav.create({
@@ -98,7 +98,7 @@ async function seedNalogs(company, user) {
       await Konto.create({
         number: "4000",
         name: "dugorocne obaveze",
-        type: "B",
+        type: "P",
         company: company._id
       }).then(async konto4 => {
         await Stav.create({

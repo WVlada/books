@@ -4,7 +4,9 @@ const Nalog = require("../models/nalog");
 const Stav = require("../models/stav");
 const Konto = require("../models/konto");
 const Komitent = require("../models/komitent");
+const komitenttype = require("../models/komitenttype");
 const accounting = require("accounting-js");
+const Okvir = require("../models/okvir");
 const ObjectId = require("mongoose").Types.ObjectId;
 
 const { validationResult } = require("express-validator");
@@ -706,7 +708,7 @@ exports.getPregledKomitenata = async (req, res, next) => {
     .countDocuments()
     .then(numberOfKomitents => {
       totalKomitents = numberOfKomitents;
-      return Komitent.find({ company: current_company })
+      return Komitent.find({ company: current_company }).populate({path: 'type', model: komitenttype})
         .skip((page - 1) * KOMITENTS_PER_PAGE) //paginacija
         .limit(KOMITENTS_PER_PAGE); //paginacija;
     });
@@ -735,5 +737,69 @@ exports.getPregledKomitenata = async (req, res, next) => {
     nextPage: page + 1,
     previousPage: page - 1,
     lastPage: Math.ceil(totalKomitents / KOMITENTS_PER_PAGE)
+  });
+};
+const KONTNI_PLAN_PER_PAGE = 22;
+exports.getKontniPlan = async (req, res, next) => {
+  const user = req.user;
+  const companies = await Company.find({ user: user });
+  const current_company = await Company.findOne({
+    _id: req.current_company_id
+  });
+  const page = +req.page || 1;
+  let totalKontos;
+  const kontos = await Konto.find({
+    company: current_company
+  })//
+    //.countDocuments()
+    //.then(numberOfKontos => {
+    //  totalKontos = numberOfKontos;
+    //  return Konto.find({ company: current_company })
+    //    .skip((page - 1) * KONTNI_PLAN_PER_PAGE) //paginacija
+    //    .limit(KONTNI_PLAN_PER_PAGE); //paginacija;
+    //});
+  const okvir = await Okvir.find({
+      company: current_company
+  }).sort({number: 1})
+  //console.log(okvir)
+  const sva_konta_i_okvir = []
+  for (let i = 0; i <= okvir.length-1; i++){
+    sva_konta_i_okvir.push(okvir[i])
+    if (okvir[i].number.length == 2) {
+      let num = okvir[i].number;
+      //console.log("*")
+      //console.log(num)
+      let pripadajuca_konta = await Konto.find({ company: current_company, number: {$regex: "^" + num + ""}}).sort({number: 1})
+      //console.log(pripadajuca_konta)
+      for (let j = 0; j <= pripadajuca_konta.length - 1; j++){
+        sva_konta_i_okvir.push(pripadajuca_konta[j])
+      }
+    }
+  }
+  //console.log(sva_konta_i_okvir)
+  const current_company_year = req.current_company_year;
+  const years = req.current_company_years;
+  //console.log("kontni plan");
+  //console.log(req.query);
+  //console.log("kontni plan");
+  return res.status(200).render("includes/dashboard/kontni_plan", {
+    pageTitle: "",
+    path: "/kontni_plan",
+    hasError: false,
+    sva_konta_i_okvir: sva_konta_i_okvir,
+    user: user,
+    current_company: current_company,
+    current_company_year: current_company_year,
+    companies: companies,
+    years: years,
+    successMessage: null,
+    infoMessage: null,
+    validationErrors: []//,
+    //currentPage: page,
+    //hasNextPage: KONTNI_PLAN_PER_PAGE * page < totalKontos,
+    //hasPreviousPage: page > 1,
+    //nextPage: page + 1,
+    //previousPage: page - 1,
+    //lastPage: Math.ceil(totalKontos / KONTNI_PLAN_PER_PAGE)
   });
 };

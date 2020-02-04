@@ -1,0 +1,34 @@
+<div id="table">
+    <table class="kontni_plan">
+      <thead class="kontni_plan_thead">
+        <tr class="kontni_plan">
+          <th class="kontni_plan">Number</th>
+          <th class="kontni_plan">Name</th>
+          <th class="kontni_plan">Type</th>
+        </tr>
+      </thead>
+      <tbody class="kontni_plan_tbody">
+        <% for(let i = 0; i <= sva_konta_i_okvir.length -1; i++) { %>
+        <tr
+          data-id="<%= sva_konta_i_okvir[i].number %>"
+          data-type="<%= sva_konta_i_okvir[i].name %>"
+          id="<%= sva_konta_i_okvir[i].number %>"
+          class="kontni_plan"
+        >
+          <td class="kontni_plan"><%= sva_konta_i_okvir[i].number %></td>
+          <td class="kontni_plan"><%= sva_konta_i_okvir[i].name %></td>
+          <td class="kontni_plan"><%= sva_konta_i_okvir[i].type %></td>
+          <% } %>
+        </tr>
+      </tbody>
+    </table>
+    <div class="table_kontni_plan_donji_deo">
+      
+    </div>
+  
+    
+    <script>
+      
+    </script>
+  </div>
+  
