@@ -23,11 +23,19 @@
       </tbody>
     </table>
     <div class="table_kontni_plan_donji_deo">
-      
+      <span title="Enter search term to filter table rows."><i class="fas fa-filter" style="vertical-align:middle;margin: 1px;color: #6d687e;margin-left: 10px;margin-right: 10px;"></i></span>
+      <input title="Enter search term to filter table rows." id="kontni_plan_text_input" class="kontni_plan_text_input" type=text></input>
     </div>
   
     
     <script>
+
+      $(document).off("keyup", "#kontni_plan_text_input").on("keyup", "#kontni_plan_text_input", function() {
+        var value = $(this).val().toLowerCase();
+        $("#table tbody tr").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+      })
       
     </script>
   </div>
