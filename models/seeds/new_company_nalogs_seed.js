@@ -22,8 +22,8 @@ async function seedNalogs(company, user) {
       // nalog kreiran
       nalog = result;
       await Konto.create({
-        number: "1000",
-        name: "stalna imovina",
+        number: "0201",
+        name: "Poslovna zgrada",
         type: "A",
         company: company._id
       }).then(async konto => {
@@ -48,8 +48,8 @@ async function seedNalogs(company, user) {
         });
       });
       await Konto.create({
-        number: "2000",
-        name: "obrtna imovina",
+        number: "2001",
+        name: "Potraživanja od kupaca",
         type: "A",
         company: company._id
       }).then(async konto2 => {

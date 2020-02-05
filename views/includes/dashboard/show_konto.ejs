@@ -1,0 +1,86 @@
+<div id="table">
+    <table class="show_konto">
+      <thead class="show_konto_thead">
+        <tr class="show_konto">
+          <th class="show_konto">Date</th>
+          <th class="show_konto">Type</th>
+          <th class="show_konto">No.</th>
+          <th class="show_konto">Description</th>
+          <th class="show_konto">Claims</th>
+          <th class="show_konto">Owes</th>
+          <th class="show_konto">Balance</th>
+        </tr>
+      </thead>
+      <tbody class="show_konto_tbody">
+        <% let saldo = 0; %>
+        <% let ukupno_duguje = 0; %>
+        <% let ukupno_potrazuje = 0; %>
+        <% for(let i = 0; i <= svi_stavovi.length -1; i++) { %>
+          <tr data-type="<%= svi_stavovi[i].type %>" data-number="<%= svi_stavovi[i].number %>" class="show_konto">
+            <td class="show_konto"><%= svi_stavovi[i].nalog_date.toLocaleDateString("en-US") %></td>
+            <td class="show_konto"><%= svi_stavovi[i].type %></td>
+            <td class="show_konto"><%= svi_stavovi[i].number %></td>
+            <td class="show_konto"><%= svi_stavovi[i].opis %></td>
+            <td class="show_konto"><%= accounting.formatNumber(svi_stavovi[i].duguje) %></td>
+            <td class="show_konto"><%= accounting.formatNumber(svi_stavovi[i].potrazuje) %></td>
+            <td class="show_konto"><%= accounting.formatNumber(saldo += svi_stavovi[i].duguje - svi_stavovi[i].potrazuje)  %></td>
+        <% ukupno_duguje += svi_stavovi[i].duguje %>
+        <% ukupno_potrazuje += svi_stavovi[i].potrazuje %>
+        <% } %>
+        </tr>
+        <tr class="show_konto_zbirni_row">
+          <td class="show_konto"></td>
+          <td class="show_konto"></td>
+          <td class="show_konto"></td>
+          <td class="show_konto">Sum:</td>
+          <td class="show_konto"><%= accounting.formatNumber(ukupno_duguje) %></td>
+          <td class="show_konto"><%= accounting.formatNumber(ukupno_potrazuje) %></td>
+          <td class="show_konto"><%= accounting.formatNumber(saldo) %></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="table_show_konto_donji_deo">
+      <span title="Enter search term to filter table rows."><i class="fas fa-filter" style="vertical-align:middle;margin: 1px;color: #6d687e;margin-left: 10px;margin-right: 10px;"></i></span>
+      <input title="Enter search term to filter table rows." id="show_konto_text_input" class="show_konto_text_input" type=text></input>
+    </div>
+  
+<script>
+$(document).off("keyup", "#show_konto_text_input").on("keyup", "#show_konto_text_input", function() {
+  var value = $(this).val().toLowerCase();
+  $("#table tbody tr").filter(function() {
+    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+  });
+})
+$(document)
+      .off("dblclick", "tr.show_konto")
+      .on("dblclick", "tr.show_konto", function() {
+        
+        var me = $(this);
+        var nalog_type = this.getAttribute("data-type");
+        var nalog_number = this.getAttribute("data-number");
+
+        if (me.data("requestRunning")) {
+          return;
+        }
+
+        me.data("requestRunning", true);
+
+        $.ajax({
+          url: "/edit_nalog",
+          type: "get",
+          data: {
+            nalog_number: nalog_number,
+            nalog_type: nalog_type,
+          },
+          dataType: "html",
+          complete: function() {
+            me.data("requestRunning", false);
+          },
+          success: function(html) {
+            $("#nalog_placeholder").html(html);
+          }
+        });
+      });
+</script>
+</div>
+  

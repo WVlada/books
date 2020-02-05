@@ -9,15 +9,22 @@
       </thead>
       <tbody class="kontni_plan_tbody">
         <% for(let i = 0; i <= sva_konta_i_okvir.length -1; i++) { %>
-        <tr
-          data-id="<%= sva_konta_i_okvir[i].number %>"
-          data-type="<%= sva_konta_i_okvir[i].name %>"
-          id="<%= sva_konta_i_okvir[i].number %>"
-          class="kontni_plan"
-        >
-          <td class="kontni_plan"><%= sva_konta_i_okvir[i].number %></td>
-          <td class="kontni_plan"><%= sva_konta_i_okvir[i].name %></td>
-          <td class="kontni_plan"><%= sva_konta_i_okvir[i].type %></td>
+          <% if (sva_konta_i_okvir[i].number.length == 1) { %>
+            <tr class="kontni_plan kontni_plan_jednocifren">
+              <td class="kontni_plan kontni_plan_jednocifren"><%= sva_konta_i_okvir[i].number %></td>
+              <td class="kontni_plan kontni_plan_jednocifren"><%= sva_konta_i_okvir[i].name %></td>
+              <td class="kontni_plan kontni_plan_jednocifren"><%= sva_konta_i_okvir[i].type %></td>
+          <% } else if (sva_konta_i_okvir[i].number.length == 2) { %>
+            <tr class="kontni_plan kontni_plan_dvocifren">
+              <td class="kontni_plan kontni_plan_dvocifren"><%= sva_konta_i_okvir[i].number %></td>
+              <td class="kontni_plan kontni_plan_dvocifren"><%= sva_konta_i_okvir[i].name %></td>
+              <td class="kontni_plan kontni_plan_dvocifren"><%= sva_konta_i_okvir[i].type %></td>
+          <% } else { %>
+            <tr data-id="<%= sva_konta_i_okvir[i].number %>" class="kontni_plan_trocifren">
+              <td class="kontni_plan kontni_plan_trocifren"><%= sva_konta_i_okvir[i].number %></td>
+              <td class="kontni_plan kontni_plan_trocifren"><%= sva_konta_i_okvir[i].name %></td>
+              <td class="kontni_plan kontni_plan_trocifren"><%= sva_konta_i_okvir[i].type %></td>
+            <% } %>
           <% } %>
         </tr>
       </tbody>
@@ -27,16 +34,34 @@
       <input title="Enter search term to filter table rows." id="kontni_plan_text_input" class="kontni_plan_text_input" type=text></input>
     </div>
   
-    
-    <script>
-
-      $(document).off("keyup", "#kontni_plan_text_input").on("keyup", "#kontni_plan_text_input", function() {
-        var value = $(this).val().toLowerCase();
-        $("#table tbody tr").filter(function() {
-          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-    });
-      })
-      
-    </script>
-  </div>
+<script>
+$(document).off("keyup", "#kontni_plan_text_input").on("keyup", "#kontni_plan_text_input", function() {
+  var value = $(this).val().toLowerCase();
+  $("#table tbody tr").filter(function() {
+    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+  });
+})
+$(document).off("dblclick", "tr.kontni_plan_trocifren").on("dblclick", "tr.kontni_plan_trocifren", function() {
+  var kontni_plan_row = $(this);
+  var konto = this.getAttribute('data-id');
+  
+  if (kontni_plan_row.data("requestRunning")) {
+          return;
+  }
+  kontni_plan_row.data("requestRunning", true);
+  $.ajax({
+    url: "/show_konto",
+    type: "get",
+    data: { konto: konto },
+    dataType: "html",
+    complete: function() {
+      kontni_plan_row.data("requestRunning", false);
+    },
+    success: function(html) {
+      $("div.centar").html(html);
+    }
+  });
+});
+</script>
+</div>
   

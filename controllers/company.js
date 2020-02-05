@@ -761,27 +761,19 @@ exports.getKontniPlan = async (req, res, next) => {
   const okvir = await Okvir.find({
       company: current_company
   }).sort({number: 1})
-  //console.log(okvir)
   const sva_konta_i_okvir = []
   for (let i = 0; i <= okvir.length-1; i++){
     sva_konta_i_okvir.push(okvir[i])
     if (okvir[i].number.length == 2) {
       let num = okvir[i].number;
-      //console.log("*")
-      //console.log(num)
       let pripadajuca_konta = await Konto.find({ company: current_company, number: {$regex: "^" + num + ""}}).sort({number: 1})
-      //console.log(pripadajuca_konta)
       for (let j = 0; j <= pripadajuca_konta.length - 1; j++){
         sva_konta_i_okvir.push(pripadajuca_konta[j])
       }
     }
   }
-  //console.log(sva_konta_i_okvir)
   const current_company_year = req.current_company_year;
   const years = req.current_company_years;
-  //console.log("kontni plan");
-  //console.log(req.query);
-  //console.log("kontni plan");
   return res.status(200).render("includes/dashboard/kontni_plan", {
     pageTitle: "",
     path: "/kontni_plan",
@@ -803,3 +795,37 @@ exports.getKontniPlan = async (req, res, next) => {
     //lastPage: Math.ceil(totalKontos / KONTNI_PLAN_PER_PAGE)
   });
 };
+exports.getShowKonto = async (req, res, next) => {
+  const user = req.user;
+  const current_company_year = req.current_company_year;
+  const years = req.current_company_years;
+  const current_company = await Company.findOne({
+    _id: req.current_company_id
+  });
+  const companies = await Company.find({ user: user });
+  const broj_konta = req.query.konto;
+  const konto = await Konto.findOne({number: broj_konta, company: current_company})
+  const svi_stavovi = await Stav.find({company: current_company, konto: konto}).sort({date: 'asc'})
+  console.log(req.query)
+  return res.status(200).render("includes/dashboard/show_konto", {
+    pageTitle: "",
+    path: "/show_konto",
+    hasError: false,
+    svi_stavovi: svi_stavovi,
+    accounting: accounting,
+    user: user,
+    current_company: current_company,
+    current_company_year: current_company_year,
+    companies: companies,
+    years: years,
+    successMessage: null,
+    infoMessage: null,
+    validationErrors: []//,
+    //currentPage: page,
+    //hasNextPage: KONTNI_PLAN_PER_PAGE * page < totalKontos,
+    //hasPreviousPage: page > 1,
+    //nextPage: page + 1,
+    //previousPage: page - 1,
+    //lastPage: Math.ceil(totalKontos / KONTNI_PLAN_PER_PAGE)
+  });
+}

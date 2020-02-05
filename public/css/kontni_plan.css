@@ -39,22 +39,22 @@ th.kontni_plan {
   font-size: 13px;
 }
 th.kontni_plan:nth-child(1) {
-  width: 154px;
+  min-width: 154px;
 }
 th.kontni_plan:nth-child(2) {
   width: 550px;
 }
 th.kontni_plan:nth-child(3) {
-  width: 200px;
+  min-width: 200px;
 }
 td.kontni_plan:nth-child(1) {
-  width: 154px;
+  min-width: 154px;
 }
 td.kontni_plan:nth-child(2) {
   width: 550px;
 }
 td.kontni_plan:nth-child(3) {
-  width: 200px;
+  min-width: 181.58px;/*18.42*/
 }
 
 th.kontni_plan:first-child {
@@ -77,14 +77,14 @@ td.kontni_plan {
   border-bottom: 1px solid #ebe9ee;
   font-size: 13px;
 }
-td.kontni_plan:nth-child(1),
+/*td.kontni_plan:nth-child(1),
 td.kontni_plan:nth-child(3)
  {
   text-align: center;
 }
 td.kontni_plan:nth-child(2) {
   text-align: left;
-}
+}*/
 
 td.kontni_plan:last-child {
   border-right: 1px solid #dfdce3;
@@ -98,17 +98,17 @@ tr.kontni_plan:last-child > td.kontni_plan:last-child {
 tr.kontni_plan {
   background: #fafafa;
 }
-tr.kontni_plan {
+td.kontni_plan {
   cursor: pointer;
 }
-tr.kontni_plan:nth-child(even) {
+tr.kontni_plan_trocifren:nth-child(even) {
   background: #f6f5f8;
 }
-tr.kontni_plan:last-child > td {
+tr.kontni_plan_trocifren:last-child > td {
   border-bottom-width: 1;
 }
-tr.kontni_plan:hover,
-tr.kontni_plan:nth-child(even):hover {
+tr.kontni_plan_trocifren:hover,
+tr.kontni_plan_trocifren:nth-child(even):hover {
   background: #dfdce3;
 }
 
@@ -131,4 +131,37 @@ tr.kontni_plan:nth-child(even):hover {
   font-size: 13px;
   width: 100px;
   height: 22px;
+}
+tr.kontni_plan_jednocifren {
+  /*background: #89849B;*/
+  background: #b1adbf;
+  cursor: pointer;
+  text-align: center;
+}
+td.kontni_plan_jednocifren {
+  text-align: center;
+}
+tr.kontni_plan_dvocifren {
+  /*background: #DCD7E6;*/
+  background: #d9d9dc;
+  cursor: pointer;
+}
+td.kontni_plan_dvocifren:nth-child(1) {
+  text-align: center;
+}
+td.kontni_plan_dvocifren:nth-child(2) {
+  text-align: left;
+}
+td.kontni_plan_dvocifren:nth-child(3) {
+  text-align: center;
+}
+td.kontni_plan_trocifren:nth-child(1) {
+  padding-right: 10px;
+  text-align: right;
+}
+td.kontni_plan_trocifren:nth-child(2) {
+  text-align: left;
+}
+td.kontni_plan_trocifren:nth-child(3) {
+  text-align: center;
 }

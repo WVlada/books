@@ -122,7 +122,7 @@ const stavI91 = await Stav.create({  user: user,  company: company._id,  opis: "
 const stavI92 = await Stav.create({  user: user,  company: company._id,  opis: "Kredit",  sifra_komitenta: komitent4,  poziv_na_broj: "805556.6",  konto: kontoIntesaKredit,  duguje: 0,  potrazuje: 10000000,  valuta: null,  number: 1,  nalog_id: nalogI9._id,  nalog_date: nalogI9.date,  type: nalogI9.type});
 nalogI9.stavovi = [ {_id: stavI91._id}, {_id: stavI92._id} ]
 await nalogI9.save()
-const nalogN2 = await Nalog.create({ company: company._id,  user: user,  locked: false,  number: 1,  duguje: 1000000,  potrazuje: 1000000,  opis: `Preknjizavanje dela kredita`,  date: new Date(Date.UTC(company.year[1], 2, 25)),  type: "N",  year: company.year[1]});
+const nalogN2 = await Nalog.create({ company: company._id,  user: user,  locked: false,  number: 2,  duguje: 1000000,  potrazuje: 1000000,  opis: `Preknjizavanje dela kredita`,  date: new Date(Date.UTC(company.year[1], 2, 25)),  type: "N",  year: company.year[1]});
 const stavN21 = await Stav.create({  user: user,  company: company._id,  opis: "Deo kredita koji dospeva do 1 godine",  sifra_komitenta: null,  poziv_na_broj: null,  konto: kontoIntesaKredit,  duguje: 1000000,  potrazuje: 0,  valuta: null,  number: 0,  nalog_id: nalogN2._id,  nalog_date: nalogN2.date,  type: nalogN2.type});
 const stavN22 = await Stav.create({  user: user,  company: company._id,  opis: "Deo kredita koji dospeva do 1 godine",  sifra_komitenta: null,  poziv_na_broj: null,  konto: kontoIntesaKreditKretkorocniDeo,  duguje: 0,  potrazuje: 1000000,  valuta: null,  number: 1,  nalog_id: nalogN2._id,  nalog_date: nalogN2.date,  type: nalogN2.type});
 nalogN2.stavovi = [ {_id: stavN21._id}, {_id: stavN22._id} ]

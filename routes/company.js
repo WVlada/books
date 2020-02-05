@@ -60,6 +60,7 @@ router.post(
 router.get("/dnevnik_naloga", isAuth, companyController.getDnevnikNaloga);
 router.get("/komitenti", isAuth, companyController.getPregledKomitenata);
 router.get("/kontni_plan", isAuth, companyController.getKontniPlan);
+router.get("/show_konto", isAuth, companyController.getShowKonto);
 router.get("/new_nalog", isAuth, companyController.getNalog);
 router.post(
   "/new_nalog",
