@@ -761,17 +761,32 @@ exports.getKontniPlan = async (req, res, next) => {
   const okvir = await Okvir.find({
       company: current_company
   }).sort({number: 1})
+  const sva_konta = await Konto.find({company: current_company}).sort({number: 1})
   const sva_konta_i_okvir = []
+  
   for (let i = 0; i <= okvir.length-1; i++){
     sva_konta_i_okvir.push(okvir[i])
     if (okvir[i].number.length == 2) {
       let num = okvir[i].number;
-      let pripadajuca_konta = await Konto.find({ company: current_company, number: {$regex: "^" + num + ""}}).sort({number: 1})
-      for (let j = 0; j <= pripadajuca_konta.length - 1; j++){
-        sva_konta_i_okvir.push(pripadajuca_konta[j])
-      }
+      let regex = new RegExp("^"+ num);
+      sva_konta.map(konto => {
+        if (konto.number.match(regex)){
+          sva_konta_i_okvir.push(konto)
+        }
+      })
     }
   }
+  
+  //for (let i = 0; i <= okvir.length-1; i++){
+  //  sva_konta_i_okvir.push(okvir[i])
+  //  if (okvir[i].number.length == 2) {
+  //    let num = okvir[i].number;
+  //    let pripadajuca_konta = await Konto.find({ company: current_company, number: {$regex: "^" + num + ""}}).sort({number: 1})
+  //    for (let j = 0; j <= pripadajuca_konta.length - 1; j++){
+  //      sva_konta_i_okvir.push(pripadajuca_konta[j])
+  //    }
+  //  }
+  //}
   const current_company_year = req.current_company_year;
   const years = req.current_company_years;
   return res.status(200).render("includes/dashboard/kontni_plan", {
