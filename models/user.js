@@ -76,6 +76,8 @@ userSchema.methods.createMoreCompanies = async function(company) {
     pib: "123321123",
     user: this
   });
+  this.company.push({ _id: company2._id });
+
   const company3 = await Company.create({
     year: [company.year[0], company.year[0] + 1, company.year[0] + 2],
     vrste_naloga: ["R", "N", "I", "Z"],
@@ -84,6 +86,8 @@ userSchema.methods.createMoreCompanies = async function(company) {
     pib: "789987789",
     user: this
   });
+  this.company.push({ _id: company3._id });
+  await this.save();
   // company
 };
 

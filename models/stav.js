@@ -36,7 +36,8 @@ const stavSchema = new Schema({
   },
   sifra_komitenta: {
     type: Schema.Types.ObjectId,
-    ref: "Komitent"
+    ref: "Komitent",
+    required: false
   },
   valuta: {
     type: Date

@@ -316,6 +316,9 @@ exports.postNalog = (req, res, next) => {
   const datum_naloga = req.body.datum_naloga;
   const opis_stava_array = req.body.opis_stava;
   const sifra_komitenta_array = req.body.sifra_komitenta;
+  //const sifra_komitenta_array = sifra_komitenta_array_premap.map(e => {
+  //  return e == "" ? null : e;
+  //});
   const poziv_na_broj_array = req.body.poziv_na_broj;
   const konto_array = req.body.konto;
   const duguje_array = req.body.duguje;
@@ -450,7 +453,7 @@ exports.getEditNalog = async (req, res, next) => {
   // sifre komitenata
   const sifra_komitenta_array = await Komitent.find({
     company: company_id
-  }).select("-_id sifra name");
+  }).select("sifra name");
   // sifre komitenata
   // broj konta
   const broj_konta_array = await Konto.find({
@@ -490,14 +493,24 @@ exports.getEditNalog = async (req, res, next) => {
   });
   // pozivi na broj
   // stavovi
-  const stavovi = await Stav.find({ _id: nalog.stavovi });
+  const stavovi = await Stav.find({ _id: nalog.stavovi })
+    .populate({
+      path: "sifra_komitenta",
+      model: Komitent,
+      select: "name sifra"
+    })
+    .populate({
+      path: "konto",
+      model: Konto,
+      select: "name number"
+    });
   var new_stavovi = stavovi.map(stav => {
     let new_stav = {};
     new_stav.duguje = accounting.formatNumber(stav["duguje"]);
     new_stav.potrazuje = accounting.formatNumber(stav["potrazuje"]);
     new_stav.number = stav["number"];
-    new_stav.sifra = stav["sifra_komitenta"];
-    new_stav.konto_id = stav["konto"];
+    new_stav.komitent = stav["sifra_komitenta"];
+    new_stav.konto = stav["konto"];
     new_stav.opis = stav["opis"];
     new_stav._id = stav["_id"];
     new_stav.user = stav["user"];
@@ -515,23 +528,9 @@ exports.getEditNalog = async (req, res, next) => {
     }
     return new_stav;
   });
-  // sifre
-  for (let i = 0; i <= new_stavovi.length - 1; i++) {
-    new_stavovi[i].sifra_komitenta = await Komitent.findOne({
-      _id: new_stavovi[i].sifra
-    }).select("-_id name");
-  }
-  // sifre
-  // konta
-  for (let i = 0; i <= new_stavovi.length - 1; i++) {
-    new_stavovi[i].konto = await Konto.findOne({
-      _id: new_stavovi[i].konto_id
-    }).select("-_id number");
-  }
-  // konta
+  console.log("***stavovi****");
   console.log(new_stavovi);
-  // stavovi
-
+  console.log("***stavovi***");
   return res.render("company/edit_nalog", {
     path: "/edit_nalog",
     user: user,
@@ -551,12 +550,17 @@ exports.getEditNalog = async (req, res, next) => {
   });
 };
 exports.updateNalog = async (req, res, next) => {
+  console.log("***update nalog***");
   console.log(req.body);
+  console.log("***update nalog***");
   const user = req.user;
   const current_company_id = req.current_company_id;
   const current_company_year = req.current_company_year;
   const years = req.current_company_years;
   const companies = await Company.find({ user: user });
+  const current_company = await Company.findOne({
+    _id: req.current_company_id
+  });
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     console.log(errors);
@@ -576,7 +580,6 @@ exports.updateNalog = async (req, res, next) => {
       validationErrors: []
     });
   }
-  console.log(req.body);
   // nalog update
   const nalog_id = req.body["_id"];
   const nalog = await Nalog.findOne({ _id: nalog_id });
@@ -599,6 +602,9 @@ exports.updateNalog = async (req, res, next) => {
       Math.round(Number(String(b).replace(/,/g, "")) * 100) / 100,
     0
   );
+  const stavovi_old_id_array = nalog.stavovi.map(e => {
+    return e._id;
+  });
   await nalog.updateOne({
     opis: opis_naloga,
     type: vrsta_naloga,
@@ -610,15 +616,18 @@ exports.updateNalog = async (req, res, next) => {
   // nalog update
   // stavovi update
   const opis_stava_array = req.body.opis_stava;
-  const sifra_komitenta_array = req.body.sifra_komitenta;
+  const sifra_komitenta_array = req.body.sifra_komitenta.map(sifra => {
+    return sifra == "" ? null : sifra;
+  });
+  console.log("***");
+  console.log(sifra_komitenta_array);
+  console.log("***");
   const poziv_na_broj_array = req.body.poziv_na_broj;
   const konto_array = req.body.konto;
   const konto_array_ids = await Konto.find({ number: konto_array }).select(
     "_id"
   );
-  const stavovi_old_id_array = nalog.stavovi.map(e => {
-    return e._id;
-  });
+
   await Stav.deleteMany({ _id: stavovi_old_id_array });
   let novi_stavovi = [];
   for (i = 0; i <= opis_stava_array.length - 1; i++) {
@@ -635,21 +644,31 @@ exports.updateNalog = async (req, res, next) => {
       ),
       valuta: valuta_array[i],
       number: i,
-      nalog_id: nalog._id,
       nalog_date: datum_naloga,
       type: nalog.type
     });
   }
-  nalog.updateOne({ stavovi: novi_stavovi });
+  nalog.stavovi = novi_stavovi;
+  nalog.save();
   // stavovi update
 
+  let totalNalogs;
+  const page = +req.page || 1;
   const nalozi = await Nalog.find({
     company: current_company_id,
     year: current_company_year
-  });
-  console.log(current_company);
-  console.log(current_company_year);
-  console.log(years);
+  })
+    .countDocuments()
+    .then(numberOfNalogs => {
+      totalNalogs = numberOfNalogs;
+      return Nalog.find({
+        company: current_company_id,
+        year: current_company_year
+      })
+        .skip((page - 1) * NALOGS_PER_PAGE) //paginacija
+        .limit(NALOGS_PER_PAGE); //paginacija;
+    });
+
   return res.status(200).render("company/show_company", {
     pageTitle: "",
     accounting: accounting,
@@ -662,7 +681,13 @@ exports.updateNalog = async (req, res, next) => {
     years: years,
     companies: companies,
     nalozi: nalozi,
-    successMessage: null,
+    currentPage: page,
+    hasNextPage: NALOGS_PER_PAGE * page < totalNalogs,
+    hasPreviousPage: page > 1,
+    nextPage: page + 1,
+    previousPage: page - 1,
+    lastPage: Math.ceil(totalNalogs / NALOGS_PER_PAGE),
+    successMessage: `Nalog ${nalog.type} - ${nalog.number} has been updated successfuly!.`,
     infoMessage: null,
     validationErrors: []
   });
@@ -708,7 +733,8 @@ exports.getPregledKomitenata = async (req, res, next) => {
     .countDocuments()
     .then(numberOfKomitents => {
       totalKomitents = numberOfKomitents;
-      return Komitent.find({ company: current_company }).populate({path: 'type', model: komitenttype})
+      return Komitent.find({ company: current_company })
+        .populate({ path: "type", model: komitenttype })
         .skip((page - 1) * KOMITENTS_PER_PAGE) //paginacija
         .limit(KOMITENTS_PER_PAGE); //paginacija;
     });
@@ -750,33 +776,35 @@ exports.getKontniPlan = async (req, res, next) => {
   let totalKontos;
   const kontos = await Konto.find({
     company: current_company
-  })//
-    //.countDocuments()
-    //.then(numberOfKontos => {
-    //  totalKontos = numberOfKontos;
-    //  return Konto.find({ company: current_company })
-    //    .skip((page - 1) * KONTNI_PLAN_PER_PAGE) //paginacija
-    //    .limit(KONTNI_PLAN_PER_PAGE); //paginacija;
-    //});
+  }); //
+  //.countDocuments()
+  //.then(numberOfKontos => {
+  //  totalKontos = numberOfKontos;
+  //  return Konto.find({ company: current_company })
+  //    .skip((page - 1) * KONTNI_PLAN_PER_PAGE) //paginacija
+  //    .limit(KONTNI_PLAN_PER_PAGE); //paginacija;
+  //});
   const okvir = await Okvir.find({
-      company: current_company
-  }).sort({number: 1})
-  const sva_konta = await Konto.find({company: current_company}).sort({number: 1})
-  const sva_konta_i_okvir = []
-  
-  for (let i = 0; i <= okvir.length-1; i++){
-    sva_konta_i_okvir.push(okvir[i])
+    company: current_company
+  }).sort({ number: 1 });
+  const sva_konta = await Konto.find({ company: current_company }).sort({
+    number: 1
+  });
+  const sva_konta_i_okvir = [];
+
+  for (let i = 0; i <= okvir.length - 1; i++) {
+    sva_konta_i_okvir.push(okvir[i]);
     if (okvir[i].number.length == 2) {
       let num = okvir[i].number;
-      let regex = new RegExp("^"+ num);
+      let regex = new RegExp("^" + num);
       sva_konta.map(konto => {
-        if (konto.number.match(regex)){
-          sva_konta_i_okvir.push(konto)
+        if (konto.number.match(regex)) {
+          sva_konta_i_okvir.push(konto);
         }
-      })
+      });
     }
   }
-  
+
   //for (let i = 0; i <= okvir.length-1; i++){
   //  sva_konta_i_okvir.push(okvir[i])
   //  if (okvir[i].number.length == 2) {
@@ -801,7 +829,7 @@ exports.getKontniPlan = async (req, res, next) => {
     years: years,
     successMessage: null,
     infoMessage: null,
-    validationErrors: []//,
+    validationErrors: [] //,
     //currentPage: page,
     //hasNextPage: KONTNI_PLAN_PER_PAGE * page < totalKontos,
     //hasPreviousPage: page > 1,
@@ -819,9 +847,15 @@ exports.getShowKonto = async (req, res, next) => {
   });
   const companies = await Company.find({ user: user });
   const broj_konta = req.query.konto;
-  const konto = await Konto.findOne({number: broj_konta, company: current_company})
-  const svi_stavovi = await Stav.find({company: current_company, konto: konto}).sort({date: 'asc'})
-  console.log(req.query)
+  const konto = await Konto.findOne({
+    number: broj_konta,
+    company: current_company
+  });
+  const svi_stavovi = await Stav.find({
+    company: current_company,
+    konto: konto
+  }).sort({ date: "asc" });
+  console.log(req.query);
   return res.status(200).render("includes/dashboard/show_konto", {
     pageTitle: "",
     path: "/show_konto",
@@ -835,7 +869,7 @@ exports.getShowKonto = async (req, res, next) => {
     years: years,
     successMessage: null,
     infoMessage: null,
-    validationErrors: []//,
+    validationErrors: [] //,
     //currentPage: page,
     //hasNextPage: KONTNI_PLAN_PER_PAGE * page < totalKontos,
     //hasPreviousPage: page > 1,
@@ -843,4 +877,4 @@ exports.getShowKonto = async (req, res, next) => {
     //previousPage: page - 1,
     //lastPage: Math.ceil(totalKontos / KONTNI_PLAN_PER_PAGE)
   });
-}
+};
