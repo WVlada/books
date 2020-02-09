@@ -235,14 +235,49 @@ exports.getDnevnikNaloga = (req, res, next) => {
         });
     });
 };
-exports.getNalog = (req, res, next) => {
+exports.getNalog = async (req, res, next) => {
   const user = req.user;
   const company_id = req.query.current_company;
   const current_company_year = req.query.current_year;
-  const sifra_komitenta_array = [1, 2, 3];
-  const poziv_na_broj_array = [1, 2, 3];
-  const broj_konta_array = [1, 2, 3];
+  // sifre komitenata
+  const sifra_komitenta_array = await Komitent.find({
+    company: company_id
+  }).select("sifra name");
+  // sifre komitenata
+  // pozivi na broj
+  const svi_stavovi = await Stav.find({ company: company_id });
+  const poziv_na_broj_array_sa_undefined = svi_stavovi.map(e => {
+    return e.pozivnabroj;
+  });
+  const poziv_na_broj_array = poziv_na_broj_array_sa_undefined.filter(
+    item => item
+  );
+  // pozivi na broj
+  // broj konta
+  const broj_konta_array = await Konto.find({
+    company: company_id
+  }).select("-_id number name");
+  // broj konta
+  // brojevi naloga
+  const brojevi_postojecih_naloga = [];
   const brojevi = [];
+  const nalog_type = "N";
+  const svi_nalozi_firme = await Nalog.find({
+    company: company_id,
+    type: nalog_type,
+    year: current_company_year
+  });
+  for (let i = 0; i <= svi_nalozi_firme.length - 1; i++) {
+    brojevi_postojecih_naloga.push(svi_nalozi_firme[i].number);
+  }
+  let j = 1;
+  while (brojevi.length < 10) {
+    if (!brojevi_postojecih_naloga.includes(j))
+      //ako ne sadrzi
+      brojevi.push(j);
+    j++;
+  }
+  // brojevi naloga
   //const nalog_date = (()=>{x = new Date(current_company_year, 0,1); return x.toLocaleDateString() })()
   const nalog_date = `${current_company_year}-01-01`;
 
@@ -488,9 +523,12 @@ exports.getEditNalog = async (req, res, next) => {
   const date = nalog.date.toISOString().split("T")[0];
   // pozivi na broj
   const svi_stavovi = await Stav.find({ company: company_id });
-  const poziv_na_broj_array = svi_stavovi.map(e => {
+  const poziv_na_broj_array_sa_undefined = svi_stavovi.map(e => {
     return e.pozivnabroj;
   });
+  const poziv_na_broj_array = poziv_na_broj_array_sa_undefined.filter(
+    item => item
+  );
   // pozivi na broj
   // stavovi
   const stavovi = await Stav.find({ _id: nalog.stavovi })
@@ -624,10 +662,19 @@ exports.updateNalog = async (req, res, next) => {
   console.log("***");
   const poziv_na_broj_array = req.body.poziv_na_broj;
   const konto_array = req.body.konto;
-  const konto_array_ids = await Konto.find({ number: konto_array }).select(
-    "_id"
-  );
-
+  const konto_array_ids_with_numbers = await Konto.find({
+    number: konto_array
+  }).select("_id number");
+  // napraviti array od konto_array i konto_array_ids_with_numbers
+  let konto_array_ids = [];
+  for (let m = 0; m <= konto_array.length - 1; m++) {
+    for (let k = 0; k <= konto_array_ids_with_numbers.length - 1; k++) {
+      if (konto_array[m] == konto_array_ids_with_numbers[k].number) {
+        konto_array_ids.push(konto_array_ids_with_numbers[k]._id);
+      }
+    }
+  }
+  // napraviti array od konto_array i konto_array_ids_with_numbers
   await Stav.deleteMany({ _id: stavovi_old_id_array });
   let novi_stavovi = [];
   for (i = 0; i <= opis_stava_array.length - 1; i++) {

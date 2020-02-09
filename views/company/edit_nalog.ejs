@@ -98,7 +98,8 @@
               <div class="form-control novi_nalog_form-control">
                   <!--<input  id="sifra_komitenta-0" name="sifra_komitenta[]" list="sifra_komitenta_list" class="chosen-select"/>-->
                   <select data-placeholder="Select..." name="sifra_komitenta[]" id="sifra_komitenta-<%= i %>" class="chosen-select sifra_komitenta_input">
-                      <option value="<%= stavovi[i].komitent ? stavovi[i].komitent._id : null %>" selected="selected"><%= stavovi[i].komitent ? stavovi[i].komitent.name : "" %></option>
+                    <option />  
+                    <option value="<%= stavovi[i].komitent ? stavovi[i].komitent._id : null %>" selected="selected"><%= stavovi[i].komitent ? stavovi[i].komitent.name : "" %></option>
                     <% for(let j=0; j <= sifra_komitenta_array.length - 1; j++) { %>
                       <option value="<%= sifra_komitenta_array[j]._id  %>"><%= sifra_komitenta_array[j].sifra %> | <%= sifra_komitenta_array[j].name %> </option>
                     <% } %>

@@ -97,7 +97,7 @@
                   <select data-placeholder="Select..." name="sifra_komitenta[]" id="sifra_komitenta-0" class="chosen-select sifra_komitenta_input">
                     <% for(let i=0; i <= sifra_komitenta_array.length - 1; i++) { %>
                       <option></option>
-                      <option><%= sifra_komitenta_array[i] %> </option>
+                      <option value="<%= sifra_komitenta_array[i]._id  %>"><%= sifra_komitenta_array[i].sifra %> | <%= sifra_komitenta_array[i].name %> </option>
                     <% } %>
                   </select>
               </div>
@@ -120,7 +120,7 @@
                   <select data-placeholder="Select..." name="konto[]" id="konto-0" class="chosen-select konto_input">
                     <% for(let i=0; i <= broj_konta_array.length - 1; i++) { %>
                       <option></option>
-                      <option><%= broj_konta_array[i] %></option>
+                      <option><%= broj_konta_array[i].number %> | <%= broj_konta_array[i].name %> </option>
                     <% } %>
                   </select>
               </div>
@@ -154,7 +154,7 @@
                   <select data-placeholder="Select..." name="sifra_komitenta[]" id="sifra_komitenta-1" class="chosen-select sifra_komitenta_input">
                     <% for(let i=0; i <= sifra_komitenta_array.length - 1; i++) { %>
                       <option></option>
-                      <option><%= sifra_komitenta_array[i] %> </option>
+                      <option value="<%= sifra_komitenta_array[i]._id  %>"><%= sifra_komitenta_array[i].sifra %> | <%= sifra_komitenta_array[i].name %> </option>
                     <% } %>
                   </select>
               </div>
@@ -171,7 +171,7 @@
                   <select data-placeholder="Select..." name="konto[]" id="konto-1" class="chosen-select konto_input">
                     <% for(let i=0; i <= broj_konta_array.length - 1; i++) { %>
                       <option></option>
-                      <option><%= broj_konta_array[i] %></option>
+                      <option><%= broj_konta_array[i].number %> | <%= broj_konta_array[i].name %> </option>
                     <% } %>
                   </select>
               </div>
@@ -206,7 +206,7 @@
                   <select data-placeholder="Select..." name="sifra_komitenta[]" id="sifra_komitenta-2" class="chosen-select sifra_komitenta_input">
                     <% for(let i=0; i <= sifra_komitenta_array.length - 1; i++) { %>
                       <option></option>
-                      <option><%= sifra_komitenta_array[i] %> </option>
+                      <option value="<%= sifra_komitenta_array[i]._id  %>"><%= sifra_komitenta_array[i].sifra %> | <%= sifra_komitenta_array[i].name %> </option>
                     <% } %>
                   </select>
               </div>
@@ -223,7 +223,7 @@
                   <select data-placeholder="Select..." name="konto[]" id="konto-2" class="chosen-select konto_input">
                     <% for(let i=0; i <= broj_konta_array.length - 1; i++) { %>
                       <option></option>
-                      <option><%= broj_konta_array[i] %></option>
+                      <option><%= broj_konta_array[i].number %> | <%= broj_konta_array[i].name %> </option>
                     <% } %>
                   </select>
               </div>
