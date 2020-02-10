@@ -19,7 +19,7 @@
           <tr data-type="<%= svi_stavovi[i].type %>" data-number="<%= svi_stavovi[i].number %>" class="show_konto">
             <td class="show_konto"><%= svi_stavovi[i].nalog_date.toLocaleDateString("en-US") %></td>
             <td class="show_konto"><%= svi_stavovi[i].type %></td>
-            <td class="show_konto"><%= svi_stavovi[i].number %></td>
+            <td class="show_konto"><%= svi_stavovi[i].nalog.number %></td>
             <td class="show_konto"><%= svi_stavovi[i].opis %></td>
             <td class="show_konto"><%= accounting.formatNumber(svi_stavovi[i].duguje) %></td>
             <td class="show_konto"><%= accounting.formatNumber(svi_stavovi[i].potrazuje) %></td>

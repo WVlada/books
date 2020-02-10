@@ -39,7 +39,7 @@ async function seedNalogs(company, user) {
           potrazuje: 0,
           valuta: null,
           number: 1,
-          nalog_id: nalog._id,
+          nalog: nalog._id,
           nalog_date: nalog.date,
           type: nalog.type
         }).then(stav => {
@@ -64,7 +64,7 @@ async function seedNalogs(company, user) {
           potrazuje: 0,
           valuta: null,
           number: 2,
-          nalog_id: nalog._id,
+          nalog: nalog._id,
           nalog_date: nalog.date,
           type: nalog.type
         }).then(stav => {
@@ -88,7 +88,7 @@ async function seedNalogs(company, user) {
           potrazuje: 10000,
           valuta: new Date(Date.UTC(company.year[0], 0, 1)),
           number: 3,
-          nalog_id: nalog._id,
+          nalog: nalog._id,
           nalog_date: nalog.date,
           type: nalog.type
         }).then(stav => {
@@ -112,7 +112,7 @@ async function seedNalogs(company, user) {
           potrazuje: 10000,
           valuta: null,
           number: 4,
-          nalog_id: nalog._id,
+          nalog: nalog._id,
           nalog_date: nalog.date,
           type: nalog.type
         })

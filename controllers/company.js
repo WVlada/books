@@ -526,9 +526,16 @@ exports.getEditNalog = async (req, res, next) => {
   const poziv_na_broj_array_sa_undefined = svi_stavovi.map(e => {
     return e.pozivnabroj;
   });
-  const poziv_na_broj_array = poziv_na_broj_array_sa_undefined.filter(
-    item => item
+  const poziv_na_broj_array2 = poziv_na_broj_array_sa_undefined.filter(
+    item => item 
   );
+  let poziv_na_broj_array = [];
+  console.log(poziv_na_broj_array2)
+  for(let k = 0; k<= poziv_na_broj_array2.length-1; k++)
+  {
+    poziv_na_broj_array.includes(poziv_na_broj_array2[k]) ? null : poziv_na_broj_array.push(poziv_na_broj_array2[k]) 
+  }
+  console.log(poziv_na_broj_array)
   // pozivi na broj
   // stavovi
   const stavovi = await Stav.find({ _id: nalog.stavovi })
@@ -548,6 +555,7 @@ exports.getEditNalog = async (req, res, next) => {
     new_stav.potrazuje = accounting.formatNumber(stav["potrazuje"]);
     new_stav.number = stav["number"];
     new_stav.komitent = stav["sifra_komitenta"];
+    new_stav.pozivnabroj = stav["pozivnabroj"];
     new_stav.konto = stav["konto"];
     new_stav.opis = stav["opis"];
     new_stav._id = stav["_id"];
@@ -901,8 +909,11 @@ exports.getShowKonto = async (req, res, next) => {
   const svi_stavovi = await Stav.find({
     company: current_company,
     konto: konto
-  }).sort({ date: "asc" });
+  }).populate({path: 'nalog', model: Nalog}).sort({ date: "asc" });
   console.log(req.query);
+  console.log("****")
+  console.log(svi_stavovi)
+  console.log("****")
   return res.status(200).render("includes/dashboard/show_konto", {
     pageTitle: "",
     path: "/show_konto",

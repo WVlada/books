@@ -112,7 +112,9 @@
                   <!--<select data-placeholder="Select..." name="poziv_na_broj[]" id="poziv_na_broj-0" class="chosen-select poziv_na_broj_input">-->
                     <datalist id="poziv_na_broj">
                       <% for(let m=0; m <= poziv_na_broj_array.length - 1; m++) { %>
-                        <option selected="selected"><%= poziv_na_broj_array[i] %></option>
+                        <% if (stavovi[i].pozivnabroj == poziv_na_broj_array[m]) {  %>
+                          <option selected="selected"><%= poziv_na_broj_array[m] %></option>
+                        <% } %>
                         <option><%= poziv_na_broj_array[m] %></option> 
                       <% } %>
                     </datalist>

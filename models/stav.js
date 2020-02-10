@@ -11,6 +11,10 @@ const stavSchema = new Schema({
     type: String,
     required: true
   },
+  nalog: {
+    type: Schema.Types.ObjectId,
+    ref: "Nalog"
+  },
   duguje: {
     type: Number,
     default: 0

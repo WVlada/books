@@ -73,11 +73,11 @@
             id="year"
             class="new_company_input new_company_input_year <%= validationErrors.find(e => e.param ==='year') ? 'invalid' : ''%>"
           >
-            <option><%= date.getFullYear()-3 %></option>
+            <option><%= date.getFullYear() %></option>
+            <!--<option><%= date.getFullYear()-3 %></option>
             <option><%= date.getFullYear()-2 %></option>
             <option><%= date.getFullYear()-1 %></option>
-            <option><%= date.getFullYear() %></option>
-            <option><%= date.getFullYear()+1 %></option>
+            <option><%= date.getFullYear()+1 %></option>-->
           </select>
         </div>
         <div class="new_company_inline_div">
