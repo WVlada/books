@@ -479,6 +479,9 @@ exports.postNalog = (req, res, next) => {
   //  });
 };
 exports.getEditNalog = async (req, res, next) => {
+  console.log("edit_nalog")
+  console.log(req.query)
+  console.log("edit_nalog")
   const user = req.user;
   const company_id = req.current_company_id;
   const current_company_year = req.current_company_year;
@@ -924,6 +927,8 @@ exports.getShowKonto = async (req, res, next) => {
     current_company: current_company,
     current_company_year: current_company_year,
     companies: companies,
+    broj_konta: broj_konta,
+    naziv_konta: konto.name,
     years: years,
     successMessage: null,
     infoMessage: null,

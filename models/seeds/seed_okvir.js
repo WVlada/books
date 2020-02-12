@@ -13,7 +13,7 @@ await Okvir.create({ company: company, number: "1",   name: "CURRENT ASSETS",   
 await Okvir.create({ company: company, number: "10",  name: "Material inventories",                   type: "D" })
 await Okvir.create({ company: company, number: "11",  name: "Unfinished production and services",     type: "D" })
 await Okvir.create({ company: company, number: "12",  name: "Finished products",                    type: "D" })
-await Okvir.create({ company: company, number: "13",  name: "Goods",                                type: "D" })
+await Okvir.create({ company: company, number: "13",  name: "Merchandise",                                type: "D" })
 await Okvir.create({ company: company, number: "14",  name: "Fixed assets held for sale",   type: "D" })
 await Okvir.create({ company: company, number: "15",  name: "Plaćeni avansi za zalihe i usluge",   type: "D" })
 

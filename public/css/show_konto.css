@@ -145,3 +145,10 @@ tr.show_konto_trocifren:nth-child(even):hover {
   width: 100px;
   height: 22px;
 }
+.show_konto_header_row {
+  border-left: none !important;
+  border-right: none !important;
+  border-top: none !important;
+  padding: 7px !important;
+  background-image: -webkit-linear-gradient(top, #49435b 0%, #6d687e 100%) !important;
+}

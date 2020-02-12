@@ -15,7 +15,7 @@ await company.save()
 // godine
 
 // konta
-const kontoKupci =          await Konto.create({ number: "2200", name: "Kupci",      type: "A", company: company._id });
+const kontoKupci =          await Konto.create({ number: "2401", name: "Kupci - Idea ltd.",      type: "A", company: company._id });
 const kontoDobavljači =     await Konto.create({ number: "4200", name: "Dobavljači", type: "P", company: company._id });
 const kontoTekuciRacun1 =   await Konto.create({ number: "2501", name: "Tekući račun - AIK Banka",    type: "A", company: company._id });
 const kontoTekuciRacun2 =   await Konto.create({ number: "2502", name: "Tekući račun - Banca Intesa", type: "A", company: company._id });

@@ -2,6 +2,9 @@
     <table class="show_konto">
       <thead class="show_konto_thead">
         <tr class="show_konto">
+          <th class="show_konto show_konto_header_row"> Account: <%= broj_konta %> | <%= naziv_konta %> </th>
+        </tr>
+        <tr class="show_konto">
           <th class="show_konto">Date</th>
           <th class="show_konto">Type</th>
           <th class="show_konto">No.</th>
@@ -16,7 +19,7 @@
         <% let ukupno_duguje = 0; %>
         <% let ukupno_potrazuje = 0; %>
         <% for(let i = 0; i <= svi_stavovi.length -1; i++) { %>
-          <tr data-type="<%= svi_stavovi[i].type %>" data-number="<%= svi_stavovi[i].number %>" class="show_konto">
+          <tr data-type="<%= svi_stavovi[i].type %>" data-number="<%= svi_stavovi[i].nalog.number %>" class="show_konto">
             <td class="show_konto"><%= svi_stavovi[i].nalog_date.toLocaleDateString("en-US") %></td>
             <td class="show_konto"><%= svi_stavovi[i].type %></td>
             <td class="show_konto"><%= svi_stavovi[i].nalog.number %></td>

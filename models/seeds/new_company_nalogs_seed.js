@@ -23,7 +23,7 @@ async function seedNalogs(company, user) {
       nalog = result;
       await Konto.create({
         number: "0201",
-        name: "Poslovna zgrada",
+        name: "Headquarters building - Prvomajska 3",
         type: "A",
         company: company._id
       }).then(async konto => {
@@ -49,7 +49,7 @@ async function seedNalogs(company, user) {
       });
       await Konto.create({
         number: "2001",
-        name: "Potraživanja od kupaca",
+        name: "Account Receivables",
         type: "A",
         company: company._id
       }).then(async konto2 => {
@@ -73,7 +73,7 @@ async function seedNalogs(company, user) {
       });
       await Konto.create({
         number: "3000",
-        name: "sopstveni kapital",
+        name: "Capital stock - owner",
         type: "P",
         company: company._id
       }).then(async konto3 => {
@@ -96,8 +96,8 @@ async function seedNalogs(company, user) {
         });
       });
       await Konto.create({
-        number: "4000",
-        name: "dugorocne obaveze",
+        number: "4001",
+        name: "Long term liabilities - founding",
         type: "P",
         company: company._id
       }).then(async konto4 => {
