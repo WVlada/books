@@ -31,19 +31,19 @@
   ></i>
 
   <% } %>
-  <form
+  <!--<form
     id="dnevnik_current_page_form"
     class="dnevnik_current_page_form"
     action="/"
     method="GET"
-  >
+  >-->
     <input
       id="dnevnik_current_page_input"
       type="number"
       value="<%= currentPage%>"
     />
-    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-  </form>
+    <!--<input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+  </form>-->
   <% if (hasNextPage) { %>
   <a
     data-link="<%= currentPage + 1 %>"
