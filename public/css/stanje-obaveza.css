@@ -13,7 +13,7 @@
   border-top-right-radius: 2px;
 }
 .tab button {
-  background-image: -webkit-linear-gradient(top, #e6e6e6 0%, #a5a5a5 100%);
+  background-image: -webkit-linear-gradient(top, #e6e6e6 60%, #a5a5a5 100%);
   float: left;
   border-bottom: none;
   outline: none;

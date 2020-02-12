@@ -33,7 +33,7 @@ $(document).on("click", "#komitenti", function() {
     url: "/komitenti",
     type: "get",
     data: { "": "" },
-    dataType: "script",
+    /*dataType: "script",*/
     dataType: "html",
     complete: function() {
       komitenti_dugme.data("requestRunning", false);
@@ -49,7 +49,7 @@ $(document).on("click", "#kontni_plan", function() {
     url: "/kontni_plan",
     type: "get",
     data: { "": "" },
-    dataType: "script",
+    /*dataType: "script",*/
     dataType: "html",
     complete: function() {
       kontni_plan_dugme.data("requestRunning", false);

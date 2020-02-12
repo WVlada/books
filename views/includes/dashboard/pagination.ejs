@@ -1,6 +1,6 @@
 <section class="pagination" data-link="<%= page_link %>">
   <% if (hasPreviousPage) { %>
-  <a data-link="1" class="dnevnik_current_page_change_link" href="/"
+  <a data-link="1" class="dnevnik_current_page_change_link" href="#"
     ><i
       style="vertical-align:middle;margin: 1px; margin-top:3px;color: #6d687e;"
       class="fas fa-fast-backward"
@@ -9,7 +9,7 @@
   <a
     data-link="<%= currentPage - 1 %>"
     class="dnevnik_current_page_change_link"
-    href="/"
+    href="#"
   >
     <i
       style="vertical-align:middle;margin: 1px;margin-top:3px;color: #6d687e;margin-left: 10px;"
@@ -48,7 +48,7 @@
   <a
     data-link="<%= currentPage + 1 %>"
     class="dnevnik_current_page_change_link"
-    href="/"
+    href="#"
     ><i
       class="fas fa-forward"
       style="vertical-align:middle;margin: 1px;margin-top:3px;color: #6d687e;margin-left: 10px;"
@@ -57,7 +57,7 @@
   <a
     data-link="<%= lastPage %>"
     class="dnevnik_current_page_change_link"
-    href="/"
+    href=""
   >
     <i
       class="fas fa-fast-forward"

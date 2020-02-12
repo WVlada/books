@@ -783,7 +783,7 @@ exports.getPregledKomitenata = async (req, res, next) => {
   const current_company = await Company.findOne({
     _id: req.current_company_id
   });
-  const page = +req.page || 1;
+  const page = +req.query.page || 1;
   let totalKomitents;
   const komitenti = await Komitent.find({
     company: current_company
@@ -800,6 +800,7 @@ exports.getPregledKomitenata = async (req, res, next) => {
   const current_company_year = req.current_company_year;
   const years = req.current_company_years;
   console.log("pregled komitenata");
+  console.log(`Page: ${page}`)
   console.log(req.query);
   console.log("pregled komitenata");
   return res.status(200).render("includes/dashboard/pregled_komitenata", {
