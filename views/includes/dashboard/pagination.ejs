@@ -123,5 +123,50 @@
         }
         //
       });
+
+      $(document).off('change',"input#dnevnik_current_page_input").on('change',"input#dnevnik_current_page_input", function(){
+        var me = $(this)[0];
+        if (me.getAttribute("requestRunning")) {
+          return;
+        }
+        if (me.value < 1){
+          me.value = 1;
+          return}
+          var page_link = document
+          .getElementsByClassName("pagination")[0]
+          .getAttribute("data-link");
+        // dnevnik
+        if (page_link === "dnevnik") {
+          $.ajax({
+            url: "/dnevnik_naloga",
+            type: "get",
+            data: { page: me.value },
+            dataType: "html",
+            complete: function() {
+              me.setAttribute("requestRunning", false);
+            },
+            success: function(html) {
+              $("div.centar").html(html);
+            }
+          });
+        }
+        // komitenti
+        if (page_link === "komitenti") {
+          $.ajax({
+            url: "/komitenti",
+            type: "get",
+            data: { page: me.value },
+            dataType: "html",
+            complete: function() {
+              me.setAttribute("requestRunning", false);
+            },
+            success: function(html) {
+              $("div.centar").html(html);
+            }
+          });
+        }
+        
+      })
+
   </script>
 </section>

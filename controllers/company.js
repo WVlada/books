@@ -183,12 +183,16 @@ exports.getDnevnikNaloga = (req, res, next) => {
   console.log(current_company_year);
   console.log(current_company_years);
   console.log("/get_dnevnik");
-  const page = +req.query.page || 1; //page=1 +ga pretvara u broj || ako nije def, onda stavi 1
+  let page = +req.query.page || 1; //page=1 +ga pretvara u broj || ako nije def, onda stavi 1
   let totalNalogs;
   Nalog.find({ company: current_company_id, year: current_company_year })
     .countDocuments()
     .then(numOfProducts => {
       totalNalogs = numOfProducts;
+      if (page > Math.ceil(totalNalogs / NALOGS_PER_PAGE))
+      {
+        page = Math.ceil(totalNalogs / NALOGS_PER_PAGE)
+      }
       return Nalog.find({
         company: current_company_id,
         year: current_company_year
@@ -783,7 +787,7 @@ exports.getPregledKomitenata = async (req, res, next) => {
   const current_company = await Company.findOne({
     _id: req.current_company_id
   });
-  const page = +req.query.page || 1;
+  let page = +req.query.page || 1;
   let totalKomitents;
   const komitenti = await Komitent.find({
     company: current_company
@@ -791,12 +795,16 @@ exports.getPregledKomitenata = async (req, res, next) => {
     .countDocuments()
     .then(numberOfKomitents => {
       totalKomitents = numberOfKomitents;
+      if (page > Math.ceil(totalKomitents / KOMITENTS_PER_PAGE))
+      {
+        page = Math.ceil(totalKomitents / KOMITENTS_PER_PAGE)
+      }
       return Komitent.find({ company: current_company })
         .populate({ path: "type", model: komitenttype })
         .skip((page - 1) * KOMITENTS_PER_PAGE) //paginacija
         .limit(KOMITENTS_PER_PAGE); //paginacija;
     });
-
+  
   const current_company_year = req.current_company_year;
   const years = req.current_company_years;
   console.log("pregled komitenata");
