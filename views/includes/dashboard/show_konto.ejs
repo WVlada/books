@@ -21,7 +21,7 @@
         <% let ukupno_duguje = 0; %>
         <% let ukupno_potrazuje = 0; %>
         <% for(let i = 0; i <= svi_stavovi.length -1; i++) { %>
-          <tr data-type="<%= svi_stavovi[i].type %>" data-number="<%= svi_stavovi[i].nalog.number %>" class="show_konto">
+          <tr data-id="<%= svi_stavovi[i].nalog._id %>" class="show_konto">
             <td class="show_konto"><%= svi_stavovi[i].nalog_date.toLocaleDateString("en-US") %></td>
             <td class="show_konto"><%= svi_stavovi[i].type %></td>
             <td class="show_konto"><%= svi_stavovi[i].nalog.number %></td>
@@ -61,8 +61,7 @@ $(document)
       .on("dblclick", "tr.show_konto", function() {
         
         var me = $(this);
-        var nalog_type = this.getAttribute("data-type");
-        var nalog_number = this.getAttribute("data-number");
+        var nalog_id = this.getAttribute("data-id");
 
         if (me.data("requestRunning")) {
           return;
@@ -74,8 +73,7 @@ $(document)
           url: "/edit_nalog",
           type: "get",
           data: {
-            nalog_number: nalog_number,
-            nalog_type: nalog_type,
+            nalog_id: nalog_id,
           },
           dataType: "html",
           complete: function() {

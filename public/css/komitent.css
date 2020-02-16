@@ -1,0 +1,238 @@
+#table {
+  height: 572px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+table.show_komitent_first_table {
+  align-self: center;
+  table-layout: auto;
+  border-spacing: 0;
+  width: 100%;
+  border-collapse: separate;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  white-space: nowrap;
+  font-size: 13px;
+}
+th.show_komitent_first_table {
+  border-left: 1px solid #7e798c;
+  border-right: 1px solid #4e4765;
+  border-top: 1px solid #4e4765;
+  padding: 6px;
+  display: table-cell;
+  font-weight: 300;
+  background-image: -webkit-linear-gradient(top, #6d687e 0%, #49435b 100%);
+  color: white;
+  vertical-align: middle;
+  text-align: center;
+  font-size: 13px;
+}
+th.show_komitent_first_table:nth-child(1) {
+  width: 50px;
+}
+th.show_komitent_first_table:nth-child(2) {
+  width: 220px;
+}
+th.show_komitent_first_table:nth-child(3) {
+  width: 95px;
+}
+th.show_komitent_first_table:nth-child(4) {
+  width: 195px;
+}
+th.show_komitent_first_table:nth-child(5) {
+  width: 242px;
+}
+th.show_komitent_first_table:nth-child(6) {
+  width: 90px;
+}
+th.show_komitent_first_table:nth-child(7) {
+  width: 90px;
+}
+th.show_komitent_first_table:first-child {
+  -webkit-border-top-left-radius: 3px;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+th.show_komitent_first_table:last-child {
+  -webkit-border-top-right-radius: 3px;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+  -moz-border-radius-topright: 3px;
+}
+td.show_komitent_first_table {
+  border-top: 1px solid #fff !important;
+  border-left: 1px solid #dfdce3;
+  line-height: 1;
+  padding: 4px;
+  color: #000;
+  border-bottom: 1px solid #ebe9ee;
+  font-size: 13px;
+}
+td.show_komitent_first_table:nth-child(1) {
+  text-align: center;
+}
+td.show_komitent_first_table:nth-child(2),
+td.show_komitent_first_table:nth-child(4),
+td.show_komitent_first_table:nth-child(5),
+td.show_komitent_first_table:nth-child(6) {
+  text-align: left;
+}
+td.show_komitent_first_table:nth-child(3),
+td.show_komitent_first_table:nth-child(7) {
+  text-align: center;
+}
+td.show_komitent_first_table:last-child {
+  border-right: 1px solid #dfdce3;
+}
+tr.show_komitent_first_table:last-child
+  > td.show_komitent_first_table:first-child {
+  border-bottom-left-radius: 5px;
+}
+tr.show_komitent_first_table:last-child
+  > td.show_komitent_first_table:last-child {
+  border-bottom-right-radius: 5px;
+}
+tr.show_komitent_first_table {
+  background: #fafafa;
+}
+tr.show_komitent_first_table {
+  cursor: pointer;
+}
+tr.show_komitent_first_table:nth-child(even) {
+  background: #f6f5f8;
+}
+tr.show_komitent_first_table:last-child > td {
+  border-bottom-width: 1;
+}
+tr.show_komitent_first_table:hover,
+tr.show_komitent_first_table:nth-child(even):hover {
+  background: #dfdce3;
+}
+/* SECOND TABLE */
+table.show_komitent_second_table {
+  align-self: center;
+  table-layout: auto;
+  border-spacing: 0;
+  width: 100%;
+  /*border-collapse: separate;*/
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  white-space: nowrap;
+  font-size: 13px;
+  margin-top: 20px;
+}
+th.show_komitent_second_table {
+  border-left: 1px solid #7e798c;
+  border-right: 1px solid #4e4765;
+  border-top: 1px solid #4e4765;
+  padding: 6px;
+  display: table-cell;
+  font-weight: 300;
+  background-image: -webkit-linear-gradient(top, #6d687e 0%, #49435b 100%);
+  color: white;
+  vertical-align: middle;
+  text-align: center;
+  font-size: 13px;
+}
+th.show_komitent_second_table:nth-child(1) {
+  width: 50px;
+}
+th.show_komitent_second_table:nth-child(2) {
+  width: 220px;
+}
+th.show_komitent_second_table:nth-child(3) {
+  width: 50px;
+}
+th.show_komitent_second_table:nth-child(4) {
+  width: 150px;
+}
+th.show_komitent_second_table:nth-child(5) {
+  width: 150px;
+}
+th.show_komitent_second_table:nth-child(6) {
+  width: 150px;
+}
+
+th.show_komitent_second_table:second-child {
+  -webkit-border-top-left-radius: 3px;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+th.show_komitent_second_table:last-child {
+  -webkit-border-top-right-radius: 3px;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+  -moz-border-radius-topright: 3px;
+}
+td.show_komitent_second_table {
+  border-top: 1px solid #fff !important;
+  border-left: 1px solid #dfdce3;
+  line-height: 1;
+  padding: 4px;
+  color: #000;
+  border-bottom: 1px solid #ebe9ee;
+  font-size: 13px;
+}
+td.show_komitent_second_table:nth-child(1),
+td.show_komitent_second_table:nth-child(3),
+td.show_komitent_second_table:nth-child(4) {
+  text-align: center;
+}
+td.show_komitent_second_table:nth-child(2) {
+  text-align: left;
+}
+td.show_komitent_second_table:nth-child(5),
+td.show_komitent_second_table:nth-child(6) {
+  text-align: right;
+}
+
+td.show_komitent_second_table:last-child {
+  border-right: 1px solid #dfdce3;
+}
+td.show_komitent_second_table:nth-child(3):hover {
+  background: #cec7d6;
+}
+tr.show_komitent_second_table:last-child
+  > td.show_komitent_second_table:second-child {
+  border-bottom-left-radius: 5px;
+}
+tr.show_komitent_second_table:last-child
+  > td.show_komitent_second_table:last-child {
+  border-bottom-right-radius: 5px;
+}
+tr.show_komitent_second_table {
+  background: #fafafa;
+}
+tr.show_komitent_second_table {
+  cursor: pointer;
+}
+tr.show_komitent_second_table:nth-child(even) {
+  background: #f6f5f8;
+}
+tr.show_komitent_second_table:last-child > td {
+  border-bottom-width: 1;
+}
+tr.show_komitent_second_table:hover,
+tr.show_komitent_second_table:nth-child(even):hover {
+  background: #dfdce3;
+}
+
+tr.show_komitent_second_table_zbirni_row {
+  border-top: double;
+  background: #dedbe4;
+  font-weight: 600;
+}
+
+.table_show_komitent_second_table_donji_deo {
+  align-self: flex-end;
+  /*background-color: rgba(254, 248, 224, 0.96);*/
+  background-image: -webkit-linear-gradient(bottom, #f6f5f8 0%, #fafafa 50%);
+  height: 38px;
+  margin-top: auto;
+  border: 1px solid;
+  border-color: #ebe9ee;
+  border-radius: 2px;
+  padding: 5px;
+  width: 100%;
+}

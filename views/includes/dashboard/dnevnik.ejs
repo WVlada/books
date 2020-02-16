@@ -12,12 +12,7 @@
     </thead>
     <tbody>
       <% for(let i = 0; i <= nalozi.length -1; i++) { %>
-      <tr
-        data-id="<%= nalozi[i].number %>"
-        data-type="<%= nalozi[i].type %>"
-        id="<%= nalozi[i].number %>"
-        class="dnevnik_naloga"
-      >
+      <tr data-id="<%= nalozi[i]._id %>" class="dnevnik_naloga">
         <% if (nalozi[i].duguje == nalozi[i].potrazuje) { %>
         <!--# ovo je test da mi je nalog balansiran -->
         <td class="dnevnik_naloga"><%= nalozi[i].type %></td>
@@ -79,9 +74,7 @@
           url: "/edit_nalog",
           type: "get",
           data: {
-            nalog_number: me.data("id"),
-            nalog_type: type,
-            nalog_index_page: page
+            nalog_id: me.data("id")
           },
           dataType: "html",
           complete: function() {

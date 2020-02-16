@@ -1,0 +1,123 @@
+<div id="table">
+    <table class="show_komitent_first_table">
+      <thead>
+        <tr class="show_komitent_first_table">
+          <th class="show_komitent_first_table">Number</th>
+          <th class="show_komitent_first_table">Name of client</th>
+          <th class="show_komitent_first_table">Type</th>
+          <th class="show_komitent_first_table">Adress</th>
+          <th class="show_komitent_first_table">Email</th>
+          <th class="show_komitent_first_table">Code</th>
+          <th class="show_komitent_first_table">VAT &#8470</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-link="<%= komitent._id %>" class="show_komitent_first_table">
+          <td class="show_komitent_first_table"><%= komitent.number %></td>
+          <td class="show_komitent_first_table"><%= komitent.name %></td>
+          <td class="show_komitent_first_table"><%= komitent.type.name %></td>
+          <td class="show_komitent_first_table"><%= komitent.adress %></td>
+          <td class="show_komitent_first_table"><%= komitent.email %></td>
+          <td class="show_komitent_first_table"><%= komitent.sifra %></td>
+          <td class="show_komitent_first_table"><%= komitent.pib %></td>
+          
+        </tr>
+      </tbody>
+    </table>
+
+    <table class="show_komitent_second_table">
+      <thead>
+        <tr class="show_komitent_second_table">
+          <th class="show_komitent_second_table">Nalog type</th>
+          <th class="show_komitent_second_table">Description</th>
+          <th class="show_komitent_second_table">Account</th>
+          <th class="show_komitent_second_table">Poziv na broj</th>
+          <th class="show_komitent_second_table">Claims</th>
+          <th class="show_komitent_second_table">Owes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(let i=0; i <= svi_stavovi.length -1; i++) { %>
+        <tr class="show_komitent_second_table">
+          <td data-elem="tdnalog" data-link="<%= svi_stavovi[i].nalog %>" class="show_komitent_second_table"><%= svi_stavovi[i].type %></td>
+          <td data-elem="tdnalog" data-link="<%= svi_stavovi[i].nalog %>" class="show_komitent_second_table"><%= svi_stavovi[i].opis %></td>
+          <td data-elem="tdkonto" data-link="<%= svi_stavovi[i].konto._id %>" class="show_komitent_second_table"><%= svi_stavovi[i].konto.number %></td>
+          <td data-elem="tdnalog" data-link="<%= svi_stavovi[i].nalog %>" class="show_komitent_second_table"><%= svi_stavovi[i].pozivnabroj %></td>
+          <td data-elem="tdnalog" data-link="<%= svi_stavovi[i].nalog %>" class="show_komitent_second_table"><%= accounting.formatNumber(svi_stavovi[i].duguje) %></td>
+          <td data-elem="tdnalog" data-link="<%= svi_stavovi[i].nalog %>" class="show_komitent_second_table"><%= accounting.formatNumber(svi_stavovi[i].potrazuje) %></td>
+        </tr>
+        <% } %>
+        <tr class="show_komitent_second_table_zbirni_row">
+          <td class="show_komitent_second_table"></td>
+          <td class="show_komitent_second_table"></td>
+          <td class="show_komitent_second_table"></td>
+          <td class="show_komitent_second_table">Sum:</td>
+          <td class="show_komitent_second_table"><%= accounting.formatNumber(suma_duguje) %></td>
+          <td class="show_komitent_second_table"><%= accounting.formatNumber(suma_potrazuje) %></td>
+          
+        </tr>
+      </tbody>
+    </table>
+  
+    <div class="table_show_komitent_second_table_donji_deo">
+      
+    </div>
+  <script>
+      $(document)
+      .off("dblclick", "td.show_komitent_second_table")
+      .on("dblclick", "td.show_komitent_second_table", function() {
+        var me = $(this);
+        var elem = this.getAttribute("data-elem");
+        if (elem==="tdnalog")
+        {
+          if (me.data("requestRunning")) {
+          return;
+        }
+
+        me.data("requestRunning", true);
+
+        $.ajax({
+          url: "/edit_nalog",
+          type: "get",
+          data: {
+            nalog_id: me.data("link"),
+          },
+          dataType: "html",
+          complete: function() {
+            me.data("requestRunning", false);
+          },
+          success: function(html) {
+            $("#nalog_placeholder").html(html);
+          }
+        });
+        }
+        else
+        {
+          
+          if (me.data("requestRunning")) {
+          return;
+        }
+
+        me.data("requestRunning", true);
+
+        $.ajax({
+          url: "/show_konto",
+          type: "get",
+          data: {
+            konto_id: me.data("link"),
+          },
+          dataType: "html",
+          complete: function() {
+            me.data("requestRunning", false);
+          },
+          success: function(html) {
+            $("div.centar").html(html);
+          }
+        });
+        }
+        
+      });
+  </script>
+    
+  </div>
+  

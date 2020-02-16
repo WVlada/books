@@ -14,9 +14,8 @@
     <tbody>
       <% for(let i = 0; i <= komitenti.length -1; i++) { %>
       <tr
-        data-id="<%= komitenti[i].number %>"
-        data-type="<%= komitenti[i].name %>"
-        id="<%= komitenti[i].number %>"
+        data-id="<%= komitenti[i]._id %>"
+        data-number="<%= komitenti[i].number %>"
         class="pregled_komitenata"
       >
         <td class="pregled_komitenata"><%= komitenti[i].number %></td>
@@ -43,13 +42,12 @@
     $(document)
       .off("dblclick", "tr.pregled_komitenata")
       .on("dblclick", "tr.pregled_komitenata", function() {
-        page = $("span.current")
-          .text()
+        page = $("input#dnevnik_current_page_input")
+          .val()
           .replace(/[\t\n]+/g, " ")
           .trim();
         var me = $(this);
-        var type = this.getAttribute("data-type");
-
+        
         if (me.data("requestRunning")) {
           return;
         }
@@ -57,11 +55,11 @@
         me.data("requestRunning", true);
 
         $.ajax({
-          url: "/edit_komitent",
+          url: "/komitent",
           type: "get",
           data: {
-            komitent_number: me.data("id"),
-            komitent_type: type,
+            komitent_number: me.data("number"),
+            komitent_id: me.data("id"),
             komitent_index_page: page
           },
           dataType: "html",
@@ -69,7 +67,7 @@
             me.data("requestRunning", false);
           },
           success: function(html) {
-            $("#komitent_placeholder").html(html);
+            $("div.centar").html(html);
           }
         });
       });

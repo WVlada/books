@@ -189,9 +189,8 @@ exports.getDnevnikNaloga = (req, res, next) => {
     .countDocuments()
     .then(numOfProducts => {
       totalNalogs = numOfProducts;
-      if (page > Math.ceil(totalNalogs / NALOGS_PER_PAGE))
-      {
-        page = Math.ceil(totalNalogs / NALOGS_PER_PAGE)
+      if (page > Math.ceil(totalNalogs / NALOGS_PER_PAGE)) {
+        page = Math.ceil(totalNalogs / NALOGS_PER_PAGE);
       }
       return Nalog.find({
         company: current_company_id,
@@ -209,7 +208,7 @@ exports.getDnevnikNaloga = (req, res, next) => {
           companies = result;
         })
         .then(com => {
-          current_company = user.current_company;
+          //current_company = user.current_company;
         })
         .then(result => {
           return res.status(200).render("includes/dashboard/dnevnik", {
@@ -218,7 +217,7 @@ exports.getDnevnikNaloga = (req, res, next) => {
             path: "/dnevnik",
             hasError: false,
             user: user,
-            current_company: current_company,
+            //current_company: current_company,
             current_company_year: current_company_year,
             years: current_company_years,
             companies: companies,
@@ -483,14 +482,13 @@ exports.postNalog = (req, res, next) => {
   //  });
 };
 exports.getEditNalog = async (req, res, next) => {
-  console.log("edit_nalog")
-  console.log(req.query)
-  console.log("edit_nalog")
+  console.log("edit_nalog");
+  console.log(req.query);
+  console.log("edit_nalog");
   const user = req.user;
   const company_id = req.current_company_id;
   const current_company_year = req.current_company_year;
-  const nalog_number = req.query.nalog_number;
-  const nalog_type = req.query.nalog_type;
+  const nalog_id = req.query.nalog_id;
   const nalog_index_page = req.query.nalog_index_page;
   // sifre komitenata
   const sifra_komitenta_array = await Komitent.find({
@@ -504,10 +502,9 @@ exports.getEditNalog = async (req, res, next) => {
   // broj konta
   const current_company = await Company.findOne({ _id: company_id });
   const nalog = await Nalog.findOne({
-    company: company_id,
-    type: nalog_type,
-    number: Number(nalog_number)
+    _id: nalog_id
   });
+  const nalog_type = nalog.type;
   // brojevi naloga
   const brojevi_postojecih_naloga = [];
   const brojevi = [];
@@ -534,15 +531,16 @@ exports.getEditNalog = async (req, res, next) => {
     return e.pozivnabroj;
   });
   const poziv_na_broj_array2 = poziv_na_broj_array_sa_undefined.filter(
-    item => item 
+    item => item
   );
   let poziv_na_broj_array = [];
-  console.log(poziv_na_broj_array2)
-  for(let k = 0; k<= poziv_na_broj_array2.length-1; k++)
-  {
-    poziv_na_broj_array.includes(poziv_na_broj_array2[k]) ? null : poziv_na_broj_array.push(poziv_na_broj_array2[k]) 
+  console.log(poziv_na_broj_array2);
+  for (let k = 0; k <= poziv_na_broj_array2.length - 1; k++) {
+    poziv_na_broj_array.includes(poziv_na_broj_array2[k])
+      ? null
+      : poziv_na_broj_array.push(poziv_na_broj_array2[k]);
   }
-  console.log(poziv_na_broj_array)
+  console.log(poziv_na_broj_array);
   // pozivi na broj
   // stavovi
   const stavovi = await Stav.find({ _id: nalog.stavovi })
@@ -659,6 +657,8 @@ exports.updateNalog = async (req, res, next) => {
     return e._id;
   });
   await nalog.updateOne({
+    duguje: duguje_sum,
+    potrazuje: potrazuje_sum,
     opis: opis_naloga,
     type: vrsta_naloga,
     number: broj_naloga,
@@ -706,6 +706,7 @@ exports.updateNalog = async (req, res, next) => {
       ),
       valuta: valuta_array[i],
       number: i,
+      nalog: nalog,
       nalog_date: datum_naloga,
       type: nalog.type
     });
@@ -780,58 +781,7 @@ exports.changeYear = async (req, res, next) => {
   user_model.save();
   res.redirect("/");
 };
-const KOMITENTS_PER_PAGE = 22;
-exports.getPregledKomitenata = async (req, res, next) => {
-  const user = req.user;
-  const companies = await Company.find({ user: user });
-  const current_company = await Company.findOne({
-    _id: req.current_company_id
-  });
-  let page = +req.query.page || 1;
-  let totalKomitents;
-  const komitenti = await Komitent.find({
-    company: current_company
-  })
-    .countDocuments()
-    .then(numberOfKomitents => {
-      totalKomitents = numberOfKomitents;
-      if (page > Math.ceil(totalKomitents / KOMITENTS_PER_PAGE))
-      {
-        page = Math.ceil(totalKomitents / KOMITENTS_PER_PAGE)
-      }
-      return Komitent.find({ company: current_company })
-        .populate({ path: "type", model: komitenttype })
-        .skip((page - 1) * KOMITENTS_PER_PAGE) //paginacija
-        .limit(KOMITENTS_PER_PAGE); //paginacija;
-    });
-  
-  const current_company_year = req.current_company_year;
-  const years = req.current_company_years;
-  console.log("pregled komitenata");
-  console.log(`Page: ${page}`)
-  console.log(req.query);
-  console.log("pregled komitenata");
-  return res.status(200).render("includes/dashboard/pregled_komitenata", {
-    pageTitle: "",
-    path: "/pregled_komitenata",
-    hasError: false,
-    komitenti: komitenti,
-    user: user,
-    current_company: current_company,
-    current_company_year: current_company_year,
-    companies: companies,
-    years: years,
-    successMessage: null,
-    infoMessage: null,
-    validationErrors: [],
-    currentPage: page,
-    hasNextPage: KOMITENTS_PER_PAGE * page < totalKomitents,
-    hasPreviousPage: page > 1,
-    nextPage: page + 1,
-    previousPage: page - 1,
-    lastPage: Math.ceil(totalKomitents / KOMITENTS_PER_PAGE)
-  });
-};
+
 const KONTNI_PLAN_PER_PAGE = 22;
 exports.getKontniPlan = async (req, res, next) => {
   const user = req.user;
@@ -913,19 +863,19 @@ exports.getShowKonto = async (req, res, next) => {
     _id: req.current_company_id
   });
   const companies = await Company.find({ user: user });
-  const broj_konta = req.query.konto;
-  const konto = await Konto.findOne({
-    number: broj_konta,
-    company: current_company
-  });
+
+  const konto_id = req.query.konto_id;
+  const konto = await Konto.findById(konto_id);
   const svi_stavovi = await Stav.find({
     company: current_company,
     konto: konto
-  }).populate({path: 'nalog', model: Nalog}).sort({ date: "asc" });
+  })
+    .populate({ path: "nalog", model: Nalog })
+    .sort({ date: "asc" });
   console.log(req.query);
-  console.log("****")
-  console.log(svi_stavovi)
-  console.log("****")
+  console.log("****");
+  console.log(svi_stavovi);
+  console.log("****");
   return res.status(200).render("includes/dashboard/show_konto", {
     pageTitle: "",
     path: "/show_konto",
@@ -936,7 +886,7 @@ exports.getShowKonto = async (req, res, next) => {
     current_company: current_company,
     current_company_year: current_company_year,
     companies: companies,
-    broj_konta: broj_konta,
+    broj_konta: konto.number,
     naziv_konta: konto.name,
     years: years,
     successMessage: null,

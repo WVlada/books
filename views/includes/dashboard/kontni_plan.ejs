@@ -20,7 +20,7 @@
               <td class="kontni_plan kontni_plan_dvocifren"><%= sva_konta_i_okvir[i].name %></td>
               <td class="kontni_plan kontni_plan_dvocifren"><%= sva_konta_i_okvir[i].type %></td>
           <% } else { %>
-            <tr data-id="<%= sva_konta_i_okvir[i].number %>" class="kontni_plan_trocifren">
+            <tr data-id="<%= sva_konta_i_okvir[i]._id %>" class="kontni_plan_trocifren">
               <td class="kontni_plan kontni_plan_trocifren"><%= sva_konta_i_okvir[i].number %></td>
               <td class="kontni_plan kontni_plan_trocifren"><%= sva_konta_i_okvir[i].name %></td>
               <td class="kontni_plan kontni_plan_trocifren"><%= sva_konta_i_okvir[i].type %></td>
@@ -52,7 +52,7 @@ $(document).off("dblclick", "tr.kontni_plan_trocifren").on("dblclick", "tr.kontn
   $.ajax({
     url: "/show_konto",
     type: "get",
-    data: { konto: konto },
+    data: { konto_id: konto },
     dataType: "html",
     complete: function() {
       kontni_plan_row.data("requestRunning", false);
