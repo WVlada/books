@@ -1,274 +1,186 @@
-<div id="edit_komitent_modal_background"></div>
+<div id="novi_nalog_modal_background"></div>
+<div class="background-image"></div>
 
-<div class="edit_komitent_placeholder">
+<div class="nalog_modal_placeholder">
   <div class="modal_title_bar">
     <span class="modal_title_bar_span">Korisnik: <%= user.email %></span>
     <% if (infoMessage) { %>
-        <div id="user-message" class="user-message-div">
-          <div class="user-message user-message--info">
-            <ul class="user-message-error-list">
-              <li><%= infoMessage %></li>
-            </ul>
-          </div>
-        </div>
-        <% } %> <% if (validationErrors.length > 0) { %>
-        <div id="user-message" class="user-message-div">
-          <div class="user-message user-message--error">
-            <ul class="user-message-error-list">
-              <% validationErrors.forEach(error=>{ %>
-              <li><%= error.msg %></li>
-              <% }) %>
-            </ul>
-          </div>
-        </div>
-        <% } %> <% if (successMessage) { %>
-        <div id="user-message" class="user-message-div">
-          <div class="user-message user-message--success">
-            <ul class="user-message-error-list">
-              <li><%= successMessage %></li>
-            </ul>
-          </div>
-        </div>
-        <% } %>  
-</div>
-
-<div id="nalog_dijalog">
-<form id="new_nalog_form" class="new_nalog_form" action="/new_nalog" method="POST">
-    <div class = "container-fluid">
-        <div class = "prvi_row"> 
-            <div class="vrsta_naloga_div">
-                <div class="form-control">
-                    <span>Vrsta naloga:</span>
-                    <select class="novi_nalog_input" name="vrsta_naloga" id="vrstaNaloga" onchange="Pronadji_brojeve_naloga()">
-                        
-                        <% for(let i = 0; i <= vrste_naloga.length - 1; i++) { %>
-                            <option <%= vrste_naloga[i] === "N" ? "selected" : null %>><%= vrste_naloga[i] %></option>
-                         <% } %>
-                    </select>
-                </div>
-            </div>
-            <div class="broj_naloga_div">
-                  <div id="broj_naloga">
-                      <span>Broj naloga:</span>
-                      <select class="novi_nalog_input" name= "broj_naloga" id="broj_naloga_select">
-                          <% for(let i=0; i< brojevi.length-1; i++) { %>
-                            <option value="<%= brojevi[i] %>"><%= brojevi[i] %></option> 
-                          <% } %>
-                      </select>
-                  </div>
-            </div>
-            <div class="opis_naloga_div">
-              <span class="opis_naloga_span">Opis naloga:</span> 
-              <div class="form-control">
-                <input name="opis_naloga" class="novi_nalog_input opis_naloga_input" type="text"/>
-              </div>
-          </div>
-           
-        </div>
-
-        <div class = "drugi_row drugi_row_grid-container"> 
-            <div class="form-control">
-                  <span>Datum:</span>
-                  <input name="datum_naloga" id="nalog_date" type="date" class="novi_nalog_input" value="<%= nalog_date %>">
-            </div>
-        </div>
-            
-      </div>   
-        <div class="treci_row treci_row_grid-container">
-            <div class="grid-item">Opis stava:</div>
-            <div class="grid-item">Šifra komitenta:</div>
-            <div class="grid-item">Poziv na broj:</div>
-            <div class="grid-item">Broj konta: <i class="fa fa-plus-square dodaj_racun" style="display:inline-block;margin-top:5px;cursor: pointer;"></i> <div id="dijalog_za_konta" style="display: none;" ></div></div>
-            <div class="grid-item">Duguje:</div>
-            <div class="grid-item">Potražuje:</div>
-            <div class="grid-item">Valuta:</div>
-        </div>
-         
-        <div class="cetvrti_row cetvrti_row_grid-container">
-            <div class="grid-item">
-              <div class="form-control novi_nalog_form-control">
-                <input id="opis_stava_input-0" name="opis_stava[]" class="novi_nalog_input opis_stava_input" type="text"/>
-              </div>
-            </div>
-            <div class="grid-item">
-              <div class="form-control novi_nalog_form-control">
-                  <!--<input  id="sifra_komitenta-0" name="sifra_komitenta[]" list="sifra_komitenta_list" class="chosen-select"/>-->
-                  <select data-placeholder="Select..." name="sifra_komitenta[]" id="sifra_komitenta-0" class="chosen-select sifra_komitenta_input">
-                    <% for(let i=0; i <= sifra_komitenta_array.length - 1; i++) { %>
-                      <option></option>
-                      <option value="<%= sifra_komitenta_array[i]._id  %>"><%= sifra_komitenta_array[i].sifra %> | <%= sifra_komitenta_array[i].name %> </option>
-                    <% } %>
-                  </select>
-              </div>
-            </div>
-            <div class="grid-item">
-              <div class="form-control novi_nalog_form-control">
-                  <input id="poziv_na_broj-0" name="poziv_na_broj[]" list="poziv_na_broj" class="poziv_na_broj_input"/>
-                  <!--<select data-placeholder="Select..." name="poziv_na_broj[]" id="poziv_na_broj-0" class="chosen-select poziv_na_broj_input">-->
-                    <datalist id="poziv_na_broj">
-                      <% for(let i=0; i <= poziv_na_broj_array.length - 1; i++) { %>
-                        <option></option>
-                        <option><%= poziv_na_broj_array[i] %></option> 
-                      <% } %>
-                    </datalist>
-              </div>
-            </div>
-            <div class="grid-item">
-              <div class="form-control novi_nalog_form-control">
-                  <!--<input id="konto-0" name="konto[]" list="konto" class="konto_input"/>-->
-                  <select data-placeholder="Select..." name="konto[]" id="konto-0" class="chosen-select konto_input">
-                    <% for(let i=0; i <= broj_konta_array.length - 1; i++) { %>
-                      <option></option>
-                      <option><%= broj_konta_array[i].number %> | <%= broj_konta_array[i].name %> </option>
-                    <% } %>
-                  </select>
-              </div>
-            </div>
-            <div class="grid-item">
-              <div class="form-control novi_nalog_form-control">
-                <input id="duguje-0" name="duguje[]" class="duguje_input number-separator" type="text" value="0.00"/>
-              </div>
-            </div>
-            <div class="grid-item">
-              <div class="form-control novi_nalog_form-control">
-                <input id="potrazuje-0" name="potrazuje[]" class="potrazuje_input number-separator" type="text" value="0.00"/>
-              </div>
-            </div>
-            <div class="grid-item">
-              <div class="form-control novi_nalog_form-control">
-                <input id="valuta-0" name="valuta[]" class="valuta_input" type="date"/>
-              </div>
-            </div>
-        </div>
-        
-        <div class="cetvrti_row cetvrti_row_grid-container">
-            <div class="grid-item">
-              <div class="form-control novi_nalog_form-control">
-                <input id="opis_stava_input-1" name="opis_stava[]" class="novi_nalog_input opis_stava_input" type="text"/>
-              </div>
-            </div>
-            <div class="grid-item">
-              <div class="form-control novi_nalog_form-control">
-                  <!--<input id="sifra_komitenta-1" name="sifra_komitenta[]" list="sifra_komitenta_list" class="sifra_komitenta_input"/>-->
-                  <select data-placeholder="Select..." name="sifra_komitenta[]" id="sifra_komitenta-1" class="chosen-select sifra_komitenta_input">
-                    <% for(let i=0; i <= sifra_komitenta_array.length - 1; i++) { %>
-                      <option></option>
-                      <option value="<%= sifra_komitenta_array[i]._id  %>"><%= sifra_komitenta_array[i].sifra %> | <%= sifra_komitenta_array[i].name %> </option>
-                    <% } %>
-                  </select>
-              </div>
-            </div>
-            <div class="grid-item">
-              <div class="form-control novi_nalog_form-control">
-                  <input id="poziv_na_broj-1" name="poziv_na_broj[]" list="poziv_na_broj" class="poziv_na_broj_input"/>
-                  <!--<select data-placeholder="Select..." name="poziv_na_broj[]" id="poziv_na_broj-1" class="chosen-select poziv_na_broj_input">-->
-              </div>
-            </div>
-            <div class="grid-item">
-              <div class="form-control novi_nalog_form-control">
-                  <!--<input id="konto-1" name="konto[]" list="konto" class="konto_input"/>-->
-                  <select data-placeholder="Select..." name="konto[]" id="konto-1" class="chosen-select konto_input">
-                    <% for(let i=0; i <= broj_konta_array.length - 1; i++) { %>
-                      <option></option>
-                      <option><%= broj_konta_array[i].number %> | <%= broj_konta_array[i].name %> </option>
-                    <% } %>
-                  </select>
-              </div>
-            </div>
-            <div class="grid-item">
-              <div class="form-control novi_nalog_form-control">
-                <input id="duguje-1"name="duguje[]" class="duguje_input number-separator" type="text" value="0.00"/>
-              </div>
-            </div>
-            <div class="grid-item">
-              <div class="form-control novi_nalog_form-control">
-                <input id="potrazuje-1" name="potrazuje[]" class="potrazuje_input number-separator" type="text" value="0.00"/>
-              </div>
-            </div>
-            <div class="grid-item">
-              <div class="form-control novi_nalog_form-control">
-                <input id="valuta-1" name="valuta[]" class="valuta_input" type="date"/>
-              </div>
-            </div>
-           
-        </div>
-
-        <div class="cetvrti_row cetvrti_row_grid-container">
-            <div class="grid-item">
-              <div class="form-control novi_nalog_form-control">
-                <input id="opis_stava_input-2" name="opis_stava[]" class="novi_nalog_input opis_stava_input" type="text"/>
-              </div>
-            </div>
-            <div class="grid-item">
-              <div class="form-control novi_nalog_form-control">
-                  <!--<input id="sifra_komitenta-2" name="sifra_komitenta[]" list="sifra_komitenta_list" class="sifra_komitenta_input"/>-->
-                  <select data-placeholder="Select..." name="sifra_komitenta[]" id="sifra_komitenta-2" class="chosen-select sifra_komitenta_input">
-                    <% for(let i=0; i <= sifra_komitenta_array.length - 1; i++) { %>
-                      <option></option>
-                      <option value="<%= sifra_komitenta_array[i]._id  %>"><%= sifra_komitenta_array[i].sifra %> | <%= sifra_komitenta_array[i].name %> </option>
-                    <% } %>
-                  </select>
-              </div>
-            </div>
-            <div class="grid-item">
-              <div class="form-control novi_nalog_form-control">
-                  <input id="poziv_na_broj-2" name="poziv_na_broj[]" list="poziv_na_broj" class="poziv_na_broj_input"/>
-                  <!--<select data-placeholder="Select..." name="poziv_na_broj[]" id="poziv_na_broj-2" class="chosen-select poziv_na_broj_input">-->
-              </div>
-            </div>
-            <div class="grid-item">
-              <div class="form-control novi_nalog_form-control">
-                  <!--<input id="konto-2" name="konto[]" list="konto" class="konto_input"/>-->
-                  <select data-placeholder="Select..." name="konto[]" id="konto-2" class="chosen-select konto_input">
-                    <% for(let i=0; i <= broj_konta_array.length - 1; i++) { %>
-                      <option></option>
-                      <option><%= broj_konta_array[i].number %> | <%= broj_konta_array[i].name %> </option>
-                    <% } %>
-                  </select>
-              </div>
-            </div>
-            <div class="grid-item">
-              <div class="form-control novi_nalog_form-control">
-                <input id="duguje-2" name="duguje[]" class="duguje_input number-separator" type="text" value="0.00" />
-              </div>
-            </div>
-            <div class="grid-item">
-              <div class="form-control novi_nalog_form-control">
-                <input id="potrazuje-2" name="potrazuje[]" class="potrazuje_input number-separator" type="text" value="0.00" />
-              </div>
-            </div>
-            <div class="grid-item">
-              <div class="form-control novi_nalog_form-control">
-                <input id="valuta-2" name="valuta[]" class="valuta_input" type="date"/>
-              </div>
-            </div>
-            
-            <div class="grid-item samo_plus_item">
-                <i class="fas fa-plus-circle" onclick="dodaj_red(this)"></i>
-            </div>
-           
-        </div>
-
-
-       
-        <hr id="ruler" class="modal_form_hr">
-        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-  </form>
-
-  <div class="modal_footer">
-    <!--<hr class="modal_footer_hr">-->
-      <div class="modal_footer_button_set">
-          <button id="submit_form_button" >
-              OK
-        </button>
-        <button id="cancel_form_button">
-            Cancel
-      </button>
+    <div id="user-message" class="user-message-div">
+      <div class="user-message user-message--info">
+        <ul class="user-message-error-list">
+          <li><%= infoMessage %></li>
+        </ul>
       </div>
-      
-      </div>    
+    </div>
+    <% } %> <% if (validationErrors.length > 0) { %>
+    <div id="user-message" class="user-message-div">
+      <div class="user-message user-message--error">
+        <ul class="user-message-error-list">
+          <% validationErrors.forEach(error=>{ %>
+          <li><%= error.msg %></li>
+          <% }) %>
+        </ul>
+      </div>
+    </div>
+    <% } %> <% if (successMessage) { %>
+    <div id="user-message" class="user-message-div">
+      <div class="user-message user-message--success">
+        <ul class="user-message-error-list">
+          <li><%= successMessage %></li>
+        </ul>
+      </div>
+    </div>
+    <% } %>
+    <div id="nalog_dijalog">
+      <div class="slika-container">
+        <div class="slika-container_new_company">
+          <div id="signup_slika" class="col-md-6">
+            <div class="new_company_slika_div">
+              <p class="new_company_slika_text_iznad">
+                Create new company
+              </p>
+              <img
+                class="new_company_slika"
+                src="../../images/company.png"
+                alt="New company"
+              />
+              <p class="new_company_slika_text">
+                At least one company must be registered for each user. Enter the
+                data about company below to create one now.
+              </p>
+              <p class="new_company_slika_text_ispod">
+                If you are a new user, and need to be registered for an existing
+                company, please contact FinBooks! team.
+              </p>
+            </div>
+            <form class="new_company_form" action="/new_company" method="POST">
+              <div class="form-control">
+                <input
+                  class="new_company_input new_company_input_name <%= validationErrors.find(e => e.param ==='name') ? 'invalid' : ''%>"
+                  type="text"
+                  placeholder="Company name"
+                  name="name"
+                  id="name"
+                  value="<%= oldInput.name %>"
+                />
+              </div>
+              <div class="form-control">
+                <% date = new Date(Date.now()) %>
+                <select
+                  name="year"
+                  id="year"
+                  class="new_company_input new_company_input_year <%= validationErrors.find(e => e.param ==='year') ? 'invalid' : ''%>"
+                >
+                  <option><%= date.getFullYear() %></option>
+                  <!--<option><%= date.getFullYear()-3 %></option>
+            <option><%= date.getFullYear()-2 %></option>
+            <option><%= date.getFullYear()-1 %></option>
+            <option><%= date.getFullYear()+1 %></option>-->
+                </select>
+              </div>
+              <div class="new_company_inline_div">
+                <div class="form-control new_company_inline">
+                  <input
+                    class="new_company_input new_company_input_mb <%= validationErrors.find(e => e.param ==='mb') ? 'invalid' : ''%>"
+                    type="mb"
+                    placeholder="mb: 8 digits"
+                    name="mb"
+                    id="mb"
+                    value="<%= oldInput.mb %>"
+                  />
+                </div>
+                <div class="form-control new_company_inline">
+                  <input
+                    class="new_company_input new_company_input_pib <%= validationErrors.find(e => e.param ==='pib') ? 'invalid' : ''%>"
+                    type="pib"
+                    placeholder="pib: 9 digits"
+                    name="pib"
+                    id="pib"
+                    value="<%= oldInput.pib %>"
+                  />
+                </div>
+              </div>
 
-</div>
+              <div class="form-control">
+                <input
+                  class="new_company_input new_company_input_adress <%= validationErrors.find(e => e.param ==='adress') ? 'invalid' : ''%>"
+                  type="adress"
+                  placeholder="Company adress"
+                  name="adress"
+                  id="adress"
+                  value="<%= oldInput.adress %>"
+                />
+              </div>
+              <div class="form-control">
+                <input
+                  class="new_company_input new_company_input_email <%= validationErrors.find(e => e.param ==='email') ? 'invalid' : ''%>"
+                  type="email"
+                  placeholder="Company e-mail"
+                  name="email"
+                  id="email"
+                  value="<%= oldInput.email %>"
+                />
+              </div>
+              <div class="form-control">
+                <input
+                  class="new_company_input new_company_input_telephone <%= validationErrors.find(e => e.param ==='telephone') ? 'invalid' : ''%>"
+                  type="tel"
+                  placeholder="Company telephone"
+                  name="telephone"
+                  id="telephone"
+                  value="<%= oldInput.telephone %>"
+                />
+              </div>
+              <div class="form-control">
+                <p class="default_transactions_text">
+                  Create default business transactions:
+                </p>
+                <input
+                  class="new_company_input_checkbox <%= validationErrors.find(e => e.param ==='checkbox') ? 'invalid' : ''%>"
+                  type="checkbox"
+                  placeholder=""
+                  name="checkbox"
+                  id="checkbox"
+                  checked
+                  disabled
+                />
+                <input
+                  class=""
+                  type="hidden"
+                  name="checkbox_hidden"
+                  id="checkbox_hidden"
+                  value="true"
+                />
+              </div>
+              <button class="new_company_button" type="submit">
+                Create company
+              </button>
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+            </form>
+            <div class="signup-back-to-login">
+              <p><a href="/back_to_login">Back to login</a></p>
+            </div>
+          </div>
+        </div>
+        <script>
+          var msgdiv = document.getElementById("user-message");
+          var msg = document.getElementsByClassName("user-message");
 
-
+          if (msg.length > 0) {
+            for (i = 0; i < msg.length; i++) {
+              let message = msg[i]; // zanimljivo je probati sa msg[i] pa timeout :)
+              message.style.opacity = 1;
+              message.style.transition = "opacity 1s ease-in-out";
+              setTimeout(function() {
+                message.style.opacity = "0";
+              }, 1800);
+              setTimeout(function() {
+                message.style.visibility = "hidden";
+              }, 3000);
+            }
+          }
+        </script>
+      </div>
+    </div>
+  </div>
 </div>

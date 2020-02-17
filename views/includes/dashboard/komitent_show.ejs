@@ -12,7 +12,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr data-link="<%= komitent._id %>" class="show_komitent_first_table">
+        <tr data-id="<%= komitent._id %>" class="show_komitent_first_table">
           <td class="show_komitent_first_table"><%= komitent.number %></td>
           <td class="show_komitent_first_table"><%= komitent.name %></td>
           <td class="show_komitent_first_table"><%= komitent.type.name %></td>
@@ -63,6 +63,32 @@
       
     </div>
   <script>
+    $(document)
+      .off("dblclick", "tr.show_komitent_first_table")
+      .on("dblclick", "tr.show_komitent_first_table", function() {
+        var me = $(this);
+        var elem = this.getAttribute("data-id");
+        if (me.data("requestRunning")) {
+        return;
+        }
+
+        me.data("requestRunning", true);
+
+        $.ajax({
+          url: "/komitent_edit",
+          type: "get",
+          data: {
+            komitent_id: me.data("id"),
+          },
+          dataType: "html",
+          complete: function() {
+            me.data("requestRunning", false);
+          },
+          success: function(html) {
+            $("#komitent_placeholder").html(html);
+          }
+        });
+      });
       $(document)
       .off("dblclick", "td.show_komitent_second_table")
       .on("dblclick", "td.show_komitent_second_table", function() {

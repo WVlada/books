@@ -107,3 +107,26 @@ exports.getKomitent = async (req, res, next) => {
     page: page
   });
 };
+exports.getEditKomitent = async (req, res, next) => {
+  const user = req.user;
+  const current_company_id = req.current_company_id;
+  const current_company = await Company.findOne({ _id: current_company_id });
+  const komitent_id = req.query.komitent_id;
+  const komitent = await Komitent.findById(komitent_id).populate({
+    path: "type",
+    model: komitenttype
+  });
+
+  return res.status(200).render("includes/dashboard/komitent_edit", {
+    pageTitle: "",
+    path: "/komitent_edit",
+    hasError: false,
+    komitent: komitent,
+    user: user,
+    current_company: current_company,
+    successMessage: null,
+    infoMessage: null,
+    validationErrors: [],
+    oldInput: {}
+  });
+};
