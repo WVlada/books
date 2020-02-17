@@ -177,20 +177,24 @@ exports.getDnevnikNaloga = (req, res, next) => {
   const current_company_id = req.current_company_id;
   const current_company_year = req.current_company_year;
   const current_company_years = req.current_company_years;
+  let page = +req.query.page || 1; //page=1 +ga pretvara u broj || ako nije def, onda stavi 1
   console.log("/get_dnevnik");
   console.log(user);
   console.log(current_company_id);
   console.log(current_company_year);
   console.log(current_company_years);
+  console.log(req.query.page);
+  console.log(page);
   console.log("/get_dnevnik");
-  let page = +req.query.page || 1; //page=1 +ga pretvara u broj || ako nije def, onda stavi 1
   let totalNalogs;
   Nalog.find({ company: current_company_id, year: current_company_year })
     .countDocuments()
-    .then(numOfProducts => {
-      totalNalogs = numOfProducts;
+    .then(numOfNalogs => {
+      totalNalogs = numOfNalogs;
       if (page > Math.ceil(totalNalogs / NALOGS_PER_PAGE)) {
-        page = Math.ceil(totalNalogs / NALOGS_PER_PAGE);
+        if (totalNalogs != 0) {
+          page = Math.ceil(totalNalogs / NALOGS_PER_PAGE);
+        }
       }
       return Nalog.find({
         company: current_company_id,

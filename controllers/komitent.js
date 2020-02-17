@@ -22,7 +22,9 @@ exports.getKomitentIndex = async (req, res, next) => {
     .then(numberOfKomitents => {
       totalKomitents = numberOfKomitents;
       if (page > Math.ceil(totalKomitents / KOMITENTS_PER_PAGE)) {
-        page = Math.ceil(totalKomitents / KOMITENTS_PER_PAGE);
+        if (totalKomitents !== 0) {
+          page = Math.ceil(totalKomitents / KOMITENTS_PER_PAGE);
+        }
       }
       return Komitent.find({ company: current_company })
         .populate({ path: "type", model: komitenttype })
