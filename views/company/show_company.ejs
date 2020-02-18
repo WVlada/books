@@ -94,8 +94,8 @@
 				</div>
 			</div>
 			<div class="dole_grid_item_4">
-				<finbutton id="dole_button4">
-					#
+				<finbutton id="new_client">
+					New client
 				</finbutton>
 			</div>
 			<div class="dole_grid_item_5">	
@@ -200,5 +200,28 @@ if (msg.length > 0) {
 //               
 //    }
 //);
-	
+$(document)
+      .off("click", "#new_client")
+      .on("click", "#new_client", function() {
+        var me = $(this);
+        if (me.data("requestRunning")) {
+          return;
+        }
+        me.data("requestRunning", true);
+        $.ajax({
+          url: "/komitent_new",
+          type: "GET",
+          //data: {
+          //  current_company: `<%= current_company.id.toString() %>`,
+          //  current_year: `<%= current_company_year %>`
+          //},
+          dataType: "html",
+          complete: function() {
+            me.data("requestRunning", false);
+          },
+          success: function(html) {
+            $("#komitent_placeholder").html(html);
+          }
+        });
+      });
 </script>
