@@ -34,9 +34,9 @@
 
   <div id="komitent_edit_dijalog">
     <form
-      id="new_nalog_form"
-      class="new_nalog_form"
-      action="/new_nalog"
+      id="komitent_edit_form"
+      class="komitent_edit_form"
+      action="/komitent_edit"
       method="POST"
     >
       <div class="row">
@@ -59,7 +59,7 @@
               </p>
                 <div class="form-control">
                   <input
-                    class="new_company_input new_company_input_name <%= validationErrors.find(e => e.param ==='name') ? 'invalid' : ''%>"
+                    class="komitent_edit_input komitent_edit_input_name <%= validationErrors.find(e => e.param ==='name') ? 'invalid' : ''%>"
                     type="text"
                     placeholder="Client name"
                     name="name"
@@ -69,72 +69,98 @@
                 </div>
                 <div class="form-control">
                   <input
-                    class="new_company_input new_company_input_name <%= validationErrors.find(e => e.param ==='name') ? 'invalid' : ''%>"
+                    class="komitent_edit_input komitent_edit_input_adress <%= validationErrors.find(e => e.param ==='adress') ? 'invalid' : ''%>"
                     type="text"
-                    placeholder="Client name"
-                    name="name"
-                    id="name"
-                    value="<%= oldInput.name %>"
+                    placeholder="Adress"
+                    name="adress"
+                    id="adress"
+                    value="<%= oldInput.adress %>"
                   />
                 </div>
                 <div class="form-control">
                   <input
-                    class="new_company_input new_company_input_name <%= validationErrors.find(e => e.param ==='name') ? 'invalid' : ''%>"
+                    class="komitent_edit_input komitent_edit_input_email <%= validationErrors.find(e => e.param ==='email') ? 'invalid' : ''%>"
                     type="text"
-                    placeholder="Client name"
-                    name="name"
-                    id="name"
-                    value="<%= oldInput.name %>"
+                    placeholder="Client email"
+                    name="email"
+                    id="email"
+                    value="<%= oldInput.email %>"
                   />
                 </div>
                 <div class="form-control">
                   <input
-                    class="new_company_input new_company_input_name <%= validationErrors.find(e => e.param ==='name') ? 'invalid' : ''%>"
+                    class="komitent_edit_input komitent_edit_input_pib <%= validationErrors.find(e => e.param ==='pib') ? 'invalid' : ''%>"
                     type="text"
-                    placeholder="Client name"
-                    name="name"
-                    id="name"
-                    value="<%= oldInput.name %>"
+                    placeholder="VAT: 9 digits"
+                    name="pib"
+                    id="pib"
+                    value="<%= oldInput.pib %>"
                   />
                 </div>
                 <div class="form-control">
                   <input
-                    class="new_company_input new_company_input_name <%= validationErrors.find(e => e.param ==='name') ? 'invalid' : ''%>"
+                    class="komitent_edit_input komitent_edit_input_sifra <%= validationErrors.find(e => e.param ==='sifra') ? 'invalid' : ''%>"
                     type="text"
-                    placeholder="Company name"
-                    name="name"
-                    id="name"
-                    value="<%= oldInput.name %>"
+                    placeholder="Client code"
+                    name="sifra"
+                    id="sifra"
+                    value="<%= oldInput.sifra %>"
                   />
                 </div>
                 <div class="form-control">
-                  <input
-                    class="new_company_input new_company_input_name <%= validationErrors.find(e => e.param ==='name') ? 'invalid' : ''%>"
-                    type="text"
-                    placeholder="Company name"
-                    name="name"
-                    id="name"
-                    value="<%= oldInput.name %>"
-                  />
+                  <select data-placeholder="Select..." name="type_id" class="komitent_edit_input komitent_edit_input_type">
+                    <% for(let j = 0; j <= komitent_types.length -1; j++) { %>
+                    <option value="<%= komitent_types[j]._id %>"><%= komitent_types[j].name %></option>
+                    <% } %>
+                  </select>
                 </div>
              
           </div>
           
         </div>
-      </div>
+        <input type="hidden" name="komitent_id" value="<%= oldInput.id %>" />
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
     </form>
-
-    <div class="modal_footer">
-      <div class="modal_footer_button_set">
-        <button id="submit_form_button">
-          OK
-        </button>
-        <button id="cancel_form_button">
-          Cancel
-        </button>
-      </div>
+</div>
+<div class="modal_footer">
+  <div class="modal_footer_button_set">
+    <button id="komitent_edit_ok_form_button">
+      OK
+    </button>
+    <button id="komitent_edit_cancel_form_button">
+      Cancel
+      </button>
     </div>
   </div>
+</div>
 
-  <script></script>
+<script>
+$(document).off('click', '#komitent_edit_ok_form_button').on('click', '#komitent_edit_ok_form_button', function()        
+  { var me = $(this);
+    var cancel_button = document.getElementById("komitent_edit_cancel_form_button")
+
+    if (me.data('requestRunning')) 
+      { return; }
+    me.data('requestRunning', true);
+    cancel_button.setAttribute('requestRunning', true);
+    //var form = document.getElementById("komitent_edit_form")
+    $.ajax({
+        type: 'POST',
+        url: '/komitent_edit',
+        data: $('#komitent_edit_form').serialize(), 
+        success: function(response) {
+          var modal_placeholder = document.getElementById("komitent_placeholder")
+          modal_placeholder.innerHTML = ""; 
+          $("div.centar").html(response);
+         },
+    });
+    //form.submit();
+  });
+$(document).off('click', '#komitent_edit_cancel_form_button').on('click', '#komitent_edit_cancel_form_button', function()        
+  { 
+    var modal_placeholder = document.getElementById("komitent_placeholder")
+    modal_placeholder.innerHTML = "";
+  }
+);
+  </script>
 </div>

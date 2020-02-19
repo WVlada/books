@@ -42,6 +42,7 @@
 }
 .komitent_edit_slika_div {
   text-align: center;
+  padding-top: 30px;
 }
 .komitent_edit_slika {
   width: 100px;
@@ -68,6 +69,7 @@
   color: #919094;
   margin-bottom: 0px;
   padding: 10px;
+  padding-left: 12px;
 }
 
 .new_nalog_form {
@@ -79,199 +81,22 @@
   background-color: transparent;
   height: auto !important;
 }
-.novi_nalog_form-control {
+.komitent_edit_form-control {
   padding: 2px;
 }
-.opis_naloga_span {
-  width: 90px;
-  margin-top: 8px;
-}
-.novi_nalog_input {
-  border-radius: 2px;
-  border: 2px solid #d8d9ea;
-  font-size: 13px;
-  height: 25px;
-}
-.prvi_row {
-  font-size: 13px;
-  display: flex;
-  flex-wrap: nowrap;
-  flex-direction: row;
-  align-items: center;
-}
-.vrsta_naloga_div {
-  width: 150px;
-}
-.broj_naloga_div {
-  width: 150px;
-}
-.opis_naloga_div {
-  width: 600px;
-  display: flex;
-}
-#nalog_date {
+.komitent_edit_input {
   padding-left: 2px;
-  width: 125px;
-}
-.drugi_row {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: left;
-}
-.treci_row {
-  margin-top: 5px;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: left;
-  font-size: 13px;
-}
-.treci_row_grid-container {
-  padding-left: 27px;
-  display: grid;
-  grid-column-gap: 5px;
-  grid-template-columns: 250px 130px 100px 100px 135px 135px 130px;
-}
-.cetvrti_row_grid-container {
-  padding-left: 23px;
-  display: grid;
-  grid-column-gap: 5px;
-  grid-template-columns: 250px 130px 100px 100px 135px 135px 130px 50px;
-}
-.opis_naloga_input {
-  padding-left: 2px;
-  width: inherit;
-  height: 25px;
-}
-.opis_stava_input {
-  padding-left: 2px;
-  width: inherit;
   border-radius: 2px;
   border: 2px solid #d8d9ea;
   font-size: 13px;
   height: 25px;
 }
-.sifra_komitenta_input {
-  width: inherit;
-  border-radius: 2px;
-  border: 2px solid #d8d9ea;
-  font-size: 13px;
-  padding-left: 4px;
-  color: #999;
-  cursor: pointer;
-  background: -webkit-gradient(
-    linear,
-    left top,
-    left bottom,
-    color-stop(20%, #fff),
-    color-stop(50%, #f6f6f6),
-    color-stop(52%, #eee),
-    to(#f4f4f4)
-  );
+.komitent_edit_input_pib {
+  width: 100px
 }
-.chosen-single {
-  width: inherit !important;
-  border-radius: 2px !important;
-  border: 2px solid #d8d9ea !important;
-  font-size: 13px !important;
-  color: #999 !important;
+.komitent_edit_input_sifra {
+  width: 130px
 }
-.chosen-with-drop {
-  width: 250px !important;
-}
-.chosen-drop {
-  background-color: #f8f8f8 !important;
-}
-.chosen-results {
-}
-li.highlighted {
-  background-image: unset !important;
-  background-color: #6d687e !important;
-  color: white !important;
-  border-radius: 2px !important;
-}
-.poziv_na_broj_input {
-  width: inherit;
-  border-radius: 2px;
-  border: 2px solid #d8d9ea;
-  font-size: 13px;
-  height: 25px;
-}
-.konto_input {
-  width: inherit;
-  border-radius: 2px;
-  border: 2px solid #d8d9ea;
-  font-size: 13px;
-  height: 25px;
-}
-.duguje_input {
-  width: inherit;
-  border-radius: 2px;
-  border: 2px solid #d8d9ea;
-  font-size: 13px;
-  text-align: right;
-  padding-right: 5px;
-  height: 25px;
-}
-.potrazuje_input {
-  width: inherit;
-  border-radius: 2px;
-  border: 2px solid #d8d9ea;
-  font-size: 13px;
-  text-align: right;
-  padding-right: 5px;
-  height: 25px;
-}
-.valuta_input {
-  padding-left: 2px;
-  width: inherit;
-  border-radius: 2px;
-  border: 2px solid #d8d9ea;
-  font-size: 13px;
-  height: 25px;
-}
-.modal_footer {
-  background-color: whitesmoke;
-  border-radius: 2px;
-  margin-top: 12px;
-  margin-bottom: 8px;
-}
-.modal_form_hr {
-  margin-bottom: 0px;
-}
-/*.modal_footer_hr {
-  margin-top: 6px;
-  margin-bottom: 3px;
-}*/
-.modal_footer_button_set {
-  margin-top: 4px;
-  margin-bottom: 4px;
-  margin-right: 20px;
-  text-align: right;
-  font-size: 13px;
-}
-.modal_footer_button_set button {
-  padding: 2px 8px;
-  margin-right: 10px;
-  line-height: initial;
-}
-.dodaj_racun {
-  cursor: pointer;
-  color: #49435b;
-}
-.fa-plus-circle {
-  margin: 6px;
-  cursor: pointer;
-  color: #49435b;
-}
-.fa-minus-circle {
-  margin: 6px;
-  cursor: pointer;
-  color: #49435b;
-}
-input[type="number"]::-webkit-inner-spin-button {
-  padding-right: 5px;
-  margin-left: 5px;
-}
-input[list] {
-  text-align: right;
+.komitent_edit_input_type {
+  color: grey
 }
