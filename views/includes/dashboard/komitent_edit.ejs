@@ -1,5 +1,7 @@
 <div id="komitent_edit_modal_background"></div>
-
+<div id="loader" >
+  <i id="loader-spinner" class="fas fa-spinner fa-spin"></i>
+</div>
 <div class="komitent_edit_modal_placeholder">
   <div class="modal_title_bar">
     <span class="modal_title_bar_span">Korisnik: <%= user.email %></span>
@@ -138,7 +140,7 @@
 $(document).off('click', '#komitent_edit_ok_form_button').on('click', '#komitent_edit_ok_form_button', function()        
   { var me = $(this);
     var cancel_button = document.getElementById("komitent_edit_cancel_form_button")
-
+    var error_inputs = []
     if (me.data('requestRunning')) 
       { return; }
     me.data('requestRunning', true);
@@ -150,9 +152,19 @@ $(document).off('click', '#komitent_edit_ok_form_button').on('click', '#komitent
         data: $('#komitent_edit_form').serialize(), 
         success: function(response) {
           var modal_placeholder = document.getElementById("komitent_placeholder")
-          modal_placeholder.innerHTML = ""; 
+          modal_placeholder.innerHTML = "";
           $("div.centar").html(response);
          },
+         error: function(error){
+          me.data('requestRunning', false);
+          for(let j =0 ; j <= error.responseJSON.length - 1; j++){
+            $(`input[name=${error.responseJSON[j].param}]`).removeClass('komitent_edit_input').addClass('komitent_edit_input_error')
+          }
+          $('#loader').hide();
+         },
+         beforeSend: function(){
+          $('#loader').show();
+        }
     });
     //form.submit();
   });

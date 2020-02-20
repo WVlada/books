@@ -6,6 +6,7 @@ const Stav = require("../models/stav");
 const Konto = require("../models/konto");
 const accounting = require("accounting-js");
 const ObjectId = require('mongoose').Types.ObjectId;
+const { validationResult } = require("express-validator");
 
 const KOMITENTS_PER_PAGE = 22;
 exports.getKomitentIndex = async (req, res, next) => {
@@ -153,6 +154,13 @@ exports.postEditKomitent = async (req, res, next) => {
   console.log("komitent_edit")
   console.log(req.body)
   console.log("komitent_edit")
+  
+  const errors = validationResult(req);
+  console.log(errors)
+  if (!errors.isEmpty()) {
+    console.log("33")
+    return res.status(402).json(errors.array())
+  }
   
   // ovde renderujem poslednju stranicu komitent_index
   // stavio sam pre update i create, da bih imao TOTALKOMITENTS 
