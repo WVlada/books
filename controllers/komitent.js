@@ -127,11 +127,13 @@ exports.getEditKomitent = async (req, res, next) => {
     email: komitent.email,
     pib: komitent.pib,
     type: komitent.type,
-    code: komitent.code,
-    id: Komitent._id
+    sifra: komitent.sifra,
+    id: komitent_id,
+    number: komitent.number
   }
   }
   const komitent_types = await Komitenttype.find({company: current_company_id})
+  
   return res.status(200).render("includes/dashboard/komitent_edit", {
     pageTitle: "",
     path: "/komitent_edit",
@@ -158,10 +160,44 @@ exports.postEditKomitent = async (req, res, next) => {
   const errors = validationResult(req);
   console.log(errors)
   if (!errors.isEmpty()) {
-    console.log("33")
     return res.status(402).json(errors.array())
   }
   
+  const name = req.body.name;
+  const adress = req.body.adress;
+  const email = req.body.email;
+  const pib = req.body.pib;
+  const sifra = req.body.sifra;
+  const number = req.body.number;
+  const type_id = req.body.type_id;
+  
+  if (ObjectId.isValid(komitent_id)) {
+    // update
+    const komitent = await Komitent.findById(komitent_id)
+    await komitent.updateOne({
+      name: name,
+      adress: adress,
+      pib: pib,
+      email: email,
+      sifra: sifra,
+      type: type_id,
+      number: number
+    })
+  }
+  else {
+    // create
+    const new_komitent = await Komitent.create({
+      company: current_company,
+      user: user,
+      name: name,
+      adress: adress,
+      pib: pib,
+      email: email,
+      sifra: sifra,
+      type: type_id,
+      number: number
+    })
+  }
   // ovde renderujem poslednju stranicu komitent_index
   // stavio sam pre update i create, da bih imao TOTALKOMITENTS 
   let page = +req.query.page || 1;
@@ -183,40 +219,6 @@ exports.postEditKomitent = async (req, res, next) => {
         .limit(KOMITENTS_PER_PAGE); //paginacija;
     });
   
-  const name = req.body.name;
-  const adress = req.body.adress;
-  const email = req.body.email;
-  const pib = req.body.pib;
-  const sifra = req.body.sifra;
-  const type_id = req.body.type_id;
-  if (ObjectId.isValid(komitent_id)) {
-    // update
-    const komitent = await Komitent.findById(komitent_id)
-    await komitent.updateOne({
-      name: name,
-      adress: adress,
-      pib: pib,
-      email: email,
-      sifra: sifra,
-      type_id: type_id
-    })
-  }
-  else {
-    // create
-    const new_komitent = await Komitent.create({
-      company: current_company,
-      user: user,
-      name: name,
-      adress: adress,
-      pib: pib,
-      email: email,
-      sifra: sifra,
-      type: type_id,
-      number: totalKomitents + 1
-    })
-  }
-  
-
   return res.status(200).render("includes/dashboard/komitent_index", {
     pageTitle: "",
     path: "/komitent_edit",

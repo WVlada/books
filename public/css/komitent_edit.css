@@ -17,7 +17,7 @@
   top: 50px;
   z-index: 101;
   border: 1px solid #c5c5c5;
-  padding: 0px;
+  padding: 1px;
   outline: 0;
   opacity: 1 !important;
   background-color: #f8f8f8;
@@ -107,6 +107,9 @@
 .komitent_edit_input_type {
   color: grey;
 }
+.komitent_edit_input_number {
+  width: 80px;
+}
 #loader {
   display: none;
   z-index: 5000;
@@ -120,6 +123,12 @@
 #loader-spinner {
   position: relative;
   top: 30%;
-  left: 50%;
+  left: 48%;
   color: #49435b;
+}
+.komitent_edit_horizontal_input_div {
+  margin-top: 6px;
+}
+.komitent_edit_horizontal_input {
+  display: inline;
 }

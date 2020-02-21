@@ -216,11 +216,16 @@ $(document)
           //  current_year: `<%= current_company_year %>`
           //},
           dataType: "html",
+          beforeSend: function(){
+          $('#loader').show();
+          },
           complete: function() {
             me.data("requestRunning", false);
+            $('#loader').hide();
           },
           success: function(html) {
             $("#komitent_placeholder").html(html);
+            $('#loader').hide();
           }
         });
       });

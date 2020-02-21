@@ -109,13 +109,30 @@
                     value="<%= oldInput.sifra %>"
                   />
                 </div>
-                <div class="form-control">
+                <div class="komitent_edit_horizontal_input_div">
+                <div class="form-control komitent_edit_horizontal_input">
                   <select data-placeholder="Select..." name="type_id" class="komitent_edit_input komitent_edit_input_type">
                     <% for(let j = 0; j <= komitent_types.length -1; j++) { %>
+                      <% if (oldInput.type._id == String(komitent_types[j]._id)) { %>
+                        <option selected value="<%= komitent_types[j]._id %>"><%= komitent_types[j].name %></option>
+                      <% } else { %>
                     <option value="<%= komitent_types[j]._id %>"><%= komitent_types[j].name %></option>
+                      <% } %>
                     <% } %>
                   </select>
                 </div>
+                <div class="form-control komitent_edit_horizontal_input">
+                  <input
+                    class="komitent_edit_input komitent_edit_input_number <%= validationErrors.find(e => e.param ==='number') ? 'invalid' : ''%>"
+                    type="number"
+                    placeholder="Number"
+                    name="number"
+                    id="number"
+                    value="<%= oldInput.number %>"
+                  />
+                </div>
+
+              </div>
              
           </div>
           
@@ -154,6 +171,7 @@ $(document).off('click', '#komitent_edit_ok_form_button').on('click', '#komitent
           var modal_placeholder = document.getElementById("komitent_placeholder")
           modal_placeholder.innerHTML = "";
           $("div.centar").html(response);
+          $('#loader').hide();
          },
          error: function(error){
           me.data('requestRunning', false);
