@@ -1,10 +1,7 @@
-<link rel="stylesheet" href="/css/tok_dokumentacije.css" />
 <div
   id="table"
   style="margin-left:2px;margin-right:2px;margin-top:0px;margin-bottom:5px;display:inline-block;position:relative"
 >
-  <%# class="table classic borderless" %>
-
   <div class="dashboard">
     <div class="item-1"></div>
 
@@ -13,7 +10,7 @@
     <div class="item-3"></div>
 
     <div class="item-4">
-      <p class="text_slike">Komitenti</p>
+      <p class="text_slike">Clients</p>
       <a class="dashboard_image_icon">
         <img
           src="/images/dashboard/kompanija1.png"
@@ -39,7 +36,7 @@
     <div class="item-11"></div>
 
     <div class="item-12">
-      <p class="text_slike">Banke</p>
+      <p class="text_slike">Banks</p>
       <a class="dashboard_image_icon"></a>
       <img
         src="/images/dashboard/bank1.png"
@@ -58,7 +55,7 @@
     <div class="item-16"></div>
 
     <div class="item-17">
-      <p class="text_slike">PDV</p>
+      <p class="text_slike">VAT</p>
       <a class="dashboard_image_icon"></a>
       <img
         src="/images/dashboard/pdv1.png"
@@ -73,7 +70,7 @@
     <div class="item-19"></div>
 
     <div class="item-20">
-      <p class="text_slike">Opšti nalog</p>
+      <p class="text_slike">General entry</p>
       <a class="dashboard_image_icon"></a>
       <img
         src="/images/dashboard/opstinalog1.png"
@@ -88,7 +85,7 @@
     <div class="item-22"></div>
 
     <div class="item-23">
-      <p class="text_slike">Dnevnik</p>
+      <p class="text_slike">Main ledger</p>
       <a class="dashboard_image_icon"></a>
       <img
         src="/images/dashboard/dnevnik1.png"
@@ -111,7 +108,7 @@
     <div class="item-29"></div>
 
     <div class="item-30">
-      <p class="text_slike">Zarade</p>
+      <p class="text_slike">Wages</p>
       <a class="dashboard_image_icon"></a>
       <img
         src="/images/dashboard/person1.png"
@@ -128,7 +125,7 @@
     <div class="item-33"></div>
 
     <div class="item-34">
-      <p class="text_slike">Faktura</p>
+      <p class="text_slike">Invoices</p>
       <a class="dashboard_image_icon"></a>
       <img
         src="/images/dashboard/faktura1.png"
@@ -145,7 +142,7 @@
     <div class="item-37"></div>
 
     <div class="item-38">
-      <p class="text_slike">Nabavka</p>
+      <p class="text_slike">Procurment</p>
       <a class="dashboard_image_icon"></a>
       <img
         src="/images/dashboard/kompanija1.png"
@@ -166,7 +163,7 @@
     <div class="item-43"></div>
 
     <div class="item-44">
-      <p class="text_slike">Izveštaji</p>
+      <p class="text_slike">Reports</p>
       <a class="dashboard_image_icon"></a>
       <img
         src="/images/dashboard/reports1.png"
@@ -224,6 +221,32 @@
           },
           success: function(html) {
             $("div.centar").html(html);
+            $('#loader').hide();
+          },
+          beforeSend: function(){
+          $('#loader').show();
+        }
+        });
+      });
+      $(document)
+      .off("click", ".newNalogOpsti")
+      .on("click", ".newNalogOpsti", function() {
+        var me = $(this);
+        if (me.data("requestRunning")) {
+          return;
+        }
+        me.data("requestRunning", true);
+        $.ajax({
+          url: "/new_nalog",
+          type: "GET",
+          data: {
+          },
+          dataType: "html",
+          complete: function() {
+            me.data("requestRunning", false);
+          },
+          success: function(html) {
+            $("#nalog_placeholder").html(html);
             $('#loader').hide();
           },
           beforeSend: function(){

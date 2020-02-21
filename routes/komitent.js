@@ -39,9 +39,12 @@ router.post("/komitent_edit",[
       .withMessage("Number wasnt entered correctly, it must be positive and less than 999.")
       .custom((value, { req }) => {
         return Komitent.findOne({ company: req.current_company_id, number: value }).then(clientDoc => {
-          if (clientDoc._id != req.body.komitent_id) {
-            return Promise.reject("Number has already been registered.");
+          if (clientDoc){
+            if (clientDoc._id != req.body.komitent_id) {
+              return Promise.reject("Number has already been registered.");
+            }
           }
+          
         });
       }),
     check("adress")

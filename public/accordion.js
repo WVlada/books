@@ -40,6 +40,10 @@ $(document).on("click", "#komitenti", function() {
     },
     success: function(html) {
       $("div.centar").html(html);
+      $('#loader').hide();
+    },
+    beforeSend: function(){
+      $('#loader').show();
     }
   });
 });
@@ -56,6 +60,10 @@ $(document).on("click", "#kontni_plan", function() {
     },
     success: function(html) {
       $("div.centar").html(html);
+      $('#loader').hide();
+    },
+    beforeSend: function(){
+      $('#loader').show();
     }
   });
 });
@@ -71,11 +79,32 @@ $(document).on("click", "#dnevnik_naloga", function() {
     },
     success: function(html) {
       $("div.centar").html(html);
+      $('#loader').hide();
+    },
+    beforeSend: function(){
+      $('#loader').show();
     }
   });
 });
 $(document).on("click", "#tok_dokumentacije", function() {
-  window.location.reload();
+  //window.location.reload();
+  var dnevnik_naloga_dugme = $(this);
+  $.ajax({
+    url: "/tok_dokumentacije",
+    type: "get",
+    data: { "": "" },
+    dataType: "html",
+    complete: function() {
+      dnevnik_naloga_dugme.data("requestRunning", false);
+    },
+    success: function(html) {
+      $("div.centar").html(html);
+      $('#loader').hide();
+    },
+    beforeSend: function(){
+      $('#loader').show();
+    }
+  });
 });
 $(document).on("click", "#zakljucni", function() {
   $.ajax({

@@ -244,8 +244,9 @@ exports.getDnevnikNaloga = (req, res, next) => {
 };
 exports.getNalog = async (req, res, next) => {
   const user = req.user;
-  const company_id = req.query.current_company;
-  const current_company_year = req.query.current_year;
+  const company_id = req.current_company_id;
+  console.log(req)
+  const current_company_year = req.current_company_year;
   // sifre komitenata
   const sifra_komitenta_array = await Komitent.find({
     company: company_id
@@ -903,4 +904,15 @@ exports.getShowKonto = async (req, res, next) => {
     //previousPage: page - 1,
     //lastPage: Math.ceil(totalKontos / KONTNI_PLAN_PER_PAGE)
   });
+};
+exports.getTokDokumentacije = (req, res, next) => {
+  console.log("tok_dokumentacije");
+  return res.status(200).render("includes/dashboard/tok_dokumentacije", {
+    pageTitle: "",
+    path: "/tok_dokumentacije",
+    hasError: false,
+    successMessage: null,
+    infoMessage: null,
+    validationErrors: []
+  }); 
 };
