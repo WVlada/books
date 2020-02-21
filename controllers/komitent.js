@@ -113,7 +113,7 @@ exports.getEditKomitent = async (req, res, next) => {
   const user = req.user;
   const current_company_id = req.current_company_id;
   const current_company = await Company.findOne({ _id: current_company_id });
-  let oldInput = {};
+  let oldInput = {type:""};//defisiacu type, da ne bih morao jos jedan if else u ejs
   let komitent;
   if (req.query.komitent_id){
   const komitent_id = req.query.komitent_id;

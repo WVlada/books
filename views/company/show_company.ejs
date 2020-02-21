@@ -158,7 +158,11 @@
           },
           success: function(html) {
             $("#nalog_placeholder").html(html);
-          }
+            $('#loader').hide();
+          },
+          beforeSend: function(){
+          $('#loader').show();
+        }
         });
       });
 var msgdiv = document.getElementById("user-message");

@@ -178,4 +178,58 @@
 
     <div class="item-45"></div>
   </div>
+  <script>
+    $(document)
+      .off("click", ".dnevnik_slika")
+      .on("click", ".dnevnik_slika", function() {
+        var me = $(this);
+        if (me.data("requestRunning")) {
+          return;
+        }
+        me.data("requestRunning", true);
+        $.ajax({
+          url: "/dnevnik_naloga",
+          type: "GET",
+          data: {
+          },
+          dataType: "html",
+          complete: function() {
+            me.data("requestRunning", false);
+          },
+          success: function(html) {
+            $("div.centar").html(html);
+            $('#loader').hide();
+          },
+          beforeSend: function(){
+          $('#loader').show();
+        }
+        });
+      });
+      $(document)
+      .off("click", ".newNalogKomitent")
+      .on("click", ".newNalogKomitent", function() {
+        var me = $(this);
+        if (me.data("requestRunning")) {
+          return;
+        }
+        me.data("requestRunning", true);
+        $.ajax({
+          url: "/komitenti",
+          type: "GET",
+          data: {
+          },
+          dataType: "html",
+          complete: function() {
+            me.data("requestRunning", false);
+          },
+          success: function(html) {
+            $("div.centar").html(html);
+            $('#loader').hide();
+          },
+          beforeSend: function(){
+          $('#loader').show();
+        }
+        });
+      });
+  </script>
 </div>

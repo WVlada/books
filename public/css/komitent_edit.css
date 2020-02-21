@@ -122,9 +122,11 @@
 }
 #loader-spinner {
   position: relative;
-  top: 30%;
-  left: 48%;
+  top: 40%;
+  left: 50%;
   color: #49435b;
+  margin-left: -35px;
+  
 }
 .komitent_edit_horizontal_input_div {
   margin-top: 6px;

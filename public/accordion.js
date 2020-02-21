@@ -75,12 +75,7 @@ $(document).on("click", "#dnevnik_naloga", function() {
   });
 });
 $(document).on("click", "#tok_dokumentacije", function() {
-  $.ajax({
-    url: "/tok_dokumentacije",
-    type: "get",
-    data: { "": "" },
-    dataType: "script"
-  });
+  window.location.reload();
 });
 $(document).on("click", "#zakljucni", function() {
   $.ajax({
