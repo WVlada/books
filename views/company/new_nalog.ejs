@@ -356,8 +356,12 @@ $(document).off('click', '#submit_form_button').on('click', '#submit_form_button
 );
 $(document).off('click', '#cancel_form_button').on('click', '#cancel_form_button', function()        
     { 
-      var modal_placeholder = document.getElementById("nalog_placeholder")
-      modal_placeholder.innerHTML = "";
+      var modal_placeholder = document.getElementById("nalog_placeholder");
+      $(modal_placeholder).fadeOut(700);
+      setTimeout(function() {
+        modal_placeholder.innerHTML = "";
+   }, 1500);
+      
     }
 );
 /*$(document).ready(function() {
