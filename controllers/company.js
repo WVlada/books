@@ -245,7 +245,12 @@ exports.getDnevnikNaloga = (req, res, next) => {
 exports.getNalog = async (req, res, next) => {
   const user = req.user;
   const company_id = req.current_company_id;
-  console.log(req)
+  console.log("*************");
+  console.log(req.session);
+  console.log("*************");
+  console.log(req.user);
+  console.log("*************");
+
   const current_company_year = req.current_company_year;
   // sifre komitenata
   const sifra_komitenta_array = await Komitent.find({
@@ -914,5 +919,5 @@ exports.getTokDokumentacije = (req, res, next) => {
     successMessage: null,
     infoMessage: null,
     validationErrors: []
-  }); 
+  });
 };

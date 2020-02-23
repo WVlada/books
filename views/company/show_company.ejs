@@ -155,11 +155,11 @@
             me.data("requestRunning", false);
           },
           success: function(html) {
-            $("#nalog_placeholder").html(html);
-            $('#loader').hide();
+            $("#nalog_placeholder").fadeOut(0).html(html).fadeIn(500)
+            $('#loader').fadeOut();
           },
           beforeSend: function(){
-          $('#loader').show();
+          $('#loader').fadeIn(200)
         }
         });
       });
