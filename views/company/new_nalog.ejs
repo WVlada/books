@@ -34,6 +34,7 @@
 </div>
 
 <div id="nalog_dijalog">
+<div id="new_nalog_form_validation_message_placeholder"></div>
 <form id="new_nalog_form" class="new_nalog_form" action="/new_nalog" method="POST">
     <div class = "container-fluid">
         <div class = "prvi_row"> 
@@ -372,22 +373,22 @@ $(document).off('click', '#submit_form_button').on('click', '#submit_form_button
             $('.new_nalog_select_error').each(function(index, element){
                 $(element).removeClass('new_nalog_select_error');
             })
+            $('#user-message').remove()
             // onda stavljam nove
+            var fail_msg = `<div id="user-message" class="user-message-div new_nalog_error_div">
+                                <div class="user-message user-message--error">
+                                  <ul class="user-message-error-list">`
             for(let j =0 ; j <= error.responseJSON.length - 1; j++){
               $(`input[name='${error.responseJSON[j].param}']`).removeClass('new_nalog_input').addClass('new_nalog_input_error')
               $(`input[name='${error.responseJSON[j].param}[]']`).removeClass('new_nalog_input').addClass('new_nalog_input_error')
               $(`select[name='${error.responseJSON[j].param}[]']`).parent().addClass('new_nalog_select_error')
               //
-              var val_fail = `<div id="user-message" class="user-message-div">
-                                <div class="user-message user-message--error">
-                                  <ul class="user-message-error-list">
-                                    <% validationErrors.forEach(error=>{ %>
-                                      <li><%= error.msg %></li>
-                                    <% }) %>
-                                  </ul>
-                                </div>
-                              </div>`
+              fail_msg += `<li>${error.responseJSON[j].msg}</li>`;
             }
+            fail_msg + `</ul></div></div>`
+            $('#new_nalog_form_validation_message_placeholder').append(fail_msg).fadeIn(500)
+            $('#new_nalog_form_validation_message_placeholder').delay(1500).fadeOut(1500);
+            
             $('#loader').fadeOut();
            },
             beforeSend: function(){

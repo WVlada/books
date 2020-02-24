@@ -260,3 +260,8 @@ input[list] {
 .new_nalog_select_error {
   background-color: rgb(214, 147, 147) !important;
 }
+.new_nalog_form_validation_message_placeholder {
+}
+.new_nalog_error_div {
+  top: -100px;
+}
