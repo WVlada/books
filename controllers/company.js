@@ -376,6 +376,10 @@ exports.postNalog = (req, res, next) => {
   let nalozi;
   let companies;
 
+  // has to be set to null if doeasnt exist
+  let sifra_kom_za_snimanje;
+  let konto_za_snimanje;
+
   Company.findOne({ _id: company_id }).then(result => {
     const current_company = result;
     const years = result.year;
@@ -394,27 +398,33 @@ exports.postNalog = (req, res, next) => {
       .then(result => {
         nalog = result;
         for (i = 0; i <= opis_stava_array.length - 1; i++) {
-          const stav = new Stav({
-            user: user,
-            company: company_id,
-            opis: opis_stava_array[i],
-            sifra_komitenta: sifra_komitenta_array[i],
-            poziv_na_broj: poziv_na_broj_array[i],
-            konto: konto_array[i],
-            duguje: Number(
-              Number(duguje_array[i].replace(/,/g, "")).toFixed(2)
-            ),
-            potrazuje: Number(
-              Number(potrazuje_array[i].replace(/,/g, "")).toFixed(2)
-            ),
-            valuta: valuta_array[i],
-            number: i,
-            nalog_id: result._id,
-            date: datum_naloga,
-            type: result.id
-          });
-          stav.save();
-          nalog.stavovi.push(stav);
+          if (opis_stava_array[i].lentgh > 1) // snimam samo stav koji ima opis
+            {
+              // ako sifra ima vrednost '', mora biti snimljena kao null
+              sifra_komitenta_array[i] === ''? sifra_kom_za_snimanje = null : sifra_kom_za_snimanje = sifra_komitenta_array[i]
+              konto_array[i] === ''? konto_za_snimanje = null : konto_za_snimanje = konto_array[i]
+              const stav = new Stav({
+                user: user,
+                company: company_id,
+                opis: opis_stava_array[i],
+                sifra_komitenta: sifra_kom_za_snimanje,
+                poziv_na_broj: poziv_na_broj_array[i],
+                konto: konto_za_snimanje,
+                duguje: Number(
+                  Number(duguje_array[i].replace(/,/g, "")).toFixed(2)
+                ),
+                potrazuje: Number(
+                  Number(potrazuje_array[i].replace(/,/g, "")).toFixed(2)
+                ),
+                valuta: valuta_array[i],
+                number: i,
+                nalog_id: result._id,
+                date: datum_naloga,
+                type: result.id
+              });
+            stav.save();
+            nalog.stavovi.push(stav);
+            }
         }
         nalog.save();
       })
@@ -428,17 +438,43 @@ exports.postNalog = (req, res, next) => {
               .then(result => {
                 companies = result;
               })
-              .then(result => {
-                return res.status(200).render("company/show_company", {
+              .then(async result => {
+                let totalNalogs;
+                let page = +req.page || 1;
+                let nalozi = await Nalog.find({
+                  company: company_id,
+                  year: current_company_year
+                })
+                  .countDocuments()
+                  .then(numberOfNalogs => {
+                    totalNalogs = numberOfNalogs;
+                    if (totalNalogs !== 0) {
+                      page = Math.ceil(totalNalogs / NALOGS_PER_PAGE);
+                    }
+                    return Nalog.find({
+                      company: company_id,
+                      year: current_company_year
+                    })
+                      .skip((page - 1) * NALOGS_PER_PAGE) //paginacija
+                      .limit(NALOGS_PER_PAGE); //paginacija;
+                  });
+                return res.status(200).render("includes/dashboard/dnevnik", {
                   pageTitle: "",
                   path: "/dnevnik",
                   hasError: false,
                   user: user,
+                  accounting: accounting,
                   current_company: current_company,
                   current_company_year: current_company_year,
                   years: years,
                   companies: companies,
                   nalozi: nalozi,
+                  currentPage: page,
+                  hasNextPage: NALOGS_PER_PAGE * page < totalNalogs,
+                  hasPreviousPage: page > 1,
+                  nextPage: page + 1,
+                  previousPage: page - 1,
+                  lastPage: Math.ceil(totalNalogs / NALOGS_PER_PAGE),
                   successMessage: `Nalog ${nalog.type} ${nalog.number} has been saved.`,
                   infoMessage: null,
                   validationErrors: []
@@ -908,3 +944,14 @@ exports.getTokDokumentacije = (req, res, next) => {
     validationErrors: []
   });
 };
+exports.getNotImplemented = (req, res, next) => {
+  console.log("***not implemented*****");
+  return res.status(200).render("includes/dashboard/tok_dokumentacije", {
+    pageTitle: "",
+    path: "/tok_dokumentacije",
+    hasError: false,
+    successMessage: null,
+    infoMessage: "Functionality not implemented in this software version.",
+    validationErrors: []
+  });
+}

@@ -1,3 +1,33 @@
+		<% if (infoMessage) { %>
+            <div id="user-message" class="user-message-div">
+              <div class="user-message user-message--info">
+                <ul class="user-message-error-list">
+                  <li><%= infoMessage %></li>
+                </ul>
+              </div>
+            </div>
+            <% } %> <% if (validationErrors.length > 0) { %>
+            <div id="user-message" class="user-message-div">
+              <div class="user-message user-message--error">
+                <ul class="user-message-error-list">
+                  <% validationErrors.forEach(error=>{ %>
+                  <li><%= error.msg %></li>
+                  <% }) %>
+                </ul>
+              </div>
+            </div>
+            <% } %> <% if (successMessage) { %>
+            <div id="user-message" class="user-message-div">
+              <div class="user-message user-message--success">
+                <ul class="user-message-error-list">
+                  <li><%= successMessage %></li>
+                </ul>
+              </div>
+            </div>
+            <% } %>
+		
+	
+
 <div
   id="table"
   style="margin-left:2px;margin-right:2px;margin-top:0px;margin-bottom:5px;display:inline-block;position:relative"
@@ -59,7 +89,7 @@
       <a class="dashboard_image_icon"></a>
       <img
         src="/images/dashboard/pdv1.png"
-        class="newNalogPDV"
+        class="newNalogPDV not_implemented"
         width="80"
         height="80"
       />
@@ -112,7 +142,7 @@
       <a class="dashboard_image_icon"></a>
       <img
         src="/images/dashboard/person1.png"
-        class="newNalogZarada"
+        class="newNalogZarada not_implemented"
         width="80"
         height="80"
       />
@@ -129,7 +159,7 @@
       <a class="dashboard_image_icon"></a>
       <img
         src="/images/dashboard/faktura1.png"
-        class="newNalogFaktura"
+        class="newNalogFaktura not_implemented"
         width="80"
         height="80"
       />
@@ -146,7 +176,7 @@
       <a class="dashboard_image_icon"></a>
       <img
         src="/images/dashboard/kompanija1.png"
-        class="newNalogNabavka"
+        class="newNalogNabavka not_implemented"
         width="80"
         height="80"
       />
@@ -246,13 +276,55 @@
             me.data("requestRunning", false);
           },
           success: function(html) {
-            $("#nalog_placeholder").html(html);
-            $('#loader').hide();
+            $("#nalog_placeholder").fadeOut(0).html(html).fadeIn(500)
+            $('#loader').fadeOut();
           },
           beforeSend: function(){
-          $('#loader').show();
+          $('#loader').fadeIn(200)
         }
         });
       });
+      $(document)
+      .off("click", ".not_implemented")
+      .on("click", ".not_implemented", function() {
+        var me = $(this);
+        if (me.data("requestRunning")) {
+          return;
+        }
+        me.data("requestRunning", true);
+        $.ajax({
+          url: "/not_implemented",
+          type: "GET",
+          data: {
+          },
+          dataType: "html",
+          complete: function() {
+            me.data("requestRunning", false);
+          },
+          success: function(html) {
+            $("div.centar").fadeOut(0).html(html).fadeIn(500)
+            $('#loader').fadeOut();
+          },
+          beforeSend: function(){
+          $('#loader').fadeIn(200)
+        }
+        });
+      });
+var msgdiv = document.getElementById("user-message");
+var msg = document.getElementsByClassName("user-message");
+
+if (msg.length > 0) {
+  for (i = 0; i < msg.length; i++) {
+    let message = msg[i]; // zanimljivo je probati sa msg[i] pa timeout :)
+    message.style.opacity = 1;
+    message.style.transition = "opacity 1s ease-in-out";
+    setTimeout(function() {
+      message.style.opacity = "0";
+    }, 1800);
+    setTimeout(function() {
+      message.style.visibility = "hidden";
+    }, 3000);
+  }
+}
   </script>
 </div>

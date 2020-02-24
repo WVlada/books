@@ -98,7 +98,11 @@
               dugme.setAttribute("requestRunning", false);
             },
             success: function(html) {
-              $("div.centar").html(html);
+              $("div.centar").fadeOut(0).html(html).fadeIn(500)
+              $('#loader').fadeOut();
+            },
+            beforeSend: function(){
+              $('#loader').fadeIn(200)
             }
           });
         }

@@ -360,8 +360,8 @@ $(document).off('click', '#submit_form_button').on('click', '#submit_form_button
           success: function(response) {
             var modal_placeholder = document.getElementById("nalog_placeholder")
             modal_placeholder.innerHTML = "";
-            $("div.centar").html(response);
-            $('#loader').hide();
+            $("div.centar").fadeOut(0).html(response).fadeIn(500)
+            $('#loader').fadeOut();
            },
            error: function(error){
             me.data('requestRunning', false);
@@ -369,20 +369,20 @@ $(document).off('click', '#submit_form_button').on('click', '#submit_form_button
               $(`input[name='${error.responseJSON[j].param}[]']`).removeClass('new_nalog_input').addClass('new_nalog_input_error')
               //
               var val_fail = `<div id="user-message" class="user-message-div">
-          <div class="user-message user-message--error">
-            <ul class="user-message-error-list">
-              <% validationErrors.forEach(error=>{ %>
-              <li><%= error.msg %></li>
-              <% }) %>
-            </ul>
-          </div>
-        </div>`
+                                <div class="user-message user-message--error">
+                                  <ul class="user-message-error-list">
+                                    <% validationErrors.forEach(error=>{ %>
+                                      <li><%= error.msg %></li>
+                                    <% }) %>
+                                  </ul>
+                                </div>
+                              </div>`
             }
-            $('#loader').hide();
+            $('#loader').fadeOut();
            },
-           beforeSend: function(){
-            $('#loader').show();
-          }
+            beforeSend: function(){
+              $('#loader').fadeIn(200)
+            }
         });
   }
 );

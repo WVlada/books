@@ -81,7 +81,11 @@
             me.data("requestRunning", false);
           },
           success: function(html) {
-            $("#nalog_placeholder").html(html);
+            $("#nalog_placeholder").fadeOut(0).html(html).fadeIn(500)
+            $('#loader').fadeOut();
+          },
+            beforeSend: function(){
+              $('#loader').fadeIn(200)
           }
         });
       });

@@ -168,3 +168,6 @@ p.text_slike {
   background-size: 80px;
   background-position: center;
 }
+.not_implemented {
+  opacity: 40%;
+}
