@@ -335,29 +335,16 @@ exports.postNalog = (req, res, next) => {
   const company_id = req.current_company_id;
   const current_company_year = req.current_company_year;
   const errors = validationResult(req);
-  //console.log(res)
-  if (!errors.isEmpty()) {
-    console.log(errors);
-    return res.status(422).render("company/new_nalog", {
-      pageTitle: "",
-      path: "/new_nalog",
-      hasError: true,
-      user: user,
-      //oldInput: {
-      //  name: name,
-      //  year: year,
-      //  mb: mb,
-      //  pib: pib,
-      //  adress: adress,
-      //  email: email,
-      //  telephone: telephone
-      //},
-      successMessage: null,
-      infoMessage: null,
-      validationErrors: errors.array()
-    });
-  }
+  console.log("---------------------");
   console.log(req.body);
+  console.log("---------------------");
+  if (!errors.isEmpty()) {
+    console.log("---------------------errors");
+    console.log(errors);
+    console.log("---------------------errors");
+    return res.status(400).json(errors.array());
+  }
+
   const vrsta_naloga = req.body.vrsta_naloga;
   const broj_naloga = req.body.broj_naloga;
   const opis_naloga = req.body.opis_naloga;

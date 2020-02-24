@@ -180,28 +180,6 @@ if (msg.length > 0) {
   }
 }
 
-//$(document).off('click', '#promet_od_do_button').on('click', '#promet_od_do_button', function()        
-//
-//    {   
-//    	var me = $(this);
-//        
-//        if (me.data('requestRunning')) 
-//            { return; }
-//        
-//        me.data('requestRunning', true);
-//        
-//        $.ajax({
-//                url: "/promet_od_do_dialog",
-//                type: "get",
-//                data: {"" : ""},
-//                dataType: "script",
-//                complete: function() { 
-//                    me.data('requestRunning', false);
-//                                    }
-//               });
-//               
-//    }
-//);
 $(document)
       .off("click", "#new_client")
       .on("click", "#new_client", function() {
@@ -213,21 +191,17 @@ $(document)
         $.ajax({
           url: "/komitent_edit",
           type: "GET",
-          //data: {
-          //  current_company: `<%= current_company.id.toString() %>`,
-          //  current_year: `<%= current_company_year %>`
-          //},
           dataType: "html",
           beforeSend: function(){
-          $('#loader').show();
+          $('#loader').fadeIn(200)
           },
           complete: function() {
             me.data("requestRunning", false);
             $('#loader').hide();
           },
           success: function(html) {
-            $("#komitent_placeholder").html(html);
-            $('#loader').hide();
+            $("#komitent_placeholder").fadeOut(0).html(html).fadeIn(500)
+            $('#loader').fadeOut();
           }
         });
       });

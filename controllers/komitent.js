@@ -5,7 +5,7 @@ const Komitenttype = require("../models/komitenttype");
 const Stav = require("../models/stav");
 const Konto = require("../models/konto");
 const accounting = require("accounting-js");
-const ObjectId = require('mongoose').Types.ObjectId;
+const ObjectId = require("mongoose").Types.ObjectId;
 const { validationResult } = require("express-validator");
 
 const KOMITENTS_PER_PAGE = 22;
@@ -113,27 +113,29 @@ exports.getEditKomitent = async (req, res, next) => {
   const user = req.user;
   const current_company_id = req.current_company_id;
   const current_company = await Company.findOne({ _id: current_company_id });
-  let oldInput = {type:""};//defisiacu type, da ne bih morao jos jedan if else u ejs
+  let oldInput = { type: "" }; //defisiacu type, da ne bih morao jos jedan if else u ejs
   let komitent;
-  if (req.query.komitent_id){
-  const komitent_id = req.query.komitent_id;
-  komitent = await Komitent.findById(komitent_id).populate({
-    path: "type",
-    model: Komitenttype
+  if (req.query.komitent_id) {
+    const komitent_id = req.query.komitent_id;
+    komitent = await Komitent.findById(komitent_id).populate({
+      path: "type",
+      model: Komitenttype
+    });
+    oldInput = {
+      name: komitent.name,
+      adress: komitent.adress,
+      email: komitent.email,
+      pib: komitent.pib,
+      type: komitent.type,
+      sifra: komitent.sifra,
+      id: komitent_id,
+      number: komitent.number
+    };
+  }
+  const komitent_types = await Komitenttype.find({
+    company: current_company_id
   });
-  oldInput = {
-    name: komitent.name,
-    adress: komitent.adress,
-    email: komitent.email,
-    pib: komitent.pib,
-    type: komitent.type,
-    sifra: komitent.sifra,
-    id: komitent_id,
-    number: komitent.number
-  }
-  }
-  const komitent_types = await Komitenttype.find({company: current_company_id})
-  
+
   return res.status(200).render("includes/dashboard/komitent_edit", {
     pageTitle: "",
     path: "/komitent_edit",
@@ -153,16 +155,16 @@ exports.postEditKomitent = async (req, res, next) => {
   const current_company_id = req.current_company_id;
   const current_company = await Company.findOne({ _id: current_company_id });
   const komitent_id = req.body.komitent_id;
-  console.log("komitent_edit")
-  console.log(req.body)
-  console.log("komitent_edit")
-  
+  console.log("komitent_edit");
+  console.log(req.body);
+  console.log("komitent_edit");
+
   const errors = validationResult(req);
-  console.log(errors)
+  console.log(errors);
   if (!errors.isEmpty()) {
-    return res.status(402).json(errors.array())
+    return res.status(400).json(errors.array());
   }
-  
+
   const name = req.body.name;
   const adress = req.body.adress;
   const email = req.body.email;
@@ -170,10 +172,10 @@ exports.postEditKomitent = async (req, res, next) => {
   const sifra = req.body.sifra;
   const number = req.body.number;
   const type_id = req.body.type_id;
-  
+
   if (ObjectId.isValid(komitent_id)) {
     // update
-    const komitent = await Komitent.findById(komitent_id)
+    const komitent = await Komitent.findById(komitent_id);
     await komitent.updateOne({
       name: name,
       adress: adress,
@@ -182,9 +184,8 @@ exports.postEditKomitent = async (req, res, next) => {
       sifra: sifra,
       type: type_id,
       number: number
-    })
-  }
-  else {
+    });
+  } else {
     // create
     const new_komitent = await Komitent.create({
       company: current_company,
@@ -196,10 +197,10 @@ exports.postEditKomitent = async (req, res, next) => {
       sifra: sifra,
       type: type_id,
       number: number
-    })
+    });
   }
   // ovde renderujem poslednju stranicu komitent_index
-  // stavio sam pre update i create, da bih imao TOTALKOMITENTS 
+  // stavio sam pre update i create, da bih imao TOTALKOMITENTS
   let page = +req.query.page || 1;
   let totalKomitents;
   const komitenti = await Komitent.find({
@@ -209,16 +210,16 @@ exports.postEditKomitent = async (req, res, next) => {
     .then(numberOfKomitents => {
       totalKomitents = numberOfKomitents;
       //if (page > Math.ceil(totalKomitents / KOMITENTS_PER_PAGE)) {
-        if (totalKomitents !== 0) {
-          page = Math.ceil(totalKomitents / KOMITENTS_PER_PAGE);
-        }
+      if (totalKomitents !== 0) {
+        page = Math.ceil(totalKomitents / KOMITENTS_PER_PAGE);
+      }
       //}
       return Komitent.find({ company: current_company })
         .populate({ path: "type", model: Komitenttype })
         .skip((page - 1) * KOMITENTS_PER_PAGE) //paginacija
         .limit(KOMITENTS_PER_PAGE); //paginacija;
     });
-  
+
   return res.status(200).render("includes/dashboard/komitent_index", {
     pageTitle: "",
     path: "/komitent_edit",

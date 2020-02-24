@@ -70,7 +70,7 @@ router.post(
       .custom(array => {
         let i = 0;
         array.every(elem => {
-          if (elem.length >= 0) {
+          if (elem.length > 0) {
             i++;
           } else {
             i++;
@@ -89,5 +89,5 @@ router.post("/edit_nalog", [], isAuth, companyController.updateNalog);
 
 router.get("/change_company", isAuth, companyController.changeCompany);
 router.get("/change_year", isAuth, companyController.changeYear);
-router.get("/tok_dokumentacije", isAuth, companyController.getTokDokumentacije)
+router.get("/tok_dokumentacije", isAuth, companyController.getTokDokumentacije);
 module.exports = router;

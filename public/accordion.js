@@ -39,11 +39,11 @@ $(document).on("click", "#komitenti", function() {
       komitenti_dugme.data("requestRunning", false);
     },
     success: function(html) {
-      $("div.centar").html(html);
-      $('#loader').hide();
+      $("div.centar").fadeOut(0).html(html).fadeIn(500)
+      $('#loader').fadeOut();
     },
     beforeSend: function(){
-      $('#loader').show();
+      $('#loader').fadeIn(200)
     }
   });
 });
@@ -59,11 +59,11 @@ $(document).on("click", "#kontni_plan", function() {
       kontni_plan_dugme.data("requestRunning", false);
     },
     success: function(html) {
-      $("div.centar").html(html);
-      $('#loader').hide();
+      $("div.centar").fadeOut(0).html(html).fadeIn(500)
+      $('#loader').fadeOut();
     },
     beforeSend: function(){
-      $('#loader').show();
+      $('#loader').fadeIn(200)
     }
   });
 });
@@ -78,11 +78,11 @@ $(document).on("click", "#dnevnik_naloga", function() {
       dnevnik_naloga_dugme.data("requestRunning", false);
     },
     success: function(html) {
-      $("div.centar").html(html);
-      $('#loader').hide();
+      $("div.centar").fadeOut(0).html(html).fadeIn(500)
+      $('#loader').fadeOut();
     },
     beforeSend: function(){
-      $('#loader').show();
+      $('#loader').fadeIn(200)
     }
   });
 });
@@ -98,11 +98,11 @@ $(document).on("click", "#tok_dokumentacije", function() {
       dnevnik_naloga_dugme.data("requestRunning", false);
     },
     success: function(html) {
-      $("div.centar").html(html);
-      $('#loader').hide();
+      $("div.centar").fadeOut(0).html(html).fadeIn(500)
+      $('#loader').fadeOut();
     },
     beforeSend: function(){
-      $('#loader').show();
+      $('#loader').fadeIn(200)
     }
   });
 });

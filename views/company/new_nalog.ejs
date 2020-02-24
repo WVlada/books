@@ -351,8 +351,40 @@ $(document).off('click', '#submit_form_button').on('click', '#submit_form_button
         { return; }
         me.data('requestRunning', true);
         cancel_button.setAttribute('requestRunning', true);
-        var form = document.getElementById("new_nalog_form")
-        form.submit();}
+        //var form = document.getElementById("new_nalog_form")
+        //form.submit();}
+        $.ajax({
+          type: 'POST',
+          url: '/new_nalog',
+          data: $('#new_nalog_form').serialize(), 
+          success: function(response) {
+            var modal_placeholder = document.getElementById("nalog_placeholder")
+            modal_placeholder.innerHTML = "";
+            $("div.centar").html(response);
+            $('#loader').hide();
+           },
+           error: function(error){
+            me.data('requestRunning', false);
+            for(let j =0 ; j <= error.responseJSON.length - 1; j++){
+              $(`input[name='${error.responseJSON[j].param}[]']`).removeClass('new_nalog_input').addClass('new_nalog_input_error')
+              //
+              var val_fail = `<div id="user-message" class="user-message-div">
+          <div class="user-message user-message--error">
+            <ul class="user-message-error-list">
+              <% validationErrors.forEach(error=>{ %>
+              <li><%= error.msg %></li>
+              <% }) %>
+            </ul>
+          </div>
+        </div>`
+            }
+            $('#loader').hide();
+           },
+           beforeSend: function(){
+            $('#loader').show();
+          }
+        });
+  }
 );
 $(document).off('click', '#cancel_form_button').on('click', '#cancel_form_button', function()        
     { 
