@@ -2,7 +2,7 @@
   <% if (hasPreviousPage) { %>
   <a data-link="1" class="dnevnik_current_page_change_link" href="#"
     ><i
-      style="vertical-align:middle;margin: 1px; margin-top:3px;color: #6d687e;"
+      style="vertical-align:middle;margin: 1px; margin-top:3px;color: #6d687e;margin-left: 10px;"
       class="fas fa-fast-backward"
     ></i
   ></a>
@@ -20,7 +20,7 @@
   <% } else { %>
   <a data-link="ff" class="dnevnik_current_page_change_link" href="#">
     <i
-      style="vertical-align:middle;margin: 1px; margin-top:3px;color: #6d687e;margin-left: 15px;"
+      style="vertical-align:middle;margin: 1px; margin-top:3px;color: #6d687e;margin-left: 10px;"
       class="fas fa-fast-backward"
     ></i>
   </a>
@@ -37,12 +37,12 @@
     action="/"
     method="GET"
   >-->
-    <input
-      id="dnevnik_current_page_input"
-      type="number"
-      value="<%= currentPage%>"
-    />
-    <!--<input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+  <input
+    id="dnevnik_current_page_input"
+    type="number"
+    value="<%= currentPage%>"
+  />
+  <!--<input type="hidden" name="_csrf" value="<%= csrfToken %>" />
   </form>-->
   <% if (hasNextPage) { %>
   <a
@@ -98,11 +98,14 @@
               dugme.setAttribute("requestRunning", false);
             },
             success: function(html) {
-              $("div.centar").fadeOut(0).html(html).fadeIn(500)
-              $('#loader').fadeOut();
+              $("div.centar")
+                .fadeOut(0)
+                .html(html)
+                .fadeIn(500);
+              $("#loader").fadeOut();
             },
-            beforeSend: function(){
-              $('#loader').fadeIn(200)
+            beforeSend: function() {
+              $("#loader").fadeIn(200);
             }
           });
         }
@@ -121,26 +124,32 @@
               dugme.setAttribute("requestRunning", false);
             },
             success: function(html) {
-              $("div.centar").fadeOut(0).html(html).fadeIn(500)
-              $('#loader').fadeOut();
+              $("div.centar")
+                .fadeOut(0)
+                .html(html)
+                .fadeIn(500);
+              $("#loader").fadeOut();
             },
-            beforeSend: function(){
-              $('#loader').fadeIn(200)
+            beforeSend: function() {
+              $("#loader").fadeIn(200);
             }
           });
         }
         //
       });
 
-      $(document).off('change',"input#dnevnik_current_page_input").on('change',"input#dnevnik_current_page_input", function(){
+    $(document)
+      .off("change", "input#dnevnik_current_page_input")
+      .on("change", "input#dnevnik_current_page_input", function() {
         var me = $(this)[0];
         if (me.getAttribute("requestRunning")) {
           return;
         }
-        if (me.value < 1){
+        if (me.value < 1) {
           me.value = 1;
-          return}
-          var page_link = document
+          return;
+        }
+        var page_link = document
           .getElementsByClassName("pagination")[0]
           .getAttribute("data-link");
         // dnevnik
@@ -154,7 +163,14 @@
               me.setAttribute("requestRunning", false);
             },
             success: function(html) {
-              $("div.centar").html(html);
+              $("div.centar")
+                .fadeOut(0)
+                .html(html)
+                .fadeIn(500);
+              $("#loader").fadeOut();
+            },
+            beforeSend: function() {
+              $("#loader").fadeIn(200);
             }
           });
         }
@@ -169,12 +185,17 @@
               me.setAttribute("requestRunning", false);
             },
             success: function(html) {
-              $("div.centar").html(html);
+              $("div.centar")
+                .fadeOut(0)
+                .html(html)
+                .fadeIn(500);
+              $("#loader").fadeOut();
+            },
+            beforeSend: function() {
+              $("#loader").fadeIn(200);
             }
           });
         }
-        
-      })
-
+      });
   </script>
 </section>

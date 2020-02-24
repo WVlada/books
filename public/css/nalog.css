@@ -257,3 +257,6 @@ input[list] {
   font-size: 13px;
   height: 25px;
 }
+.new_nalog_select_error {
+  background-color: rgb(214, 147, 147) !important;
+}

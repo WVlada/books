@@ -365,8 +365,18 @@ $(document).off('click', '#submit_form_button').on('click', '#submit_form_button
            },
            error: function(error){
             me.data('requestRunning', false);
+            // prvo remove prethodne
+            $('.new_nalog_input_error').each(function(index, element){
+                $(element).removeClass('new_nalog_input_error');
+              })
+            $('.new_nalog_select_error').each(function(index, element){
+                $(element).removeClass('new_nalog_select_error');
+            })
+            // onda stavljam nove
             for(let j =0 ; j <= error.responseJSON.length - 1; j++){
+              $(`input[name='${error.responseJSON[j].param}']`).removeClass('new_nalog_input').addClass('new_nalog_input_error')
               $(`input[name='${error.responseJSON[j].param}[]']`).removeClass('new_nalog_input').addClass('new_nalog_input_error')
+              $(`select[name='${error.responseJSON[j].param}[]']`).parent().addClass('new_nalog_select_error')
               //
               var val_fail = `<div id="user-message" class="user-message-div">
                                 <div class="user-message user-message--error">

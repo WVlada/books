@@ -58,7 +58,11 @@ $(document).off("dblclick", "tr.kontni_plan_trocifren").on("dblclick", "tr.kontn
       kontni_plan_row.data("requestRunning", false);
     },
     success: function(html) {
-      $("div.centar").html(html);
+      $("div.centar").fadeOut(0).html(html).fadeIn(500)
+      $('#loader').fadeOut();
+    },
+    beforeSend: function(){
+      $('#loader').fadeIn(200)
     }
   });
 });

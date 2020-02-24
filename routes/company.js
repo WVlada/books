@@ -61,34 +61,12 @@ router.get("/dnevnik_naloga", isAuth, companyController.getDnevnikNaloga);
 
 router.get("/kontni_plan", isAuth, companyController.getKontniPlan);
 router.get("/show_konto", isAuth, companyController.getShowKonto);
-router.get("/new_nalog", isAuth, companyController.getNalog);
-router.post(
-  "/new_nalog",
-  [
-    check("opis_stava")
-      .isArray()
-      .custom(array => {
-        let i = 0;
-        array.every(elem => {
-          if (elem.length >= 0) {
-            i++;
-          } else {
-            i++;
-            msg = `Opis stava broj "${i}" mora biti duzi od 1 karaktera`;
-            throw new Error(msg);
-          }
-        });
-        return true;
-      })
-  ],
-  isAuth,
-  companyController.postNalog
-);
-router.get("/edit_nalog", isAuth, companyController.getEditNalog);
-router.post("/edit_nalog", [], isAuth, companyController.updateNalog);
 
 router.get("/change_company", isAuth, companyController.changeCompany);
 router.get("/change_year", isAuth, companyController.changeYear);
+
 router.get("/tok_dokumentacije", isAuth, companyController.getTokDokumentacije);
+
 router.get("/not_implemented", isAuth, companyController.getNotImplemented);
+
 module.exports = router;

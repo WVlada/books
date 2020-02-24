@@ -39,7 +39,7 @@ body {
   padding: 15px;
 }
 .user-message--info {
-  border-color: yellow;
+  border-color: #ffff64;
   background: rgb(255, 251, 203);
   color: rgb(210, 197, 10);
 }
