@@ -558,3 +558,32 @@ exports.updateNalog = async (req, res, next) => {
     validationErrors: []
   });
 };
+
+exports.getPronadjiBrojeveNaloga = async (req, res, next) => {
+  const current_company_id = req.current_company_id;
+  const current_company_year = req.current_company_year;
+  const brojevi_postojecih_naloga = [];
+  const brojevi = [];
+  const nalog_type = req.query.vrsta;
+  const svi_nalozi_firme = await Nalog.find({
+    company: current_company_id,
+    type: nalog_type,
+    year: current_company_year
+  });
+  for (let i = 0; i <= svi_nalozi_firme.length - 1; i++) {
+    brojevi_postojecih_naloga.push(svi_nalozi_firme[i].number);
+  }
+  let j = 1;
+  while (brojevi.length < 10) {
+    if (!brojevi_postojecih_naloga.includes(j))
+      brojevi.push(j);
+    j++;
+  }
+  
+  return res.status(200).render("includes/pronadji_brojeve_naloga", {
+    brojevi: brojevi,
+    hasError: false,
+    infoMessage: null,
+    validationErrors: []
+  });
+}

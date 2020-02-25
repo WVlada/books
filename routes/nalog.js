@@ -70,5 +70,6 @@ router.post(
 );
 router.get("/edit_nalog", isAuth, nalogController.getEditNalog);
 router.post("/edit_nalog", [], isAuth, nalogController.updateNalog);
+router.get("/pronadji_brojeve_naloga", isAuth, nalogController.getPronadjiBrojeveNaloga);
 
 module.exports = router;

@@ -41,7 +41,7 @@
             <div class="vrsta_naloga_div">
                 <div class="form-control">
                     <span>Vrsta naloga:</span>
-                    <select class="novi_nalog_input" name="vrsta_naloga" id="vrstaNaloga" onchange="Pronadji_brojeve_naloga()">
+                    <select class="novi_nalog_input" name="vrsta_naloga" id="vrstaNaloga" onchange="pronadji_brojeve_naloga()">
                         
                         <% for(let i = 0; i <= vrste_naloga.length - 1; i++) { %>
                             <option <%= vrste_naloga[i] === "N" ? "selected" : null %>><%= vrste_naloga[i] %></option>
@@ -431,6 +431,25 @@ $(document).on('change', '.chosen-select', function(e, params) {
         }
     else {}
 });
+function pronadji_brojeve_naloga() {
+    var vrsta = $("#vrstaNaloga").val()
+    
+    $.ajax({
+      url: "/pronadji_brojeve_naloga",
+      type: "GET",
+      data: { vrsta: vrsta},
+      dataType: "html",
+      beforeSend: function(){
+        $('#loader').fadeIn(200)
+      },
+      success: function(response) {
+        var broj_naloga_select = document.getElementById("broj_naloga_select")
+        broj_naloga_select.innerHTML = response;
+        $('#loader').fadeOut();
+      },
+   }
+  );        
+}
 </script>
 
 
