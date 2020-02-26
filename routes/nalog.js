@@ -43,7 +43,7 @@ router.post(
             i++;
           } else {
             i++;
-            msg = `Konto number is not a number - "${i}" `;
+            msg = `Duguje number is not a number - "${i}" `;
             throw new Error(msg);
           }
         });
@@ -58,7 +58,7 @@ router.post(
             i++;
           } else {
             i++;
-            msg = `Konto number is not a number - "${i}" `;
+            msg = `Duguje number is not a number - "${i}" `;
             throw new Error(msg);
           }
         });

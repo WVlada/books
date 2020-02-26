@@ -1,4 +1,32 @@
 <div id="table">
+  <% if (infoMessage) { %>
+    <div id="user-message" class="user-message-div">
+      <div class="user-message user-message--info">
+        <ul class="user-message-error-list">
+          <li><%= infoMessage %></li>
+        </ul>
+      </div>
+    </div>
+    <% } %> <% if (validationErrors.length > 0) { %>
+    <div id="user-message" class="user-message-div">
+      <div class="user-message user-message--error">
+        <ul class="user-message-error-list">
+          <% validationErrors.forEach(error=>{ %>
+          <li><%= error.msg %></li>
+          <% }) %>
+        </ul>
+      </div>
+    </div>
+    <% } %> <% if (successMessage) { %>
+    <div id="user-message" class="user-message-div">
+      <div class="user-message user-message--success">
+        <ul class="user-message-error-list">
+          <li><%= successMessage %></li>
+        </ul>
+      </div>
+    </div>
+<% } %>
+
   <table class="dnevnik_naloga">
     <thead>
       <tr class="dnevnik_naloga">
@@ -89,5 +117,21 @@
           }
         });
       });
+      var msgdiv = document.getElementById("user-message");
+var msg = document.getElementsByClassName("user-message");
+
+if (msg.length > 0) {
+  for (i = 0; i < msg.length; i++) {
+    let message = msg[i]; // zanimljivo je probati sa msg[i] pa timeout :)
+    message.style.opacity = 1;
+    message.style.transition = "opacity 1s ease-in-out";
+    setTimeout(function() {
+      message.style.opacity = "0";
+    }, 1800);
+    setTimeout(function() {
+      message.style.visibility = "hidden";
+    }, 3000);
+  }
+}
   </script>
 </div>

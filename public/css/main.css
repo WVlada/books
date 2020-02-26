@@ -45,9 +45,9 @@ body {
 }
 .user-message--success {
   z-index: 10;
-  border-color: green;
+  border-color: #9bdc9b;
   background: rgb(219, 253, 219);
-  color: rgb(130, 219, 130);
+  color: #5db95d;
 }
 input.invalid {
   border-color: #ff9f9d;

@@ -142,8 +142,8 @@ td.kontni_plan_jednocifren {
   text-align: center;
 }
 tr.kontni_plan_dvocifren {
-  /*background: #DCD7E6;*/
-  background: #d9d9dc;
+  background: #DCD7E6;
+  /*background: #d9d9dc;*/
   cursor: pointer;
 }
 td.kontni_plan_dvocifren:nth-child(1) {
@@ -151,6 +151,8 @@ td.kontni_plan_dvocifren:nth-child(1) {
 }
 td.kontni_plan_dvocifren:nth-child(2) {
   text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 td.kontni_plan_dvocifren:nth-child(3) {
   text-align: center;
@@ -161,6 +163,8 @@ td.kontni_plan_trocifren:nth-child(1) {
 }
 td.kontni_plan_trocifren:nth-child(2) {
   text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 td.kontni_plan_trocifren:nth-child(3) {
   text-align: center;
