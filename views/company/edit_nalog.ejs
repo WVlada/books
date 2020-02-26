@@ -33,6 +33,7 @@
 </div>
 
 <div id="nalog_dijalog">
+<div id="new_nalog_form_validation_message_placeholder"></div>
 <form id="new_nalog_form" class="new_nalog_form" action="/edit_nalog" method="POST">
     <div class = "container-fluid">
         <div class = "prvi_row"> 
@@ -126,7 +127,7 @@
                   <select data-placeholder="Select..." name="konto[]" id="konto-<%= i %>" class="chosen-select konto_input">
                       <option selected="selected"><%= stavovi[i].konto.number %></option>
                       <% for(let k=0; k <= broj_konta_array.length - 1; k++) { %>
-                        <option><%= broj_konta_array[k].number %> | <%= broj_konta_array[k].name %> </option>
+                        <option value="<%= broj_konta_array[k].number %>"><%= broj_konta_array[k].number %> | <%= broj_konta_array[k].name %> </option>
                     <% } %>
                   </select>
               </div>
@@ -280,8 +281,50 @@ $(document).off('click', '#submit_form_button').on('click', '#submit_form_button
         { return; }
         me.data('requestRunning', true);
         cancel_button.setAttribute('requestRunning', true);
-        var form = document.getElementById("new_nalog_form")
-        form.submit();}
+        //var form = document.getElementById("new_nalog_form")
+        //form.submit();
+        $.ajax({
+          type: 'POST',
+          url: '/edit_nalog',
+          data: $('#new_nalog_form').serialize(), 
+          success: function(response) {
+            var modal_placeholder = document.getElementById("nalog_placeholder")
+            modal_placeholder.innerHTML = "";
+            $("div.centar").fadeOut(0).html(response).fadeIn(500)
+            $('#loader').fadeOut();
+           },
+           error: function(error){
+            me.data('requestRunning', false);
+            // prvo remove prethodne
+            $('.new_nalog_input_error').each(function(index, element){
+                $(element).removeClass('new_nalog_input_error');
+              })
+            $('.new_nalog_select_error').each(function(index, element){
+                $(element).removeClass('new_nalog_select_error');
+            })
+            $('#user-message').remove()
+            // onda stavljam nove
+            var fail_msg = `<div id="user-message" class="user-message-div new_nalog_error_div">
+                                <div class="user-message user-message--error">
+                                  <ul class="user-message-error-list">`
+            for(let j =0 ; j <= error.responseJSON.length - 1; j++){
+              $(`input[name='${error.responseJSON[j].param}']`).removeClass('new_nalog_input').addClass('new_nalog_input_error')
+              $(`input[name='${error.responseJSON[j].param}[]']`).removeClass('new_nalog_input').addClass('new_nalog_input_error')
+              $(`select[name='${error.responseJSON[j].param}[]']`).parent().addClass('new_nalog_select_error')
+              //
+              fail_msg += `<li>${error.responseJSON[j].msg}</li>`;
+            }
+            fail_msg + `</ul></div></div>`
+            $('#new_nalog_form_validation_message_placeholder').append(fail_msg).fadeIn(500)
+            $('#new_nalog_form_validation_message_placeholder').delay(1500).fadeOut(1500);
+            
+            $('#loader').fadeOut();
+           },
+            beforeSend: function(){
+              $('#loader').fadeIn(200)
+            }
+        });  
+    }
 );
 $(document).off('click', '#cancel_form_button').on('click', '#cancel_form_button', function()        
     { 

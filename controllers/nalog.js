@@ -126,18 +126,7 @@ exports.postNalog = async (req, res, next) => {
   const duguje_array = req.body.duguje;
   const potrazuje_array = req.body.potrazuje;
   const valuta_array = req.body.valuta;
-  const duguje_sum = duguje_array.reduce(
-    (a, b) =>
-      Math.round(Number(String(a).replace(/,/g, "")) * 100) / 100 +
-      Math.round(Number(String(b).replace(/,/g, "")) * 100) / 100,
-    0
-  );
-  const potrazuje_sum = potrazuje_array.reduce(
-    (a, b) =>
-      Math.round(Number(String(a).replace(/,/g, "")) * 100) / 100 +
-      Math.round(Number(String(b).replace(/,/g, "")) * 100) / 100,
-    0
-  );
+  
   let nalog;
   let nalozi;
   let companies;
@@ -171,6 +160,29 @@ exports.postNalog = async (req, res, next) => {
   }
   //[ { _id: 5e54e455fa4e4b2c1c673f2b, number: '0201' }, null, { _id: 5e54e457fa4e4b2c1c673f37, number: '2401' } ] 
   console.log(array_konta_za_snimanje)
+
+  // u duguje i potrazuje sum mogu uci samo stavovi za koje postoje konta
+  for (i = 0; i <= array_konta_za_snimanje.length - 1; i++) {
+    if (array_konta_za_snimanje[i] == null)
+    {
+      duguje_array[i] = 0;
+      potrazuje_array[i] = 0;
+    }
+  }
+  const duguje_sum = duguje_array.reduce(
+    (a, b) =>
+      Math.round(Number(String(a).replace(/,/g, "")) * 100) / 100 +
+      Math.round(Number(String(b).replace(/,/g, "")) * 100) / 100,
+    0
+  );
+  const potrazuje_sum = potrazuje_array.reduce(
+    (a, b) =>
+      Math.round(Number(String(a).replace(/,/g, "")) * 100) / 100 +
+      Math.round(Number(String(b).replace(/,/g, "")) * 100) / 100,
+    0
+  );
+  // u duguje i potrazuje sum mogu uci samo stavovi za koje postoje konta
+  
   
   // provera datuma naloga - moglo je i u routu
   if (datum_naloga.slice(0,4) != current_company_year) {
@@ -426,22 +438,10 @@ exports.updateNalog = async (req, res, next) => {
   });
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
+    console.log("-----erorrs")
     console.log(errors);
-    return res.status(300).render("includes/dashboard/dnevnik", {
-      pageTitle: "",
-      accounting: accounting,
-      path: "/dnevnik",
-      hasError: false,
-      user: user,
-      current_company: current_company,
-      current_company_year: current_company_year,
-      years: years,
-      companies: companies,
-      nalozi: nalozi,
-      successMessage: null,
-      infoMessage: null,
-      validationErrors: []
-    });
+    console.log("-----erorrs")
+    return res.status(400).json(errors.array());
   }
   // nalog update
   const nalog_id = req.body["_id"];
@@ -453,6 +453,50 @@ exports.updateNalog = async (req, res, next) => {
   const duguje_array = req.body.duguje;
   const potrazuje_array = req.body.potrazuje;
   const valuta_array = req.body.valuta;
+  
+  const opis_stava_array = req.body.opis_stava;
+  const poziv_na_broj_array = req.body.poziv_na_broj;
+  const konto_array = req.body.konto;
+  // provera stavova
+  let broj_stavova_koji_se_snimaju = 0;
+  for (i = 0; i <= opis_stava_array.length - 1; i++) {
+    if (opis_stava_array[i].length > 1) {
+      broj_stavova_koji_se_snimaju++;
+    }
+  }
+  if (broj_stavova_koji_se_snimaju < 2) {
+    return res
+      .status(400)
+      .json([
+        { param: "opis_stava", msg: "At least 2 (two) entries must exist." }
+      ]);
+  }
+  // provera stavova
+  // snimanje naloga ce biti moguce samo ako konto postoji
+  // jer on je glavni
+  let array_konta_za_snimanje = []
+  for (i = 0; i <= konto_array.length - 1; i++) {
+    let x = await Konto.findOne({company: current_company_id, number: konto_array[i]})
+    if(x)
+    { array_konta_za_snimanje.push({_id: x._id, number: x.number}) }
+    else { array_konta_za_snimanje.push(null)}
+  }
+  //[ { _id: 5e54e455fa4e4b2c1c673f2b, number: '0201' }, null, { _id: 5e54e457fa4e4b2c1c673f37, number: '2401' } ] 
+  console.log(array_konta_za_snimanje)
+  // ne sme uci u sumu red stav koji ne snimam jer nema konto - a ima iznos duguje ili potrazuje
+  for (i = 0; i <= array_konta_za_snimanje.length - 1; i++) {
+    if (array_konta_za_snimanje[i] == null)
+    {
+      duguje_array[i] = 0;
+      potrazuje_array[i] = 0;
+    }
+  }
+  console.log("++++")
+  console.log(duguje_array)
+  console.log("++++")
+  console.log("++++")
+  console.log(potrazuje_array)
+  console.log("++++")
   const duguje_sum = duguje_array.reduce(
     (a, b) =>
       Math.round(Number(String(a).replace(/,/g, "")) * 100) / 100 +
@@ -468,6 +512,13 @@ exports.updateNalog = async (req, res, next) => {
   const stavovi_old_id_array = nalog.stavovi.map(e => {
     return e._id;
   });
+  // provera datuma naloga - moglo je i u routu
+  if (datum_naloga.slice(0,4) != current_company_year) {
+    return res
+      .status(400)
+      .json([{ param: "datum_naloga", msg: `Godina naloga mora biti ${current_company_year}.` }]);
+  }
+  // provera datuma naloga - moglo je i u routu
   await nalog.updateOne({
     duguje: duguje_sum,
     potrazuje: potrazuje_sum,
@@ -480,38 +531,38 @@ exports.updateNalog = async (req, res, next) => {
   });
   // nalog update
   // stavovi update
-  const opis_stava_array = req.body.opis_stava;
+  
   const sifra_komitenta_array = req.body.sifra_komitenta.map(sifra => {
     return sifra == "" ? null : sifra;
   });
   console.log("***");
   console.log(sifra_komitenta_array);
   console.log("***");
-  const poziv_na_broj_array = req.body.poziv_na_broj;
-  const konto_array = req.body.konto;
-  const konto_array_ids_with_numbers = await Konto.find({
-    number: konto_array
-  }).select("_id number");
-  // napraviti array od konto_array i konto_array_ids_with_numbers
-  let konto_array_ids = [];
-  for (let m = 0; m <= konto_array.length - 1; m++) {
-    for (let k = 0; k <= konto_array_ids_with_numbers.length - 1; k++) {
-      if (konto_array[m] == konto_array_ids_with_numbers[k].number) {
-        konto_array_ids.push(konto_array_ids_with_numbers[k]._id);
-      }
-    }
-  }
+  
+  //const konto_array_ids_with_numbers = await Konto.find({
+  //  number: konto_array
+  //}).select("_id number");
+  //// napraviti array od konto_array i konto_array_ids_with_numbers
+  //let konto_array_ids = [];
+  //for (let m = 0; m <= konto_array.length - 1; m++) {
+  //  for (let k = 0; k <= konto_array_ids_with_numbers.length - 1; k++) {
+  //    if (konto_array[m] == konto_array_ids_with_numbers[k].number) {
+  //      konto_array_ids.push(konto_array_ids_with_numbers[k]._id);
+  //    }
+  //  }
+  //}
   // napraviti array od konto_array i konto_array_ids_with_numbers
   await Stav.deleteMany({ _id: stavovi_old_id_array });
   let novi_stavovi = [];
-  for (i = 0; i <= opis_stava_array.length - 1; i++) {
-    novi_stavovi[i] = await Stav.create({
+  for (i = 0; i <= array_konta_za_snimanje.length - 1; i++) {
+    if (array_konta_za_snimanje[i]) {
+      novi_stavovi[i] = await Stav.create({
       user: user,
       company: current_company_id,
       opis: opis_stava_array[i],
       sifra_komitenta: sifra_komitenta_array[i],
       poziv_na_broj: poziv_na_broj_array[i],
-      konto: konto_array_ids[i],
+      konto: array_konta_za_snimanje[i],
       duguje: Number(Number(duguje_array[i].replace(/,/g, "")).toFixed(2)),
       potrazuje: Number(
         Number(potrazuje_array[i].replace(/,/g, "")).toFixed(2)
@@ -522,7 +573,7 @@ exports.updateNalog = async (req, res, next) => {
       nalog_date: datum_naloga,
       type: nalog.type
     });
-  }
+  }}
   nalog.stavovi = novi_stavovi;
   nalog.save();
   // stavovi update
@@ -544,7 +595,7 @@ exports.updateNalog = async (req, res, next) => {
         .limit(NALOGS_PER_PAGE); //paginacija;
     });
 
-  return res.status(200).render("company/show_company", {
+  return res.status(200).render("includes/dashboard/dnevnik", {
     pageTitle: "",
     accounting: accounting,
     path: "/dnevnik",
