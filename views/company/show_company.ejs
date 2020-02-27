@@ -57,11 +57,7 @@
 			<%- include('../includes/dashboard/tok_dokumentacije.ejs') %>
 		<% } %>
 
-        <div id="novi_komitent_placeholder">
-        </div>
-        <div id="odabir_kartice_placeholder">
-        </div>
-
+        
     </div>
   
 
@@ -99,8 +95,8 @@
 				</finbutton>
 			</div>
 			<div class="dole_grid_item_5">	
-				<finbutton id="dole_button5">
-					#
+				<finbutton id="konto_new">
+					Add acc.
 				</finbutton>
 			</div>
 			<div class="dole_grid_item_6">	
@@ -134,6 +130,8 @@
 <div id="nalog_placeholder">
 </div>
 <div id="komitent_placeholder">
+</div>
+<div id="konto_placeholder">
 </div>
 
 <script>
@@ -201,6 +199,31 @@ $(document)
           },
           success: function(html) {
             $("#komitent_placeholder").fadeOut(0).html(html).fadeIn(500)
+            $('#loader').fadeOut();
+          }
+        });
+      });
+      $(document)
+      .off("click", "#konto_new")
+      .on("click", "#konto_new", function() {
+        var me = $(this);
+        if (me.data("requestRunning")) {
+          return;
+        }
+        me.data("requestRunning", true);
+        $.ajax({
+          url: "/konto_edit",
+          type: "GET",
+          dataType: "html",
+          beforeSend: function(){
+          $('#loader').fadeIn(200)
+          },
+          complete: function() {
+            me.data("requestRunning", false);
+            $('#loader').hide();
+          },
+          success: function(html) {
+            $("#konto_placeholder").fadeOut(0).html(html).fadeIn(500)
             $('#loader').fadeOut();
           }
         });

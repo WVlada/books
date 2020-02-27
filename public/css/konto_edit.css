@@ -1,0 +1,137 @@
+#konto_edit_modal_background {
+    z-index: 100;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #aaa;
+    opacity: 0.3;
+    text-align: center;
+  }
+  .konto_edit_modal_placeholder {
+    position: relative;
+    margin: 0px auto;
+    height: auto;
+    width: 550px;
+    top: 50px;
+    z-index: 101;
+    border: 1px solid #c5c5c5;
+    padding: 1px;
+    outline: 0;
+    opacity: 1 !important;
+    background-color: #f8f8f8;
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+    border-bottom-left-radius: 2px;
+  }
+  #konto_placeholder {
+    position: absolute;
+    margin: 0px auto;
+    top: 50px;
+    width: 100%;
+  }
+  #konto_edit_dijalog {
+    background-image: -webkit-linear-gradient(top, #fff9e8 0%, #d8d9ea 100%);
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+    border-bottom-left-radius: 2px;
+    padding-bottom: 30px;
+  }
+  .konto_edit_slika_div {
+    text-align: center;
+    padding-top: 30px;
+  }
+  .konto_edit_slika {
+    width: 100px;
+    height: 100px;
+  }
+  .konto_edit_slika_text {
+    font-size: 14px;
+    font-weight: 500;
+    color: #49435b;
+    margin-top: 15px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .konto_edit_slika_text_iznad {
+    font-size: 14px;
+    font-weight: 700;
+    color: #49435b;
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+  .konto_edit_slika_text_ispod {
+    margin-top: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #919094;
+    margin-bottom: 0px;
+    padding: 10px;
+    padding-left: 12px;
+  }
+  
+  .new_nalog_form {
+    padding-top: 10px;
+  }
+  .form-control {
+    font-size: 13px;
+    border: none;
+    background-color: transparent;
+    height: auto !important;
+  }
+  .konto_edit_form-control {
+    padding: 2px;
+  }
+  .konto_edit_input {
+    padding-left: 2px;
+    border-radius: 2px;
+    border: 2px solid #d8d9ea;
+    font-size: 13px;
+    height: 25px;
+  }
+  .konto_edit_input_error {
+    padding-left: 2px;
+    border-radius: 2px;
+    border: 2px solid rgb(214, 147, 147);
+    font-size: 13px;
+    height: 25px;
+  }
+  .konto_edit_input_pib {
+    width: 100px;
+  }
+  .konto_edit_input_sifra {
+    width: 130px;
+  }
+  .konto_edit_input_type {
+    color: grey;
+  }
+  .konto_edit_input_number {
+    width: 120px;
+  }
+  #loader {
+    display: none;
+    z-index: 5000;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(224, 224, 224, 0.335);
+  }
+  #loader-spinner {
+    position: relative;
+    top: 40%;
+    left: 50%;
+    color: #49435b;
+    margin-left: -35px;
+    
+  }
+  .konto_edit_horizontal_input_div {
+    margin-top: 6px;
+  }
+  .konto_edit_horizontal_input {
+    display: inline;
+  }

@@ -7,6 +7,8 @@ const Komitent = require("./komitent");
 const Komitenttype = require("./komitenttype");
 const Okvir = require("./okvir");
 const Schema = mongoose.Schema;
+const seedOkvir = require("./seeds/seed_okvir");
+const seedZaDruguITrecu = require('./seeds/seed_za_drugu_i_trecu')
 
 const userSchema = new Schema({
   email: {
@@ -89,6 +91,12 @@ userSchema.methods.createMoreCompanies = async function(company) {
   this.company.push({ _id: company3._id });
   await this.save();
   // company
+
+  await seedOkvir(company2);
+  await seedOkvir(company3);
+
+  await seedZaDruguITrecu(this, company2)
+  await seedZaDruguITrecu(this, company3)
 };
 
 userSchema.methods.deleteAllConnectedRecords = async function() {

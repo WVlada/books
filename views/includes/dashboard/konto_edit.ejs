@@ -1,0 +1,145 @@
+<div id="konto_edit_modal_background"></div>
+
+<div class="konto_edit_modal_placeholder">
+  <div class="modal_title_bar">
+    <span class="modal_title_bar_span">Korisnik: <%= user.email %></span>
+    <% if (infoMessage) { %>
+    <div id="user-message" class="user-message-div">
+      <div class="user-message user-message--info">
+        <ul class="user-message-error-list">
+          <li><%= infoMessage %></li>
+        </ul>
+      </div>
+    </div>
+    <% } %> <% if (validationErrors.length > 0) { %>
+    <div id="user-message" class="user-message-div">
+      <div class="user-message user-message--error">
+        <ul class="user-message-error-list">
+          <% validationErrors.forEach(error=>{ %>
+          <li><%= error.msg %></li>
+          <% }) %>
+        </ul>
+      </div>
+    </div>
+    <% } %> <% if (successMessage) { %>
+    <div id="user-message" class="user-message-div">
+      <div class="user-message user-message--success">
+        <ul class="user-message-error-list">
+          <li><%= successMessage %></li>
+        </ul>
+      </div>
+    </div>
+    <% } %>
+  </div>
+
+  <div id="konto_edit_dijalog">
+    <form
+      id="konto_edit_form"
+      class="konto_edit_form"
+      action="/konto_edit"
+      method="POST"
+    >
+      <div class="row">
+        
+        <div class="col-md">
+          <div class="konto_edit_slika_div">
+            <p class="konto_edit_slika_text_iznad">
+              Add account
+            </p>
+          <img
+            class="konto_edit_slika"
+            src="../../images/company.png"
+            alt="Add account"
+          />
+        </div>
+          </div>
+            <div class="col-md">
+              <p class="konto_edit_slika_text_ispod">
+                Enter data in fields below
+              </p>
+                <div class="form-control">
+                  <input
+                    class="konto_edit_input konto_edit_input_name"
+                    type="text"
+                    placeholder="Account name"
+                    name="name"
+                    id="name"
+                    value="<%= oldInput.name %>"
+                  />
+                </div>
+                <div class="form-control">
+                  <input
+                    class="konto_edit_input konto_edit_input_number"
+                    type="text"
+                    placeholder="Number: 3-6 digits"
+                    name="number"
+                    id="number"
+                    value="<%= oldInput.number %>"
+                  />
+                </div>
+                
+              </div>
+             
+          </div>
+          
+        
+        <input type="hidden" name="konto_id" value="<%= oldInput.id %>" />
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+    </form>
+  </div>
+<div class="modal_footer">
+  <div class="modal_footer_button_set">
+    <button id="konto_edit_ok_form_button">
+      OK
+    </button>
+    <button id="konto_edit_cancel_form_button">
+      Cancel
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+$(document).off('click', '#konto_edit_ok_form_button').on('click', '#konto_edit_ok_form_button', function()        
+  { var me = $(this);
+    var cancel_button = document.getElementById("konto_edit_cancel_form_button")
+    var error_inputs = []
+    if (me.data('requestRunning')) 
+      { return; }
+    me.data('requestRunning', true);
+    cancel_button.setAttribute('requestRunning', true);
+    //var form = document.getElementById("konto_edit_form")
+    $.ajax({
+        type: 'POST',
+        url: '/konto_edit',
+        data: $('#konto_edit_form').serialize(), 
+        success: function(response) {
+          var modal_placeholder = document.getElementById("konto_placeholder")
+          modal_placeholder.innerHTML = "";
+          $("div.centar").fadeOut(0).html(response).fadeIn(500)
+          $('#loader').fadeOut();
+         },
+         error: function(error){
+          me.data('requestRunning', false);
+          for(let j =0 ; j <= error.responseJSON.length - 1; j++){
+            $(`input[name=${error.responseJSON[j].param}]`).removeClass('konto_edit_input').addClass('konto_edit_input_error')
+          }
+          $('#loader').fadeOut();
+         },
+         beforeSend: function(){
+          $('#loader').fadeIn(200)
+        }
+    });
+    //form.submit();
+  });
+$(document).off('click', '#konto_edit_cancel_form_button').on('click', '#konto_edit_cancel_form_button', function()        
+  { 
+    var modal_placeholder = document.getElementById("konto_placeholder")
+    $(modal_placeholder).fadeOut(700);
+      setTimeout(function() {
+        modal_placeholder.innerHTML = "";
+   }, 1500);
+  }
+);
+  </script>
+</div>
