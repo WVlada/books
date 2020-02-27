@@ -9,6 +9,11 @@ const kontoController = require("../controllers/konto");
 
 router.get("/konto_edit", isAuth, kontoController.getEditKonto);
 router.post("/konto_edit", isAuth, kontoController.postEditKonto);
-
+router.get(
+  "/konto_promet_odabir",
+  isAuth,
+  kontoController.getKontoPrometOdabir
+);
+router.post("/konto_promet", isAuth, kontoController.postKontoPromet);
 
 module.exports = router;

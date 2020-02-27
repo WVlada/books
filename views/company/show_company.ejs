@@ -83,7 +83,7 @@
 				</finbutton>
 			</div>
 			<div class="dole_grid_item_3">	
-				<finbutton id="promet_od_do_button">
+				<finbutton id="konto_promet_odabir">
 					Promet
 				</finbutton>
 				<div id="promet_od_do_placeholder">
@@ -132,6 +132,8 @@
 <div id="komitent_placeholder">
 </div>
 <div id="konto_placeholder">
+</div>
+<div id="konto_promet_odabir_placeholder">
 </div>
 
 <script>
@@ -224,6 +226,31 @@ $(document)
           },
           success: function(html) {
             $("#konto_placeholder").fadeOut(0).html(html).fadeIn(500)
+            $('#loader').fadeOut();
+          }
+        });
+      });
+      $(document)
+      .off("click", "#konto_promet_odabir")
+      .on("click", "#konto_promet_odabir", function() {
+        var me = $(this);
+        if (me.data("requestRunning")) {
+          return;
+        }
+        me.data("requestRunning", true);
+        $.ajax({
+          url: "/konto_promet_odabir",
+          type: "GET",
+          dataType: "html",
+          beforeSend: function(){
+          $('#loader').fadeIn(200)
+          },
+          complete: function() {
+            me.data("requestRunning", false);
+            $('#loader').hide();
+          },
+          success: function(html) {
+            $("#konto_promet_odabir_placeholder").fadeOut(0).html(html).fadeIn(500)
             $('#loader').fadeOut();
           }
         });

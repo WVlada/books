@@ -1,0 +1,154 @@
+<div id="konto_promet_odabir_modal_background"></div>
+
+<div class="konto_promet_odabir_modal_placeholder">
+  <div class="modal_title_bar">
+    <span class="modal_title_bar_span">Korisnik: <%= user.email %></span>
+    <% if (infoMessage) { %>
+    <div id="user-message" class="user-message-div">
+      <div class="user-message user-message--info">
+        <ul class="user-message-error-list">
+          <li><%= infoMessage %></li>
+        </ul>
+      </div>
+    </div>
+    <% } %> <% if (validationErrors.length > 0) { %>
+    <div id="user-message" class="user-message-div">
+      <div class="user-message user-message--error">
+        <ul class="user-message-error-list">
+          <% validationErrors.forEach(error=>{ %>
+          <li><%= error.msg %></li>
+          <% }) %>
+        </ul>
+      </div>
+    </div>
+    <% } %> <% if (successMessage) { %>
+    <div id="user-message" class="user-message-div">
+      <div class="user-message user-message--success">
+        <ul class="user-message-error-list">
+          <li><%= successMessage %></li>
+        </ul>
+      </div>
+    </div>
+    <% } %>
+  </div>
+
+  <div id="konto_promet_odabir_dijalog">
+    <form
+      id="konto_promet_odabir_form"
+      class="konto_promet_odabir_form"
+      action="/konto_promet"
+      method="POST"
+    >
+      <div class="row">
+        
+        <div class="col-md">
+          <div class="konto_promet_odabir_slika_div">
+            <p class="konto_promet_odabir_slika_text_iznad">
+              Account listing overview
+            </p>
+            <img
+              class="konto_promet_odabir_slika"
+              src="../../images/dashboard/opstinalog1.png"
+              alt="Add account"
+            />
+          </div>
+          <p class="konto_promet_odabir_slika_text_ispod">
+            Select start account:
+          </p>
+          <div class="form-control konto_promet_odabir_form-control">
+            <select name="konto_start" data-placeholder="Select..." class="konto_promet_odabir_input konto_promet_odabir_input_konto_number">
+              <% for(let i=0; i <= broj_konta_array.length - 1; i++) { %>
+                <option><%= broj_konta_array[i].number %> | <%= broj_konta_array[i].name %> </option>
+              <% } %>
+            </select>
+            <div id="odabir_konta_start" class="konto_promet_odabir_konto_name">********************</div>
+          </div>
+        </div>
+        
+        <div class="col-md">
+          <p class="konto_promet_odabir_slika_text_ispod">
+            Select start date:
+          </p>
+          <div class="form-control">
+            <input name="datum_start" type="date" class="konto_promet_odabir_input konto_promet_odabir_input_date" value="<%= date %>">
+          </div>
+          <p class="konto_promet_odabir_slika_text_ispod">
+            Select end date:
+          </p>
+          <div class="form-control">
+            <input name="datum_end" type="date" class="konto_promet_odabir_input konto_promet_odabir_input_date" value="<%= date %>">
+          </div>
+          <p class="konto_promet_odabir_slika_text_ispod">
+            Select end account:
+          </p>
+          <div class="form-control konto_promet_odabir_form-control">
+            <select data-placeholder="Select..." name="konto_end" class="konto_promet_odabir_input konto_promet_odabir_input_konto_number">
+              <% for(let i=0; i <= broj_konta_array.length - 1; i++) { %>
+                <option><%= broj_konta_array[i].number %> | <%= broj_konta_array[i].name %> </option>
+              <% } %>
+              </select>
+            <div id="odabir_konta_end" class="konto_promet_odabir_konto_name">********************</div>
+          </div>
+        </div>
+        
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+      </div>
+      </form>
+  
+    </div>
+<div class="modal_footer">
+  <div class="modal_footer_button_set">
+    <button id="konto_promet_odabir_ok_form_button">
+      OK
+    </button>
+    <button id="konto_promet_odabir_cancel_form_button">
+      Cancel
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+$(document).off('click', '#konto_promet_odabir_ok_form_button').on('click', '#konto_promet_odabir_ok_form_button', function()        
+  { var me = $(this);
+    var cancel_button = document.getElementById("konto_promet_odabir_cancel_form_button")
+    var error_inputs = []
+    if (me.data('requestRunning')) 
+      { return; }
+    me.data('requestRunning', true);
+    cancel_button.setAttribute('requestRunning', true);
+    //var form = document.getElementById("konto_promet_odabir_form")
+    $.ajax({
+        type: 'POST',
+        url: '/konto_promet',
+        data: $('#konto_promet_odabir_form').serialize(), 
+        success: function(response) {
+          var modal_placeholder = document.getElementById("konto_promet_placeholder")
+          modal_placeholder.innerHTML = "";
+          $("div.centar").fadeOut(0).html(response).fadeIn(500)
+          $('#loader').fadeOut();
+         },
+         error: function(error){
+          me.data('requestRunning', false);
+          for(let j =0 ; j <= error.responseJSON.length - 1; j++){
+            $(`input[name=${error.responseJSON[j].param}]`).removeClass('konto_promet_odabir_input').addClass('konto_promet_odabir_input_error')
+          }
+          $('#loader').fadeOut();
+         },
+         beforeSend: function(){
+          $('#loader').fadeIn(200)
+        }
+    });
+  
+  });
+$(document).off('click', '#konto_promet_odabir_cancel_form_button').on('click', '#konto_promet_odabir_cancel_form_button', function()        
+  { 
+    var modal_placeholder = document.getElementById("konto_promet_odabir_placeholder")
+    $(modal_placeholder).fadeOut(700);
+      setTimeout(function() {
+        modal_placeholder.innerHTML = "";
+   }, 1500);
+  }
+);
+  </script>
+</div>
