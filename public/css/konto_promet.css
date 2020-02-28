@@ -132,3 +132,17 @@
 .konto_promet_odabir_konto_name {
   padding: 10px;
 }
+#odabir_konta_start {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 500px;
+  height: 30px;
+}
+#odabir_konta_end {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 500px;
+  height: 30px;
+}

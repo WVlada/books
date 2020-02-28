@@ -52,50 +52,58 @@
               alt="Add account"
             />
           </div>
-          <p class="konto_promet_odabir_slika_text_ispod">
-            Select start account:
-          </p>
-          <div class="form-control konto_promet_odabir_form-control">
-            <select name="konto_start" data-placeholder="Select..." class="konto_promet_odabir_input konto_promet_odabir_input_konto_number">
-              <% for(let i=0; i <= broj_konta_array.length - 1; i++) { %>
-                <option><%= broj_konta_array[i].number %> | <%= broj_konta_array[i].name %> </option>
-              <% } %>
-            </select>
-            <div id="odabir_konta_start" class="konto_promet_odabir_konto_name">********************</div>
+        </div>
+        <div class="col-md">
+            <p class="konto_promet_odabir_slika_text_ispod">
+              Select start date:
+            </p>
+            <div class="form-control">
+              <input name="datum_start" type="date" class="konto_promet_odabir_input konto_promet_odabir_input_date" value="<%= date %>">
+            </div>
+            <p class="konto_promet_odabir_slika_text_ispod">
+              Select end date:
+            </p>
+            <div class="form-control">
+              <input name="datum_end" type="date" class="konto_promet_odabir_input konto_promet_odabir_input_date" value="<%= date %>">
+            </div>
           </div>
         </div>
         
-        <div class="col-md">
-          <p class="konto_promet_odabir_slika_text_ispod">
-            Select start date:
-          </p>
-          <div class="form-control">
-            <input name="datum_start" type="date" class="konto_promet_odabir_input konto_promet_odabir_input_date" value="<%= date %>">
-          </div>
-          <p class="konto_promet_odabir_slika_text_ispod">
-            Select end date:
-          </p>
-          <div class="form-control">
-            <input name="datum_end" type="date" class="konto_promet_odabir_input konto_promet_odabir_input_date" value="<%= date %>">
-          </div>
-          <p class="konto_promet_odabir_slika_text_ispod">
-            Select end account:
-          </p>
-          <div class="form-control konto_promet_odabir_form-control">
-            <select data-placeholder="Select..." name="konto_end" class="konto_promet_odabir_input konto_promet_odabir_input_konto_number">
-              <% for(let i=0; i <= broj_konta_array.length - 1; i++) { %>
-                <option><%= broj_konta_array[i].number %> | <%= broj_konta_array[i].name %> </option>
-              <% } %>
+        <div class="row">
+        
+          <div class="col-md">
+            <p class="konto_promet_odabir_slika_text_ispod">
+              Select start account:
+            </p>
+            <div class="form-control konto_promet_odabir_form-control">
+              <select onchange="changeKontoStart(this)" name="konto_start" data-placeholder="Select..." class="konto_promet_odabir_input konto_promet_odabir_input_konto_number">
+                <% for(let i=0; i <= broj_konta_array.length - 1; i++) { %>
+                  <option value="<%= broj_konta_array[i].number %>"><%= broj_konta_array[i].number %> | <%= broj_konta_array[i].name %> </option>
+                <% } %>
               </select>
-            <div id="odabir_konta_end" class="konto_promet_odabir_konto_name">********************</div>
+              <div id="odabir_konta_start" class="konto_promet_odabir_konto_name"></div>
+            </div>
+            <p class="konto_promet_odabir_slika_text_ispod">
+              Select end account:
+            </p>
+            <div class="form-control konto_promet_odabir_form-control">
+              <select onchange="changeKontoEnd(this)" data-placeholder="Select..." name="konto_end" class="konto_promet_odabir_input konto_promet_odabir_input_konto_number">
+                <% for(let i=0; i <= broj_konta_array.length - 1; i++) { %>
+                  <option value="<%= broj_konta_array[i].number %>"><%= broj_konta_array[i].number %> | <%= broj_konta_array[i].name %> </option>
+                <% } %>
+                </select>
+              <div id="odabir_konta_end" class="konto_promet_odabir_konto_name"></div>
+
           </div>
+        </div>
+          
         </div>
         
         <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-      </div>
+      
       </form>
-  
     </div>
+    
 <div class="modal_footer">
   <div class="modal_footer_button_set">
     <button id="konto_promet_odabir_ok_form_button">
@@ -150,5 +158,15 @@ $(document).off('click', '#konto_promet_odabir_cancel_form_button').on('click', 
    }, 1500);
   }
 );
+function changeKontoStart(elem) {
+  let val = elem.options[elem.selectedIndex].text.split("|")[1];
+  var el = document.getElementById('odabir_konta_start');
+  el.innerText = val;
+}
+function changeKontoEnd(elem) {
+  let val = elem.options[elem.selectedIndex].text.split("|")[1];
+  var el = document.getElementById('odabir_konta_end');
+  el.innerText = val;
+}
   </script>
 </div>
