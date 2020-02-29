@@ -146,3 +146,155 @@
   width: 500px;
   height: 30px;
 }
+.konto_promet_table {
+  justify-content: flex-start !important;
+  overflow-y: auto;
+  padding: 1px;
+}
+.konto_promet_tbody {
+}
+.konto_promet_thead {
+  margin-top: 30px;
+}
+.konto_promet_thead_zero {
+  margin-top: 0px;
+}
+table.konto_promet {
+  display: contents;
+}
+.konto_promet_thead tr {
+  display: block;
+  margin-bottom: 5px;
+}
+.konto_promet_tbody {
+  height: 572px;
+  overflow-y: auto;
+  display: block;
+}
+th.konto_promet {
+  border-left: 1px solid #7e798c;
+  border-right: 1px solid #4e4765;
+  border-top: 1px solid #4e4765;
+  padding: 6px;
+  display: table-cell;
+  font-weight: 300;
+  background-image: -webkit-linear-gradient(top, #6d687e 0%, #49435b 100%);
+  color: white;
+  vertical-align: middle;
+  text-align: center;
+  font-size: 13px;
+}
+th.konto_promet:nth-child(1) {
+  min-width: 100px;
+  text-align: center;
+}
+th.konto_promet:nth-child(2) {
+  text-align: center;
+  min-width: 50px;
+}
+th.konto_promet:nth-child(3) {
+  text-align: center;
+  min-width: 50px;
+}
+th.konto_promet:nth-child(4) {
+  min-width: 343px;
+}
+th.konto_promet:nth-child(5) {
+  min-width: 120px;
+}
+th.konto_promet:nth-child(6) {
+  min-width: 120px;
+}
+th.konto_promet:nth-child(7) {
+  min-width: 120px;
+}
+td.konto_promet:nth-child(1) {
+  text-align: center;
+  min-width: 100px;
+}
+td.konto_promet:nth-child(2) {
+  text-align: center;
+  min-width: 50px;
+}
+td.konto_promet:nth-child(3) {
+  text-align: center;
+  min-width: 50px;
+}
+td.konto_promet:nth-child(4) {
+  text-align: left;
+  min-width: 346px;
+}
+td.konto_promet:nth-child(5) {
+  text-align: right;
+  min-width: 120px;
+}
+td.konto_promet:nth-child(6) {
+  text-align: right;
+  min-width: 120px;
+}
+td.konto_promet:nth-child(7) {
+  text-align: right;
+  min-width: 101.58px;
+  width: auto;
+}
+
+th.konto_promet:first-child {
+  /*-webkit-border-top-left-radius: 3px;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;*/
+}
+th.konto_promet:last-child {
+  /*-webkit-border-top-right-radius: 3px;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;*/
+}
+td.konto_promet {
+  border-top: 1px solid #fff !important;
+  border-left: 1px solid #dfdce3;
+  line-height: 1;
+  padding: 4px;
+  color: #000;
+  border-bottom: 1px solid #ebe9ee;
+  font-size: 13px;
+}
+td.konto_promet:last-child {
+  border-right: 1px solid #dfdce3;
+}
+tr.konto_promet:last-child > td.konto_promet:first-child {
+  border-bottom-left-radius: 5px;
+}
+tr.konto_promet:last-child > td.konto_promet:last-child {
+  border-bottom-right-radius: 5px;
+}
+tr.konto_promet {
+  background: #fafafa;
+}
+td.konto_promet {
+  cursor: pointer;
+}
+tr.konto_promet_zbirni_row {
+  border-top: double;
+  background: #f6f5f8;
+  font-weight: 600;
+}
+tr.konto_promet_trocifren:nth-child(even) {
+  background: #f6f5f8;
+}
+tr.konto_promet_trocifren:last-child > td {
+  border-bottom-width: 1;
+}
+tr.konto_promet_trocifren:hover,
+tr.konto_promet_trocifren:nth-child(even):hover {
+  background: #dfdce3;
+}
+.konto_promet_header_row {
+  border: none !important;
+  padding: 6px;
+  display: table-cell;
+  font-weight: 300;
+  background-image: none !important;
+  color: #402020 !important;
+  vertical-align: middle;
+  text-align: center;
+  font-size: 13px;
+}

@@ -131,7 +131,7 @@ $(document).off('click', '#konto_promet_odabir_ok_form_button').on('click', '#ko
         url: '/konto_promet',
         data: $('#konto_promet_odabir_form').serialize(), 
         success: function(response) {
-          var modal_placeholder = document.getElementById("konto_promet_placeholder")
+          var modal_placeholder = document.getElementById("konto_promet_odabir_placeholder")
           modal_placeholder.innerHTML = "";
           $("div.centar").fadeOut(0).html(response).fadeIn(500)
           $('#loader').fadeOut();

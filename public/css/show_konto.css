@@ -1,9 +1,5 @@
-#table {
-  
-}
 table.show_konto {
   display: contents;
-  
 }
 .show_konto_thead tr {
   display: block;
@@ -12,7 +8,7 @@ table.show_konto {
   height: 572px;
   overflow-y: auto;
   display: block;
-  }
+}
 th.show_konto {
   border-left: 1px solid #7e798c;
   border-right: 1px solid #4e4765;
@@ -159,6 +155,5 @@ tr.show_konto_trocifren:nth-child(even):hover {
   /*background-image: -webkit-linear-gradient(top, #49435b 0%, #6d687e 100%) !important;*/
 }
 .show_konto_header_row_tr {
-  
   margin-bottom: 5px;
 }

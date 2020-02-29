@@ -1,8 +1,10 @@
 const User = require("../models/user");
+const Nalog = require("../models/nalog");
 const Company = require("../models/company");
 const Konto = require("../models/konto");
 const Okvir = require("../models/okvir");
 const Stav = require("../models/stav");
+const accounting = require("accounting-js");
 
 exports.getEditKonto = async (req, res, next) => {
   const user = req.user;
@@ -121,7 +123,9 @@ exports.getKontoPrometOdabir = async (req, res, next) => {
   const current_company = await Company.findOne({ _id: current_company_id });
   const date = `${current_company_year}-01-01`;
 
-  const broj_konta_array = await Konto.find({ company: current_company_id }).sort('number');
+  const broj_konta_array = await Konto.find({
+    company: current_company_id
+  }).sort("number");
   //console.log(broj_konta_array);
   return res.status(200).render("includes/dashboard/konto_promet_odabir", {
     pageTitle: "",
@@ -141,44 +145,65 @@ exports.postKontoPromet = async (req, res, next) => {
   const current_company_id = req.current_company_id;
   const current_company_year = req.current_company_year;
   const current_company = await Company.findOne({ _id: current_company_id });
-  
-  const datum_start = req.body.datum_start
-  const datum_end = req.body.datum_end
-  const konto_start_number = req.body.konto_start
-  const konto_end_number = req.body.konto_end
-  console.log(req.body)
-  const sva_konta = await Konto.find({company: current_company_id, number: {$gte: konto_start_number,
-    $lte: konto_end_number}}).sort('number')
+
+  const datum_start = req.body.datum_start;
+  const datum_end = req.body.datum_end;
+  const konto_start_number = req.body.konto_start;
+  const konto_end_number = req.body.konto_end;
+  console.log(req.body);
+  const sva_konta = await Konto.find({
+    company: current_company_id,
+    number: { $gte: konto_start_number, $lte: konto_end_number }
+  }).sort("number");
   //.select("-_id number")
-  const sva_konta_array_idova = sva_konta.map(e=> e._id)
-  const sva_konta_array_brojeva = sva_konta.map(e=> e.number)
-  console.log(sva_konta_array_idova)
-  console.log(sva_konta_array_brojeva)
-  const stavovi = await Stav.find({company: current_company_id, konto: sva_konta_array_idova, nalog_date: {$gte: datum_start, $lte: datum_end }}).populate({path: 'konto', model: Konto, select: 'number'})
+  const sva_konta_array_idova = sva_konta.map(e => e._id);
+  const sva_konta_array_brojeva = sva_konta.map(e => e.number);
+  console.log(sva_konta_array_idova);
+  console.log(sva_konta_array_brojeva);
+  const stavovi = await Stav.find({
+    company: current_company_id,
+    konto: sva_konta_array_idova,
+    nalog_date: { $gte: datum_start, $lte: datum_end }
+  })
+    .populate({ path: "konto", model: Konto, select: "number" })
+    .populate({ path: "nalog", model: Nalog, select: "number" })
+    .populate({ path: "nalog", model: Nalog, select: "name" });
+  console.log("****");
+  console.log(stavovi);
+  console.log("****");
   // prolazak samo jednom kroz 2 liste
-  let sredjeno = new Map()
+  let sredjeno = new Map();
   //let sredjeno = {};
-  for(let m = 0; m <= sva_konta_array_brojeva.length -1; m++){
-    //sredjeno[sva_konta_array_brojeva[m]] = []
-    sredjeno.set(sva_konta_array_brojeva[m], [])
+  for (let m = 0; m <= sva_konta_array_brojeva.length - 1; m++) {
+    sredjeno.set(sva_konta_array_brojeva[m], []);
   }
-  console.log(sredjeno)
-  console.log(sredjeno[0])
-  for (let j = 0; j <= stavovi.length-1; j++){
-    //sredjeno[stavovi[j].konto.number].push(stavovi[j])
+
+  for (let j = 0; j <= stavovi.length - 1; j++) {
+    if (sredjeno.get(String([stavovi[j].konto.number])).length == 0) {
+      sredjeno.set(String(stavovi[j].konto.number), [stavovi[j]]);
+    } else {
+      let temp = sredjeno.get(String([stavovi[j].konto.number]));
+      temp.push(stavovi[j]);
+      sredjeno.set(String([stavovi[j].konto.number]), temp);
+    }
   }
   // prolazak samo jednom kroz 2 liste
-  console.log(stavovi)
-  console.log("****")
-  console.log(sredjeno)
-  console.log("****")
+  for (let [key, value] of sredjeno) {
+    value.sort(function(a, b) {
+      return a.nalog_date - b.nalog_date;
+    });
+  }
+  console.log("****");
+  console.log(sredjeno);
+  console.log("****");
   return res.status(200).render("includes/dashboard/konto_promet", {
     pageTitle: "",
     path: "/konto_promet",
     hasError: false,
     user: user,
     current_company: current_company,
-
+    sredjeno: sredjeno,
+    accounting: accounting,
     successMessage: null,
     infoMessage: null,
     validationErrors: []

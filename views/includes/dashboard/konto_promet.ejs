@@ -1,65 +1,86 @@
-<div id="table">
-    <table class="show_konto">
-      <thead class="show_konto_thead">
-        <tr class="show_konto show_konto_header_row_tr">
-          <th class="show_konto show_konto_header_row">Account</th>
-          <th class="">&nbsp</th>
-          <th class="show_konto show_konto_header_row"><%= broj_konta %> - <%= naziv_konta %> </th>
-        </tr>
-        <tr class="show_konto">
-          <th class="show_konto">Date</th>
-          <th class="show_konto">Type</th>
-          <th class="show_konto">No.</th>
-          <th class="show_konto">Description</th>
-          <th class="show_konto">Claims</th>
-          <th class="show_konto">Owes</th>
-          <th class="show_konto">Balance</th>
-        </tr>
-      </thead>
-      <tbody class="show_konto_tbody">
-        <% let saldo = 0; %>
-        <% let ukupno_duguje = 0; %>
-        <% let ukupno_potrazuje = 0; %>
-        <% for(let i = 0; i <= svi_stavovi.length -1; i++) { %>
-          <tr data-id="<%= svi_stavovi[i].nalog._id %>" class="show_konto">
-            <td class="show_konto"><%= svi_stavovi[i].nalog_date.toLocaleDateString("en-US") %></td>
-            <td class="show_konto"><%= svi_stavovi[i].type %></td>
-            <td class="show_konto"><%= svi_stavovi[i].nalog.number %></td>
-            <td class="show_konto"><%= svi_stavovi[i].opis %></td>
-            <td class="show_konto"><%= accounting.formatNumber(svi_stavovi[i].duguje) %></td>
-            <td class="show_konto"><%= accounting.formatNumber(svi_stavovi[i].potrazuje) %></td>
-            <td class="show_konto"><%= accounting.formatNumber(saldo += svi_stavovi[i].duguje - svi_stavovi[i].potrazuje)  %></td>
-        <% ukupno_duguje += svi_stavovi[i].duguje %>
-        <% ukupno_potrazuje += svi_stavovi[i].potrazuje %>
-        <% } %>
-        </tr>
-        <tr class="show_konto_zbirni_row">
-          <td class="show_konto"></td>
-          <td class="show_konto"></td>
-          <td class="show_konto"></td>
-          <td class="show_konto">Sum:</td>
-          <td class="show_konto"><%= accounting.formatNumber(ukupno_duguje) %></td>
-          <td class="show_konto"><%= accounting.formatNumber(ukupno_potrazuje) %></td>
-          <td class="show_konto"><%= accounting.formatNumber(saldo) %></td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="table_show_konto_donji_deo">
-      <span title="Enter search term to filter table rows."><i class="fas fa-filter" style="vertical-align:middle;margin: 1px;color: #6d687e;margin-left: 10px;margin-right: 10px;"></i></span>
-      <input title="Enter search term to filter table rows." id="show_konto_text_input" class="show_konto_text_input" type=text></input>
-    </div>
-  
-<script>
-$(document).off("keyup", "#show_konto_text_input").on("keyup", "#show_konto_text_input", function() {
-  var value = $(this).val().toLowerCase();
-  $("#table tbody tr").filter(function() {
-    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-  });
-})
-$(document)
-      .off("dblclick", "tr.show_konto")
-      .on("dblclick", "tr.show_konto", function() {
-        
+<div id="table" class="konto_promet_table">
+  <% let brojcanik = 0; %>
+  <% for (let [key, value] of sredjeno) { %>
+  <table class="konto_promet">
+    <% if (brojcanik == 0) { %>
+      <thead class="konto_promet_thead_zero">
+    <% } else { %>
+        <thead class="konto_promet_thead">
+    <% } %>
+      <tr class="konto_promet ">
+        <th class="konto_promet "><%= key %></th>
+        <th class="konto_promet "><%= key %></th>
+      </tr>
+      <tr class="konto_promet">
+        <th class="konto_promet">Date</th>
+        <th class="konto_promet">Type</th>
+        <th class="konto_promet">No.</th>
+        <th class="konto_promet">Description</th>
+        <th class="konto_promet">Claims</th>
+        <th class="konto_promet">Owes</th>
+        <th class="konto_promet">Balance</th>
+      </tr>
+    </thead>
+
+    <% let saldo = 0; %> <% let ukupno_duguje = 0; %> <% let ukupno_potrazuje =
+    0; %> <% for(let i = 0; i <= value.length -1; i++) { %>
+
+    <tr data-id="<%= value[i].nalog._id %>" class="konto_promet">
+      <td class="konto_promet">
+        <%= value[i].nalog_date.toLocaleDateString("en-US") %>
+      </td>
+      <td class="konto_promet"><%= value[i].type %></td>
+      <td class="konto_promet"><%= value[i].nalog.number %></td>
+      <td class="konto_promet"><%= value[i].opis %></td>
+      <td class="konto_promet">
+        <%= accounting.formatNumber(value[i].duguje) %>
+      </td>
+      <td class="konto_promet">
+        <%= accounting.formatNumber(value[i].potrazuje) %>
+      </td>
+      <td class="konto_promet">
+        <%= accounting.formatNumber(saldo += value[i].duguje -
+        value[i].potrazuje) %>
+      </td>
+      <% ukupno_duguje += value[i].duguje %> <% ukupno_potrazuje +=
+      value[i].potrazuje %> <% } %>
+    </tr>
+    <tr class="konto_promet_zbirni_row">
+      <td class="konto_promet"></td>
+      <td class="konto_promet"></td>
+      <td class="konto_promet"></td>
+      <td class="konto_promet">Sum:</td>
+      <td class="konto_promet">
+        <%= accounting.formatNumber(ukupno_duguje) %>
+      </td>
+      <td class="konto_promet">
+        <%= accounting.formatNumber(ukupno_potrazuje) %>
+      </td>
+      <td class="konto_promet"><%= accounting.formatNumber(saldo) %></td>
+    </tr>
+  </table>
+  <% brojcanik++ %>
+  <% } %>
+
+  <script>
+    $(document)
+      .off("keyup", "#konto_promet_text_input")
+      .on("keyup", "#konto_promet_text_input", function() {
+        var value = $(this)
+          .val()
+          .toLowerCase();
+        $("#table tbody tr").filter(function() {
+          $(this).toggle(
+            $(this)
+              .text()
+              .toLowerCase()
+              .indexOf(value) > -1
+          );
+        });
+      });
+    $(document)
+      .off("dblclick", "tr.konto_promet")
+      .on("dblclick", "tr.konto_promet", function() {
         var me = $(this);
         var nalog_id = this.getAttribute("data-id");
 
@@ -73,21 +94,23 @@ $(document)
           url: "/edit_nalog",
           type: "get",
           data: {
-            nalog_id: nalog_id,
+            nalog_id: nalog_id
           },
           dataType: "html",
           complete: function() {
             me.data("requestRunning", false);
           },
           success: function(html) {
-            $("#nalog_placeholder").fadeOut(0).html(html).fadeIn(500)
-            $('#loader').fadeOut();
+            $("#nalog_placeholder")
+              .fadeOut(0)
+              .html(html)
+              .fadeIn(500);
+            $("#loader").fadeOut();
           },
-          beforeSend: function(){
-            $('#loader').fadeIn(200)
+          beforeSend: function() {
+            $("#loader").fadeIn(200);
           }
         });
       });
-</script>
+  </script>
 </div>
-  
