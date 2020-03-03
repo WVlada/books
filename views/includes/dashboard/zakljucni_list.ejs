@@ -1,0 +1,75 @@
+<div id="table">
+    <table class="zakljucni_list">
+      <thead class="zakljucni_list_thead">
+        <tr class="zakljucni_list">
+          <th class="zakljucni_list">Number</th>
+          <th class="zakljucni_list">Name</th>
+          <th class="zakljucni_list">Type</th>
+          <th class="zakljucni_list">Claims</th>
+          <th class="zakljucni_list">Owes</th>
+          <th class="zakljucni_list">Saldo</th>
+        </tr>
+      </thead>
+      <tbody class="zakljucni_list_tbody">
+        <% let i = 0 %>
+        <% for (let j =0; j <= array.length -1; j++ ) { %>
+          <% if (array.length === 1) { %>
+            <tr class="zakljucni_list zakljucni_list_jednocifren">
+              <td class="zakljucni_list zakljucni_list_jednocifren"><%= sva_konta_i_okvir[i].number %></td>
+              <td class="zakljucni_list zakljucni_list_jednocifren"><%= sva_konta_i_okvir[i].name %></td>
+              <td class="zakljucni_list zakljucni_list_jednocifren"><%= sva_konta_i_okvir[i].type %></td>
+          <% } else if (sva_konta_i_okvir[i].number.length == 2) { %>
+            <tr class="zakljucni_list zakljucni_list_dvocifren">
+              <td class="zakljucni_list zakljucni_list_dvocifren"><%= sva_konta_i_okvir[i].number %></td>
+              <td class="zakljucni_list zakljucni_list_dvocifren"><%= sva_konta_i_okvir[i].name %></td>
+              <td class="zakljucni_list zakljucni_list_dvocifren"><%= sva_konta_i_okvir[i].type %></td>
+          <% } else { %>
+            <tr data-id="<%= sva_konta_i_okvir[i]._id %>" class="zakljucni_list_trocifren">
+              <td class="zakljucni_list zakljucni_list_trocifren"><%= sva_konta_i_okvir[i].number %></td>
+              <td class="zakljucni_list zakljucni_list_trocifren"><%= sva_konta_i_okvir[i].name %></td>
+              <td class="zakljucni_list zakljucni_list_trocifren"><%= sva_konta_i_okvir[i].type %></td>
+            <% } %>
+          <% } %>
+        </tr>
+      </tbody>
+    </table>
+    <div class="table_zakljucni_list_donji_deo">
+      <span title="Enter search term to filter table rows."><i class="fas fa-filter" style="vertical-align:middle;margin: 1px;color: #6d687e;margin-left: 10px;margin-right: 10px;"></i></span>
+      <input title="Enter search term to filter table rows." id="zakljucni_list_text_input" class="zakljucni_list_text_input" type=text></input>
+    </div>
+  
+<script>
+$(document).off("keyup", "#zakljucni_list_text_input").on("keyup", "#zakljucni_list_text_input", function() {
+  var value = $(this).val().toLowerCase();
+  $("#table tbody tr").filter(function() {
+    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+  });
+})
+$(document).off("dblclick", "tr.zakljucni_list_trocifren").on("dblclick", "tr.zakljucni_list_trocifren", function() {
+  var zakljucni_list_row = $(this);
+  var konto = this.getAttribute('data-id');
+  
+  if (zakljucni_list_row.data("requestRunning")) {
+          return;
+  }
+  zakljucni_list_row.data("requestRunning", true);
+  $.ajax({
+    url: "/show_konto",
+    type: "get",
+    data: { konto_id: konto },
+    dataType: "html",
+    complete: function() {
+      zakljucni_list_row.data("requestRunning", false);
+    },
+    success: function(html) {
+      $("div.centar").fadeOut(0).html(html).fadeIn(500)
+      $('#loader').fadeOut();
+    },
+    beforeSend: function(){
+      $('#loader').fadeIn(200)
+    }
+  });
+});
+</script>
+</div>
+  

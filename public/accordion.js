@@ -107,11 +107,22 @@ $(document).on("click", "#tok_dokumentacije", function() {
   });
 });
 $(document).on("click", "#zakljucni", function() {
+  var zakljucni_dugme = $(this);
   $.ajax({
     url: "/zakljucni_list",
     type: "get",
     data: { "": "" },
-    dataType: "script"
+    dataType: "html",
+    complete: function() {
+      zakljucni_dugme.data("requestRunning", false);
+    },
+    success: function(html) {
+      $("div.centar").fadeOut(0).html(html).fadeIn(500)
+      $('#loader').fadeOut();
+    },
+    beforeSend: function(){
+      $('#loader').fadeIn(200)
+    }
   });
 });
 $(document).on("click", "#zakljucni_list_trocifreni", function() {

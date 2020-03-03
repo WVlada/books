@@ -151,6 +151,7 @@ exports.postKontoPromet = async (req, res, next) => {
   const konto_start_number = req.body.konto_start;
   const konto_end_number = req.body.konto_end;
   console.log(req.body);
+  // ovo mi nije neophodno
   const sva_konta = await Konto.find({
     company: current_company_id,
     number: { $gte: konto_start_number, $lte: konto_end_number }
@@ -165,9 +166,8 @@ exports.postKontoPromet = async (req, res, next) => {
     konto: sva_konta_array_idova,
     nalog_date: { $gte: datum_start, $lte: datum_end }
   })
-    .populate({ path: "konto", model: Konto, select: "number" })
+    .populate({ path: "konto", model: Konto, select: "number name" })
     .populate({ path: "nalog", model: Nalog, select: "number" })
-    .populate({ path: "nalog", model: Nalog, select: "name" });
   console.log("****");
   console.log(stavovi);
   console.log("****");
@@ -201,6 +201,179 @@ exports.postKontoPromet = async (req, res, next) => {
     path: "/konto_promet",
     hasError: false,
     user: user,
+    current_company: current_company,
+    sredjeno: sredjeno,
+    accounting: accounting,
+    successMessage: null,
+    infoMessage: null,
+    validationErrors: []
+  });
+};
+exports.getZakljucniList = async (req, res, next) => {
+  const user = req.user;
+  const current_company_id = req.current_company_id;
+  const current_company_year = req.current_company_year;
+  const current_company = await Company.findOne({ _id: current_company_id });
+
+  const datum_start = `01-01-${current_company_year}`;
+  const datum_end = `12-31-${current_company_year}`;
+  //const konto_start_number = req.body.konto_start;
+  //const konto_end_number = req.body.konto_end;
+  //console.log(req.body);
+  const sva_konta = await Konto.find({
+    company: current_company_id,
+  }).sort("number");
+
+  //.select("-_id number")
+  const sva_konta_array_idova = sva_konta.map(e => e._id);
+  const sva_konta_array_brojeva = sva_konta.map(e => e.number);
+  console.log(sva_konta_array_idova);
+  console.log(sva_konta_array_brojeva);
+  const stavovi = await Stav.find({
+    company: current_company_id,
+    konto: sva_konta_array_idova,
+    nalog_date: { $gte: datum_start, $lte: datum_end }
+  })
+    .populate({ path: "konto", model: Konto, select: "number name" })
+    .populate({ path: "nalog", model: Nalog, select: "number" })
+  
+    // prolazak samo jednom kroz 2 liste
+  let sredjeno = new Map();
+  //let sredjeno = {};
+  for (let m = 0; m <= sva_konta_array_brojeva.length - 1; m++) {
+    sredjeno.set(sva_konta_array_brojeva[m], []);
+  }
+
+  for (let j = 0; j <= stavovi.length - 1; j++) {
+    if (sredjeno.get(String([stavovi[j].konto.number])).length == 0) {
+      sredjeno.set(String(stavovi[j].konto.number), [stavovi[j]]);
+    } else {
+      let temp = sredjeno.get(String([stavovi[j].konto.number]));
+      temp.push(stavovi[j]);
+      sredjeno.set(String([stavovi[j].konto.number]), temp);
+    }
+  }
+  // prolazak samo jednom kroz 2 liste
+  
+  for (let [key, value] of sredjeno) {
+    value.sort(function(a, b) {
+      return a.nalog_date - b.nalog_date;
+    });
+  }
+  
+  console.log("+++++");
+  //console.log(sredjeno);
+  console.log("+++++");
+  let brojac = 0;
+  let array = []
+  let trocifreni_array = []
+  for (let [key, value] of sredjeno) {
+    let trocifreni_broj = key.slice(0,3)
+    if (!trocifreni_array.includes(key)){
+      trocifreni_array.push(trocifreni_broj);
+    }
+    array[brojac] = {};
+    array[brojac]['key'] = key;
+    let poc_zbir_d = 0;
+    let poc_zbir_p = 0;
+    let prom_zbir_d = 0;
+    let prom_zbir_p = 0;
+    let zbir_d = 0;
+    let zbir_p = 0;
+    for (let j = 0; j <= value.length -1; j++){
+      if (value[j].type == 'R'){
+        poc_zbir_d += value[j].duguje;
+        poc_zbir_p += value[j].potrazuje;
+      } else {
+        prom_zbir_d += value[j].duguje;
+        prom_zbir_p += value[j].potrazuje;
+      }
+      zbir_d += value[j].duguje;
+      zbir_p += value[j].potrazuje;
+    }
+    array[brojac]['poc_zbir_d'] = poc_zbir_d
+    array[brojac]['poc_zbir_p'] = poc_zbir_p
+    array[brojac]['prom_zbir_d'] = prom_zbir_d
+    array[brojac]['prom_zbir_p'] = prom_zbir_p
+    array[brojac]['zbir_d'] = zbir_d
+    array[brojac]['zbir_p'] = zbir_p
+
+    brojac++;
+  }
+  // [ 
+  //  [ '0201', 10000, 0, 0, 0, 10000, 0 ],
+  //  [ '2001', 10000, 0, 0, 0, 10000, 0 ]
+  // ]
+  ///sredjen_objekat = {}
+  ///for (let m=0; m <= array.length -1; m++){
+  ///  let trocifreni_broj = array[m][0].slice(0,3)
+  ///  if (sredjen_objekat[trocifreni_broj]) {
+  ///    let temp = sredjen_objekat[trocifreni_broj]
+  ///    console.log(temp)
+  ///    //sredjen_objekat[trocifreni_broj].push(array[m])
+  ///  } else {
+  ///    sredjen_objekat[trocifreni_broj] = m;
+  ///  }
+  ///}
+  console.log("111111")
+  console.log(array)
+  console.log("111111")
+  console.log("2222222")
+  //console.log(trocifreni_array)
+  console.log("2222222")
+  let trocifreni_obj = {}
+  for (let z = 0; z <= array.length -1; z++){
+     let tr = array[z].key.slice(0,3);
+     if (trocifreni_obj[tr]){
+      trocifreni_obj[tr]['poc_zbir_d'] += array[z].poc_zbir_d;
+      trocifreni_obj[tr]['poc_zbir_p'] += array[z].poc_zbir_p;
+      trocifreni_obj[tr]['prom_zbir_d'] += array[z].prom_zbir_d;
+      trocifreni_obj[tr]['prom_zbir_p'] += array[z].prom_zbir_p;
+      trocifreni_obj[tr]['zbir_d'] += array[z].zbir_d;
+      trocifreni_obj[tr]['zbir_p'] += array[z].zbir_p;
+     } else {
+      trocifreni_obj[tr] = {}
+      trocifreni_obj[tr]['poc_zbir_d'] = array[z].poc_zbir_d;
+      trocifreni_obj[tr]['poc_zbir_p'] = array[z].poc_zbir_p;
+      trocifreni_obj[tr]['prom_zbir_d'] = array[z].prom_zbir_d;
+      trocifreni_obj[tr]['prom_zbir_p'] = array[z].prom_zbir_p;
+      trocifreni_obj[tr]['zbir_d'] = array[z].zbir_d;
+      trocifreni_obj[tr]['zbir_p'] = array[z].zbir_p;
+     }
+  }
+  console.log(trocifreni_obj)
+  // {
+  // '0201'=> [ {duguje: 100, potrazuje: 0}, {duguje:0, potrazuje: 100} ]
+  // }
+  //let jednocifren = 0;
+  //let trocifren = 0;
+  //let svi_racuni = new Map();
+  //for (let [key, value] of sredjeno) {
+  //// u listi imam samo 4 i 5 cifrene
+  //  let trocifreni_broj = key.slice(0,3)
+  //  if (svi_racuni.get(trocifreni_broj)){
+  //    let temp = svi_racuni.get(trocifreni_broj)
+  //    temp.push(value)
+  //    svi_racuni.set(trocifreni_broj, temp)
+  //  } else {
+  //    svi_racuni.set(trocifreni_broj, [value])
+  //  }
+  //}
+  // pushovanje ide posle
+  //let temp = svi_racuni.get(trocifreni_broj)
+  //console.log("+++++");
+  //console.log(svi_racuni);
+  //console.log("+++++"); 
+  // {
+  // '020'=> [ [{duguje: 100, potrazuje: 0}, {duguje:0, potrazuje: 100}] ]
+  // }
+  return res.status(200).render("includes/dashboard/zakljucni_list", {
+    pageTitle: "",
+    path: "/zakljucni_list",
+    hasError: false,
+    user: user,
+    array: array,
+    trocifreni_obj: trocifreni_obj,
     current_company: current_company,
     sredjeno: sredjeno,
     accounting: accounting,
