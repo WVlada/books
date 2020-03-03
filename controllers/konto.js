@@ -167,7 +167,7 @@ exports.postKontoPromet = async (req, res, next) => {
     nalog_date: { $gte: datum_start, $lte: datum_end }
   })
     .populate({ path: "konto", model: Konto, select: "number name" })
-    .populate({ path: "nalog", model: Nalog, select: "number" })
+    .populate({ path: "nalog", model: Nalog, select: "number" });
   console.log("****");
   console.log(stavovi);
   console.log("****");
@@ -221,7 +221,7 @@ exports.getZakljucniList = async (req, res, next) => {
   //const konto_end_number = req.body.konto_end;
   //console.log(req.body);
   const sva_konta = await Konto.find({
-    company: current_company_id,
+    company: current_company_id
   }).sort("number");
 
   //.select("-_id number")
@@ -235,9 +235,9 @@ exports.getZakljucniList = async (req, res, next) => {
     nalog_date: { $gte: datum_start, $lte: datum_end }
   })
     .populate({ path: "konto", model: Konto, select: "number name" })
-    .populate({ path: "nalog", model: Nalog, select: "number" })
-  
-    // prolazak samo jednom kroz 2 liste
+    .populate({ path: "nalog", model: Nalog, select: "number" });
+
+  // prolazak samo jednom kroz 2 liste
   let sredjeno = new Map();
   //let sredjeno = {};
   for (let m = 0; m <= sva_konta_array_brojeva.length - 1; m++) {
@@ -254,34 +254,34 @@ exports.getZakljucniList = async (req, res, next) => {
     }
   }
   // prolazak samo jednom kroz 2 liste
-  
+
   for (let [key, value] of sredjeno) {
     value.sort(function(a, b) {
       return a.nalog_date - b.nalog_date;
     });
   }
-  
+
   console.log("+++++");
   //console.log(sredjeno);
   console.log("+++++");
   let brojac = 0;
-  let array = []
-  let trocifreni_array = []
+  let array = [];
+  let trocifreni_array = [];
   for (let [key, value] of sredjeno) {
-    let trocifreni_broj = key.slice(0,3)
-    if (!trocifreni_array.includes(key)){
+    let trocifreni_broj = key.slice(0, 3);
+    if (!trocifreni_array.includes(key)) {
       trocifreni_array.push(trocifreni_broj);
     }
     array[brojac] = {};
-    array[brojac]['key'] = key;
+    array[brojac]["key"] = key;
     let poc_zbir_d = 0;
     let poc_zbir_p = 0;
     let prom_zbir_d = 0;
     let prom_zbir_p = 0;
     let zbir_d = 0;
     let zbir_p = 0;
-    for (let j = 0; j <= value.length -1; j++){
-      if (value[j].type == 'R'){
+    for (let j = 0; j <= value.length - 1; j++) {
+      if (value[j].type == "R") {
         poc_zbir_d += value[j].duguje;
         poc_zbir_p += value[j].potrazuje;
       } else {
@@ -291,16 +291,16 @@ exports.getZakljucniList = async (req, res, next) => {
       zbir_d += value[j].duguje;
       zbir_p += value[j].potrazuje;
     }
-    array[brojac]['poc_zbir_d'] = poc_zbir_d
-    array[brojac]['poc_zbir_p'] = poc_zbir_p
-    array[brojac]['prom_zbir_d'] = prom_zbir_d
-    array[brojac]['prom_zbir_p'] = prom_zbir_p
-    array[brojac]['zbir_d'] = zbir_d
-    array[brojac]['zbir_p'] = zbir_p
+    array[brojac]["poc_zbir_d"] = poc_zbir_d;
+    array[brojac]["poc_zbir_p"] = poc_zbir_p;
+    array[brojac]["prom_zbir_d"] = prom_zbir_d;
+    array[brojac]["prom_zbir_p"] = prom_zbir_p;
+    array[brojac]["zbir_d"] = zbir_d;
+    array[brojac]["zbir_p"] = zbir_p;
 
     brojac++;
   }
-  // [ 
+  // [
   //  [ '0201', 10000, 0, 0, 0, 10000, 0 ],
   //  [ '2001', 10000, 0, 0, 0, 10000, 0 ]
   // ]
@@ -315,36 +315,70 @@ exports.getZakljucniList = async (req, res, next) => {
   ///    sredjen_objekat[trocifreni_broj] = m;
   ///  }
   ///}
-  console.log("111111")
-  console.log(array)
-  console.log("111111")
-  console.log("2222222")
+  console.log("111111");
+
+  console.log("111111");
+  console.log("2222222");
   //console.log(trocifreni_array)
-  console.log("2222222")
-  let trocifreni_obj = {}
-  for (let z = 0; z <= array.length -1; z++){
-     let tr = array[z].key.slice(0,3);
-     if (trocifreni_obj[tr]){
-      trocifreni_obj[tr]['poc_zbir_d'] += array[z].poc_zbir_d;
-      trocifreni_obj[tr]['poc_zbir_p'] += array[z].poc_zbir_p;
-      trocifreni_obj[tr]['prom_zbir_d'] += array[z].prom_zbir_d;
-      trocifreni_obj[tr]['prom_zbir_p'] += array[z].prom_zbir_p;
-      trocifreni_obj[tr]['zbir_d'] += array[z].zbir_d;
-      trocifreni_obj[tr]['zbir_p'] += array[z].zbir_p;
-     } else {
-      trocifreni_obj[tr] = {}
-      trocifreni_obj[tr]['poc_zbir_d'] = array[z].poc_zbir_d;
-      trocifreni_obj[tr]['poc_zbir_p'] = array[z].poc_zbir_p;
-      trocifreni_obj[tr]['prom_zbir_d'] = array[z].prom_zbir_d;
-      trocifreni_obj[tr]['prom_zbir_p'] = array[z].prom_zbir_p;
-      trocifreni_obj[tr]['zbir_d'] = array[z].zbir_d;
-      trocifreni_obj[tr]['zbir_p'] = array[z].zbir_p;
-     }
+  console.log("2222222");
+  let trocifreni_obj = {};
+  for (let z = 0; z <= array.length - 1; z++) {
+    let tr = array[z].key.slice(0, 3);
+    if (trocifreni_obj[tr]) {
+      trocifreni_obj[tr]["poc_zbir_d"] += array[z].poc_zbir_d;
+      trocifreni_obj[tr]["poc_zbir_p"] += array[z].poc_zbir_p;
+      trocifreni_obj[tr]["prom_zbir_d"] += array[z].prom_zbir_d;
+      trocifreni_obj[tr]["prom_zbir_p"] += array[z].prom_zbir_p;
+      trocifreni_obj[tr]["zbir_d"] += array[z].zbir_d;
+      trocifreni_obj[tr]["zbir_p"] += array[z].zbir_p;
+    } else {
+      trocifreni_obj[tr] = {};
+      trocifreni_obj[tr]["poc_zbir_d"] = array[z].poc_zbir_d;
+      trocifreni_obj[tr]["poc_zbir_p"] = array[z].poc_zbir_p;
+      trocifreni_obj[tr]["prom_zbir_d"] = array[z].prom_zbir_d;
+      trocifreni_obj[tr]["prom_zbir_p"] = array[z].prom_zbir_p;
+      trocifreni_obj[tr]["zbir_d"] = array[z].zbir_d;
+      trocifreni_obj[tr]["zbir_p"] = array[z].zbir_p;
+    }
   }
-  console.log(trocifreni_obj)
+  //console.log(array);
+  // [
+  //  { key: '0201',
+  //  poc_zbir_d: 10000,
+  //  poc_zbir_p: 0,
+  //  prom_zbir_d: 0,
+  //  prom_zbir_p: 0,
+  //  zbir_d: 10000,
+  //  zbir_p: 0 },
+  // { key: '2001',
+  //  poc_zbir_d: 10000,
+  //  poc_zbir_p: 0,
+  //  prom_zbir_d: 0,
+  //  prom_zbir_p: 0,
+  //  zbir_d: 10000,
+  //  zbir_p: 0 }
+  //  ]
+  //console.log(trocifreni_obj);
   // {
-  // '0201'=> [ {duguje: 100, potrazuje: 0}, {duguje:0, potrazuje: 100} ]
+  // '020' : { poc_zbir_d: 10000, poc_zbir_p: 0, prom_zbir_d: 0, prom_zbir_p: 0, zbir_d: 10000, zbir_p: 0 }
   // }
+
+  for (let [key, value] of Object.entries(trocifreni_obj)) {
+    value["key"] = key;
+  }
+  for (let [key, value] of Object.entries(trocifreni_obj)) {
+    array.push(value);
+  }
+  //console.log(array);
+  array.sort((a, b) => {
+    if (a.key > b.key) {
+      return 1;
+    }
+    if (a.key < b.key) {
+      return -1;
+    }
+    return 0;
+  });
   //let jednocifren = 0;
   //let trocifren = 0;
   //let svi_racuni = new Map();
@@ -363,10 +397,24 @@ exports.getZakljucniList = async (req, res, next) => {
   //let temp = svi_racuni.get(trocifreni_broj)
   //console.log("+++++");
   //console.log(svi_racuni);
-  //console.log("+++++"); 
+  //console.log("+++++");
   // {
   // '020'=> [ [{duguje: 100, potrazuje: 0}, {duguje:0, potrazuje: 100}] ]
   // }
+  const aray_konta_name_and_number = await Konto.find({
+    _id: sva_konta_array_idova
+  }).select(" name number");
+  for (let i = 0; i <= array.length - 1; i++) {
+    for (let j = 0; j <= aray_konta_name_and_number.length - 1; j++) {
+      if (array[i].key == aray_konta_name_and_number[j].number) {
+        array[i].name = aray_konta_name_and_number[j].name;
+      }
+    }
+  }
+  console.log(array);
+  console.log("333");
+  console.log(aray_konta_name_and_number);
+  console.log("333");
   return res.status(200).render("includes/dashboard/zakljucni_list", {
     pageTitle: "",
     path: "/zakljucni_list",
@@ -375,7 +423,6 @@ exports.getZakljucniList = async (req, res, next) => {
     array: array,
     trocifreni_obj: trocifreni_obj,
     current_company: current_company,
-    sredjeno: sredjeno,
     accounting: accounting,
     successMessage: null,
     infoMessage: null,

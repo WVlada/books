@@ -4,33 +4,41 @@
         <tr class="zakljucni_list">
           <th class="zakljucni_list">Number</th>
           <th class="zakljucni_list">Name</th>
-          <th class="zakljucni_list">Type</th>
+          <th class="zakljucni_list">Start claims</th>
+          <th class="zakljucni_list">Start owes</th>
           <th class="zakljucni_list">Claims</th>
-          <th class="zakljucni_list">Owes</th>
-          <th class="zakljucni_list">Saldo</th>
+          <th class="zakljucni_list">Ows</th>
+          <th class="zakljucni_list">Total claims</th>
+          <th class="zakljucni_list">Total owes</th>
         </tr>
       </thead>
       <tbody class="zakljucni_list_tbody">
-        <% let i = 0 %>
+       
         <% for (let j =0; j <= array.length -1; j++ ) { %>
-          <% if (array.length === 1) { %>
-            <tr class="zakljucni_list zakljucni_list_jednocifren">
-              <td class="zakljucni_list zakljucni_list_jednocifren"><%= sva_konta_i_okvir[i].number %></td>
-              <td class="zakljucni_list zakljucni_list_jednocifren"><%= sva_konta_i_okvir[i].name %></td>
-              <td class="zakljucni_list zakljucni_list_jednocifren"><%= sva_konta_i_okvir[i].type %></td>
-          <% } else if (sva_konta_i_okvir[i].number.length == 2) { %>
-            <tr class="zakljucni_list zakljucni_list_dvocifren">
-              <td class="zakljucni_list zakljucni_list_dvocifren"><%= sva_konta_i_okvir[i].number %></td>
-              <td class="zakljucni_list zakljucni_list_dvocifren"><%= sva_konta_i_okvir[i].name %></td>
-              <td class="zakljucni_list zakljucni_list_dvocifren"><%= sva_konta_i_okvir[i].type %></td>
+          <% if (array[j].key.length === 3) { %>
+            <tr class="zakljucni_list zakljucni_list_trocifren">
+              <td class="zakljucni_list zakljucni_list_trocifren"><%= array[j].key %></td>
+              <td class="zakljucni_list zakljucni_list_trocifren"><%= %></td>
+              <td class="zakljucni_list zakljucni_list_trocifren"><%= accounting.formatNumber(array[j].poc_zbir_d) %></td>
+              <td class="zakljucni_list zakljucni_list_trocifren"><%= accounting.formatNumber(array[j].poc_zbir_p) %></td>
+              <td class="zakljucni_list zakljucni_list_trocifren"><%= accounting.formatNumber(array[j].prom_zbir_d) %></td>
+              <td class="zakljucni_list zakljucni_list_trocifren"><%= accounting.formatNumber(array[j].prom_zbir_p) %></td>
+              <td class="zakljucni_list zakljucni_list_trocifren"><%= accounting.formatNumber(array[j].zbir_d) %></td>
+              <td class="zakljucni_list zakljucni_list_trocifren"><%= accounting.formatNumber(array[j].zbir_p) %></td>
+            </tr>
           <% } else { %>
-            <tr data-id="<%= sva_konta_i_okvir[i]._id %>" class="zakljucni_list_trocifren">
-              <td class="zakljucni_list zakljucni_list_trocifren"><%= sva_konta_i_okvir[i].number %></td>
-              <td class="zakljucni_list zakljucni_list_trocifren"><%= sva_konta_i_okvir[i].name %></td>
-              <td class="zakljucni_list zakljucni_list_trocifren"><%= sva_konta_i_okvir[i].type %></td>
+            <tr data-id="<%= array[j]._id %>" class="zakljucni_list zakljucni_list_obican">
+              <td class="zakljucni_list zakljucni_list_obican"><%= array[j].key %></td>
+              <td class="zakljucni_list zakljucni_list_obican"><%= array[j].name %></td>
+              <td class="zakljucni_list zakljucni_list_obican"><%= accounting.formatNumber(array[j].poc_zbir_d) %></td>
+              <td class="zakljucni_list zakljucni_list_obican"><%= accounting.formatNumber(array[j].poc_zbir_p) %></td>
+              <td class="zakljucni_list zakljucni_list_obican"><%= accounting.formatNumber(array[j].prom_zbir_d) %></td>
+              <td class="zakljucni_list zakljucni_list_obican"><%= accounting.formatNumber(array[j].prom_zbir_p) %></td>
+              <td class="zakljucni_list zakljucni_list_obican"><%= accounting.formatNumber(array[j].zbir_d) %></td>
+              <td class="zakljucni_list zakljucni_list_obican"><%= accounting.formatNumber(array[j].zbir_p) %></td>
+            </tr>
             <% } %>
           <% } %>
-        </tr>
       </tbody>
     </table>
     <div class="table_zakljucni_list_donji_deo">
