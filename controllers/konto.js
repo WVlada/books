@@ -429,3 +429,103 @@ exports.getZakljucniList = async (req, res, next) => {
     validationErrors: []
   });
 };
+exports.getZakljucniTrocifreni = async (req, res, next) => {
+  const user = req.user;
+  const current_company_id = req.current_company_id;
+  const current_company_year = req.current_company_year;
+  const current_company = await Company.findOne({ _id: current_company_id });
+  const datum_start = `01-01-${current_company_year}`;
+  const datum_end = `12-31-${current_company_year}`;
+  
+  const sva_konta = await Konto.find({
+    company: current_company_id
+  }).sort("number name");
+  
+  const sva_konta_array_idova = sva_konta.map(e => e._id);
+  const sva_konta_array_brojeva = sva_konta.map(e => e.number);
+  
+  const stavovi = await Stav.find({
+    company: current_company_id,
+    konto: sva_konta_array_idova,
+    nalog_date: { $gte: datum_start, $lte: datum_end }
+  })
+    .populate({ path: "konto", model: Konto, select: "number name" })
+    .populate({ path: "nalog", model: Nalog, select: "number" });
+
+    const m = stavovi.reduce(function(rv, elem){ //elem je stav
+(rv[elem.konto.number] = rv[elem.konto.number] || []).push(elem)
+return rv
+}, {})
+
+let sva_konta_sa_prometom = {};
+let samo_array_trocifrenih = [];
+for(var x in m){
+  let poc_d = 0;
+  let poc_p = 0;
+  let d = 0;
+  let p = 0;
+  let ukup_d = 0;
+  let ukup_p = 0;
+  for(let i=0; i<= m[x].length -1; i++){
+    if (m[x][i].type === 'R'){
+      poc_d += m[x][i].duguje;
+      poc_p += m[x][i].potrazuje;
+    } else {
+      d += m[x][i].duguje;
+      p += m[x][i].potrazuje;
+    }
+  }
+  ukup_d = d + poc_d;
+  ukup_p = p + poc_p;
+  
+  let sliced = x.slice(0,3)
+  
+  if (sva_konta_sa_prometom[sliced]) {
+  sva_konta_sa_prometom[sliced].d += d;
+  sva_konta_sa_prometom[sliced].p += p;
+  sva_konta_sa_prometom[sliced].poc_d += poc_d;
+  sva_konta_sa_prometom[sliced].poc_p += poc_p;
+  sva_konta_sa_prometom[sliced].ukup_d += ukup_d;
+  sva_konta_sa_prometom[sliced].ukup_p += ukup_p;
+  } else {
+  sva_konta_sa_prometom[sliced] = {}
+  sva_konta_sa_prometom[sliced].d = d;
+  sva_konta_sa_prometom[sliced].p = p;
+  sva_konta_sa_prometom[sliced].poc_d = poc_d;
+  sva_konta_sa_prometom[sliced].poc_p = poc_p;
+  sva_konta_sa_prometom[sliced].ukup_d = ukup_d;
+  sva_konta_sa_prometom[sliced].ukup_p = ukup_p;
+  samo_array_trocifrenih.push(sliced)
+  }
+}
+
+console.log(sva_konta_sa_prometom)
+console.log(samo_array_trocifrenih)
+let sorted_samo_array_trocifrenih = samo_array_trocifrenih.sort((a,b)=> {return a > b})
+let full_trocifreni = []
+console.log(sorted_samo_array_trocifrenih)
+
+for (let i=0; i<= sorted_samo_array_trocifrenih.length-1;i++){
+  full_trocifreni.push([
+    sorted_samo_array_trocifrenih[i],
+    sva_konta_sa_prometom[sorted_samo_array_trocifrenih[i]].poc_d,
+    sva_konta_sa_prometom[sorted_samo_array_trocifrenih[i]].poc_p,
+    sva_konta_sa_prometom[sorted_samo_array_trocifrenih[i]].d,
+    sva_konta_sa_prometom[sorted_samo_array_trocifrenih[i]].p,
+    sva_konta_sa_prometom[sorted_samo_array_trocifrenih[i]].ukup_d,
+    sva_konta_sa_prometom[sorted_samo_array_trocifrenih[i]].ukup_p])
+}
+
+return res.status(200).render("includes/dashboard/zakljucni_trocifreni", {
+  pageTitle: "",
+  path: "/zakljucni_trocifreni",
+  hasError: false,
+  user: user,
+  full_trocifreni: full_trocifreni,
+  current_company: current_company,
+  accounting: accounting,
+  successMessage: null,
+  infoMessage: null,
+  validationErrors: []
+});
+};

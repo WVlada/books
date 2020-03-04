@@ -101,12 +101,12 @@
 			</div>
 			<div class="dole_grid_item_6">	
 				<finbutton id="zakljucni_list">
-					Zakljucni
+					Closing sheet
 				</finbutton>
 			</div>
 			<div class="dole_grid_item_6">	
-					<finbutton id="dole_button6">
-						#
+					<finbutton id="zakljucni_trocifreni">
+						Closing sheet 3-digits
 					</finbutton>
 			</div>
 			<div class="dole_grid_item_6">	
@@ -253,6 +253,58 @@ $(document)
             $("#konto_promet_odabir_placeholder").fadeOut(0).html(html).fadeIn(500)
             $('#loader').fadeOut();
           }
+        });
+      });
+      $(document)
+      .off("click", "#zakljucni_list")
+      .on("click", "#zakljucni_list", function() {
+        var me = $(this);
+        if (me.data("requestRunning")) {
+          return;
+        }
+        me.data("requestRunning", true);
+        $.ajax({
+          url: "/zakljucni_list",
+          type: "GET",
+          data: {
+          },
+          dataType: "html",
+          complete: function() {
+            me.data("requestRunning", false);
+          },
+          success: function(html) {
+            $("div.centar").fadeOut(0).html(html).fadeIn(500)
+            $('#loader').fadeOut();
+          },
+          beforeSend: function(){
+          $('#loader').fadeIn(200)
+        }
+        });
+      });
+      $(document)
+      .off("click", "#zakljucni_trocifreni")
+      .on("click", "#zakljucni_trocifreni", function() {
+        var me = $(this);
+        if (me.data("requestRunning")) {
+          return;
+        }
+        me.data("requestRunning", true);
+        $.ajax({
+          url: "/zakljucni_trocifreni",
+          type: "GET",
+          data: {
+          },
+          dataType: "html",
+          complete: function() {
+            me.data("requestRunning", false);
+          },
+          success: function(html) {
+            $("div.centar").fadeOut(0).html(html).fadeIn(500)
+            $('#loader').fadeOut();
+          },
+          beforeSend: function(){
+          $('#loader').fadeIn(200)
+        }
         });
       });
 </script>

@@ -1,0 +1,69 @@
+<div id="table">
+    <table class="zakljucni_trocifren">
+      <thead class="zakljucni_trocifren_thead">
+        <tr class="zakljucni_trocifren">
+          <th class="zakljucni_trocifren">Number</th>
+          <th class="zakljucni_trocifren">Name</th>
+          <th class="zakljucni_trocifren">Start claims</th>
+          <th class="zakljucni_trocifren">Start owes</th>
+          <th class="zakljucni_trocifren">Claims</th>
+          <th class="zakljucni_trocifren">Ows</th>
+          <th class="zakljucni_trocifren">Total claims</th>
+          <th class="zakljucni_trocifren">Total owes</th>
+        </tr>
+      </thead>
+      <tbody class="zakljucni_trocifren_tbody">
+        <% for (let j =0; j <= full_trocifreni.length -1; j++ ) { %>
+            <tr class="zakljucni_trocifren zakljucni_trocifren_obican">
+              <td class="zakljucni_trocifren zakljucni_trocifren_obican"><%= full_trocifreni[j][0] %></td>
+              <td class="zakljucni_trocifren zakljucni_trocifren_obican"><%= 'Group ' + `${full_trocifreni[j][0]}` %></td>
+              <td class="zakljucni_trocifren zakljucni_trocifren_obican"><%= accounting.formatNumber(full_trocifreni[j][1]) %></td>
+              <td class="zakljucni_trocifren zakljucni_trocifren_obican"><%= accounting.formatNumber(full_trocifreni[j][2]) %></td>
+              <td class="zakljucni_trocifren zakljucni_trocifren_obican"><%= accounting.formatNumber(full_trocifreni[j][3]) %></td>
+              <td class="zakljucni_trocifren zakljucni_trocifren_obican"><%= accounting.formatNumber(full_trocifreni[j][4]) %></td>
+              <td class="zakljucni_trocifren zakljucni_trocifren_obican"><%= accounting.formatNumber(full_trocifreni[j][5]) %></td>
+              <td class="zakljucni_trocifren zakljucni_trocifren_obican"><%= accounting.formatNumber(full_trocifreni[j][6]) %></td>
+            </tr>
+        <% } %>
+      </tbody>
+    </table>
+    <div class="table_zakljucni_trocifren_donji_deo">
+      <span title="Enter search term to filter table rows."><i class="fas fa-filter" style="vertical-align:middle;margin: 1px;color: #6d687e;margin-left: 10px;margin-right: 10px;"></i></span>
+      <input title="Enter search term to filter table rows." id="zakljucni_trocifren_text_input" class="zakljucni_trocifren_text_input" type=text></input>
+    </div>
+  
+<script>
+$(document).off("keyup", "#zakljucni_trocifren_text_input").on("keyup", "#zakljucni_trocifren_text_input", function() {
+  var value = $(this).val().toLowerCase();
+  $("#table tbody tr").filter(function() {
+    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+  });
+})
+$(document).off("dblclick", "tr.zakljucni_trocifren_trocifren").on("dblclick", "tr.zakljucni_trocifren_trocifren", function() {
+  var zakljucni_trocifren_row = $(this);
+  var konto = this.getAttribute('data-id');
+  
+  if (zakljucni_trocifren_row.data("requestRunning")) {
+          return;
+  }
+  zakljucni_trocifren_row.data("requestRunning", true);
+  $.ajax({
+    url: "/show_konto",
+    type: "get",
+    data: { konto_id: konto },
+    dataType: "html",
+    complete: function() {
+      zakljucni_trocifren_row.data("requestRunning", false);
+    },
+    success: function(html) {
+      $("div.centar").fadeOut(0).html(html).fadeIn(500)
+      $('#loader').fadeOut();
+    },
+    beforeSend: function(){
+      $('#loader').fadeIn(200)
+    }
+  });
+});
+</script>
+</div>
+  
