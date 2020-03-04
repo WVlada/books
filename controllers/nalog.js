@@ -126,14 +126,14 @@ exports.postNalog = async (req, res, next) => {
   const duguje_array = req.body.duguje;
   const potrazuje_array = req.body.potrazuje;
   const valuta_array = req.body.valuta;
-  
+
   let nalog;
   let nalozi;
   let companies;
 
   // has to be set to null if doeasnt exist
   let sifra_kom_za_snimanje;
-  
+
   // provera stavova
   let broj_stavova_koji_se_snimaju = 0;
   for (i = 0; i <= opis_stava_array.length - 1; i++) {
@@ -151,20 +151,24 @@ exports.postNalog = async (req, res, next) => {
   // provera stavova
   // snimanje naloga ce biti moguce samo ako konto postoji
   // jer on je glavni
-  let array_konta_za_snimanje = []
+  let array_konta_za_snimanje = [];
   for (i = 0; i <= konto_array.length - 1; i++) {
-    let x = await Konto.findOne({company: company_id, number: konto_array[i]})
-    if(x)
-    { array_konta_za_snimanje.push({_id: x._id, number: x.number}) }
-    else { array_konta_za_snimanje.push(null)}
+    let x = await Konto.findOne({
+      company: company_id,
+      number: konto_array[i]
+    });
+    if (x) {
+      array_konta_za_snimanje.push({ _id: x._id, number: x.number });
+    } else {
+      array_konta_za_snimanje.push(null);
+    }
   }
-  //[ { _id: 5e54e455fa4e4b2c1c673f2b, number: '0201' }, null, { _id: 5e54e457fa4e4b2c1c673f37, number: '2401' } ] 
-  console.log(array_konta_za_snimanje)
+  //[ { _id: 5e54e455fa4e4b2c1c673f2b, number: '0201' }, null, { _id: 5e54e457fa4e4b2c1c673f37, number: '2401' } ]
+  console.log(array_konta_za_snimanje);
 
   // u duguje i potrazuje sum mogu uci samo stavovi za koje postoje konta
   for (i = 0; i <= array_konta_za_snimanje.length - 1; i++) {
-    if (array_konta_za_snimanje[i] == null)
-    {
+    if (array_konta_za_snimanje[i] == null) {
       duguje_array[i] = 0;
       potrazuje_array[i] = 0;
     }
@@ -182,13 +186,17 @@ exports.postNalog = async (req, res, next) => {
     0
   );
   // u duguje i potrazuje sum mogu uci samo stavovi za koje postoje konta
-  
-  
+
   // provera datuma naloga - moglo je i u routu
-  if (datum_naloga.slice(0,4) != current_company_year) {
+  if (datum_naloga.slice(0, 4) != current_company_year) {
     return res
       .status(400)
-      .json([{ param: "datum_naloga", msg: `Godina naloga mora biti ${current_company_year}.` }]);
+      .json([
+        {
+          param: "datum_naloga",
+          msg: `Godina naloga mora biti ${current_company_year}.`
+        }
+      ]);
   }
   // provera datuma naloga - moglo je i u routu
   Company.findOne({ _id: company_id }).then(result => {
@@ -216,8 +224,8 @@ exports.postNalog = async (req, res, next) => {
             sifra_komitenta_array[i] === ""
               ? (sifra_kom_za_snimanje = null)
               : (sifra_kom_za_snimanje = sifra_komitenta_array[i]);
-            
-              const stav = new Stav({
+
+            const stav = new Stav({
               user: user,
               company: company_id,
               opis: opis_stava_array[i],
@@ -232,7 +240,7 @@ exports.postNalog = async (req, res, next) => {
               ),
               valuta: valuta_array[i],
               number: i,
-              nalog_id: result._id,
+              nalog: result._id,
               nalog_date: datum_naloga,
               type: result.id
             });
@@ -438,9 +446,9 @@ exports.updateNalog = async (req, res, next) => {
   });
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    console.log("-----erorrs")
+    console.log("-----erorrs");
     console.log(errors);
-    console.log("-----erorrs")
+    console.log("-----erorrs");
     return res.status(400).json(errors.array());
   }
   // nalog update
@@ -453,7 +461,7 @@ exports.updateNalog = async (req, res, next) => {
   const duguje_array = req.body.duguje;
   const potrazuje_array = req.body.potrazuje;
   const valuta_array = req.body.valuta;
-  
+
   const opis_stava_array = req.body.opis_stava;
   const poziv_na_broj_array = req.body.poziv_na_broj;
   const konto_array = req.body.konto;
@@ -474,29 +482,33 @@ exports.updateNalog = async (req, res, next) => {
   // provera stavova
   // snimanje naloga ce biti moguce samo ako konto postoji
   // jer on je glavni
-  let array_konta_za_snimanje = []
+  let array_konta_za_snimanje = [];
   for (i = 0; i <= konto_array.length - 1; i++) {
-    let x = await Konto.findOne({company: current_company_id, number: konto_array[i]})
-    if(x)
-    { array_konta_za_snimanje.push({_id: x._id, number: x.number}) }
-    else { array_konta_za_snimanje.push(null)}
+    let x = await Konto.findOne({
+      company: current_company_id,
+      number: konto_array[i]
+    });
+    if (x) {
+      array_konta_za_snimanje.push({ _id: x._id, number: x.number });
+    } else {
+      array_konta_za_snimanje.push(null);
+    }
   }
-  //[ { _id: 5e54e455fa4e4b2c1c673f2b, number: '0201' }, null, { _id: 5e54e457fa4e4b2c1c673f37, number: '2401' } ] 
-  console.log(array_konta_za_snimanje)
+  //[ { _id: 5e54e455fa4e4b2c1c673f2b, number: '0201' }, null, { _id: 5e54e457fa4e4b2c1c673f37, number: '2401' } ]
+  console.log(array_konta_za_snimanje);
   // ne sme uci u sumu red stav koji ne snimam jer nema konto - a ima iznos duguje ili potrazuje
   for (i = 0; i <= array_konta_za_snimanje.length - 1; i++) {
-    if (array_konta_za_snimanje[i] == null)
-    {
+    if (array_konta_za_snimanje[i] == null) {
       duguje_array[i] = 0;
       potrazuje_array[i] = 0;
     }
   }
-  console.log("++++")
-  console.log(duguje_array)
-  console.log("++++")
-  console.log("++++")
-  console.log(potrazuje_array)
-  console.log("++++")
+  console.log("++++");
+  console.log(duguje_array);
+  console.log("++++");
+  console.log("++++");
+  console.log(potrazuje_array);
+  console.log("++++");
   const duguje_sum = duguje_array.reduce(
     (a, b) =>
       Math.round(Number(String(a).replace(/,/g, "")) * 100) / 100 +
@@ -513,10 +525,15 @@ exports.updateNalog = async (req, res, next) => {
     return e._id;
   });
   // provera datuma naloga - moglo je i u routu
-  if (datum_naloga.slice(0,4) != current_company_year) {
+  if (datum_naloga.slice(0, 4) != current_company_year) {
     return res
       .status(400)
-      .json([{ param: "datum_naloga", msg: `Godina naloga mora biti ${current_company_year}.` }]);
+      .json([
+        {
+          param: "datum_naloga",
+          msg: `Godina naloga mora biti ${current_company_year}.`
+        }
+      ]);
   }
   // provera datuma naloga - moglo je i u routu
   await nalog.updateOne({
@@ -531,14 +548,14 @@ exports.updateNalog = async (req, res, next) => {
   });
   // nalog update
   // stavovi update
-  
+
   const sifra_komitenta_array = req.body.sifra_komitenta.map(sifra => {
     return sifra == "" ? null : sifra;
   });
   console.log("***");
   console.log(sifra_komitenta_array);
   console.log("***");
-  
+
   //const konto_array_ids_with_numbers = await Konto.find({
   //  number: konto_array
   //}).select("_id number");
@@ -557,23 +574,24 @@ exports.updateNalog = async (req, res, next) => {
   for (i = 0; i <= array_konta_za_snimanje.length - 1; i++) {
     if (array_konta_za_snimanje[i]) {
       novi_stavovi[i] = await Stav.create({
-      user: user,
-      company: current_company_id,
-      opis: opis_stava_array[i],
-      sifra_komitenta: sifra_komitenta_array[i],
-      poziv_na_broj: poziv_na_broj_array[i],
-      konto: array_konta_za_snimanje[i],
-      duguje: Number(Number(duguje_array[i].replace(/,/g, "")).toFixed(2)),
-      potrazuje: Number(
-        Number(potrazuje_array[i].replace(/,/g, "")).toFixed(2)
-      ),
-      valuta: valuta_array[i],
-      number: i,
-      nalog: nalog,
-      nalog_date: datum_naloga,
-      type: nalog.type
-    });
-  }}
+        user: user,
+        company: current_company_id,
+        opis: opis_stava_array[i],
+        sifra_komitenta: sifra_komitenta_array[i],
+        poziv_na_broj: poziv_na_broj_array[i],
+        konto: array_konta_za_snimanje[i],
+        duguje: Number(Number(duguje_array[i].replace(/,/g, "")).toFixed(2)),
+        potrazuje: Number(
+          Number(potrazuje_array[i].replace(/,/g, "")).toFixed(2)
+        ),
+        valuta: valuta_array[i],
+        number: i,
+        nalog: nalog,
+        nalog_date: datum_naloga,
+        type: nalog.type
+      });
+    }
+  }
   nalog.stavovi = novi_stavovi;
   nalog.save();
   // stavovi update
@@ -635,15 +653,14 @@ exports.getPronadjiBrojeveNaloga = async (req, res, next) => {
   }
   let j = 1;
   while (brojevi.length < 10) {
-    if (!brojevi_postojecih_naloga.includes(j))
-      brojevi.push(j);
+    if (!brojevi_postojecih_naloga.includes(j)) brojevi.push(j);
     j++;
   }
-  
+
   return res.status(200).render("includes/pronadji_brojeve_naloga", {
     brojevi: brojevi,
     hasError: false,
     infoMessage: null,
     validationErrors: []
   });
-}
+};

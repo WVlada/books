@@ -39,11 +39,14 @@ $(document).on("click", "#komitenti", function() {
       komitenti_dugme.data("requestRunning", false);
     },
     success: function(html) {
-      $("div.centar").fadeOut(0).html(html).fadeIn(500)
-      $('#loader').fadeOut();
+      $("div.centar")
+        .fadeOut(0)
+        .html(html)
+        .fadeIn(500);
+      $("#loader").fadeOut();
     },
-    beforeSend: function(){
-      $('#loader').fadeIn(200)
+    beforeSend: function() {
+      $("#loader").fadeIn(200);
     }
   });
 });
@@ -59,11 +62,14 @@ $(document).on("click", "#kontni_plan", function() {
       kontni_plan_dugme.data("requestRunning", false);
     },
     success: function(html) {
-      $("div.centar").fadeOut(0).html(html).fadeIn(500)
-      $('#loader').fadeOut();
+      $("div.centar")
+        .fadeOut(0)
+        .html(html)
+        .fadeIn(500);
+      $("#loader").fadeOut();
     },
-    beforeSend: function(){
-      $('#loader').fadeIn(200)
+    beforeSend: function() {
+      $("#loader").fadeIn(200);
     }
   });
 });
@@ -78,11 +84,14 @@ $(document).on("click", "#dnevnik_naloga", function() {
       dnevnik_naloga_dugme.data("requestRunning", false);
     },
     success: function(html) {
-      $("div.centar").fadeOut(0).html(html).fadeIn(500)
-      $('#loader').fadeOut();
+      $("div.centar")
+        .fadeOut(0)
+        .html(html)
+        .fadeIn(500);
+      $("#loader").fadeOut();
     },
-    beforeSend: function(){
-      $('#loader').fadeIn(200)
+    beforeSend: function() {
+      $("#loader").fadeIn(200);
     }
   });
 });
@@ -98,11 +107,14 @@ $(document).on("click", "#tok_dokumentacije", function() {
       dnevnik_naloga_dugme.data("requestRunning", false);
     },
     success: function(html) {
-      $("div.centar").fadeOut(0).html(html).fadeIn(500)
-      $('#loader').fadeOut();
+      $("div.centar")
+        .fadeOut(0)
+        .html(html)
+        .fadeIn(500);
+      $("#loader").fadeOut();
     },
-    beforeSend: function(){
-      $('#loader').fadeIn(200)
+    beforeSend: function() {
+      $("#loader").fadeIn(200);
     }
   });
 });
@@ -117,20 +129,37 @@ $(document).on("click", "#zakljucni", function() {
       zakljucni_dugme.data("requestRunning", false);
     },
     success: function(html) {
-      $("div.centar").fadeOut(0).html(html).fadeIn(500)
-      $('#loader').fadeOut();
+      $("div.centar")
+        .fadeOut(0)
+        .html(html)
+        .fadeIn(500);
+      $("#loader").fadeOut();
     },
-    beforeSend: function(){
-      $('#loader').fadeIn(200)
+    beforeSend: function() {
+      $("#loader").fadeIn(200);
     }
   });
 });
-$(document).on("click", "#zakljucni_list_trocifreni", function() {
+$(document).on("click", "#accordion_zakljucni_trocifren", function() {
+  var accordion_zakljucni_trocifren_dugme = $(this);
   $.ajax({
-    url: "/zakljucni_list_trocifreni",
+    url: "/zakljucni_trocifreni",
     type: "get",
     data: { "": "" },
-    dataType: "script"
+    dataType: "html",
+    complete: function() {
+      accordion_zakljucni_trocifren_dugme.data("requestRunning", false);
+    },
+    success: function(html) {
+      $("div.centar")
+        .fadeOut(0)
+        .html(html)
+        .fadeIn(500);
+      $("#loader").fadeOut();
+    },
+    beforeSend: function() {
+      $("#loader").fadeIn(200);
+    }
   });
 });
 $(document).on("click", "#overview_button", function() {

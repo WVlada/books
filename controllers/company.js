@@ -191,6 +191,16 @@ exports.getDnevnikNaloga = (req, res, next) => {
     .countDocuments()
     .then(numOfNalogs => {
       totalNalogs = numOfNalogs;
+      if (totalNalogs == 0) {
+        return res.status(200).render("includes/dashboard/nothing_to_display", {
+          pageTitle: "",
+          path: "/nothing_to_display",
+          hasError: false,
+          successMessage: null,
+          infoMessage: "There are no ledger entries.",
+          validationErrors: []
+        });
+      }
       if (page > Math.ceil(totalNalogs / NALOGS_PER_PAGE)) {
         if (totalNalogs != 0) {
           page = Math.ceil(totalNalogs / NALOGS_PER_PAGE);

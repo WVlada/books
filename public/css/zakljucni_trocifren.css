@@ -1,71 +1,119 @@
 table.zakljucni_trocifren {
-    display: contents;
-    width: max-content;
-    border-collapse: separate;
-    border-spacing: 0;
+  width: max-content;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 .zakljucni_trocifren_tbody {
-    height: 572px;
-    overflow-y: auto;
-    display: block;
+  height: 572px;
+  overflow-y: auto;
 }
 th.zakljucni_trocifren {
-    border-left: 1px solid #7e798c;
-    border-right: 1px solid #4e4765;
-    border-top: 1px solid #4e4765;
-    padding: 6px;
-    display: table-cell;
-    font-weight: 300;
-    background-image: -webkit-linear-gradient(top, #6d687e 0%, #49435b 100%);
-    color: white;
-    vertical-align: middle;
-    text-align: center;
-    font-size: 13px;
-  }
+  border-left: 1px solid #7e798c;
+  border-right: 1px solid #4e4765;
+  border-top: 1px solid #4e4765;
+  padding: 6px;
+  display: table-cell;
+  font-weight: 300;
+  background-image: -webkit-linear-gradient(top, #6d687e 0%, #49435b 100%);
+  color: white;
+  vertical-align: middle;
+  text-align: center;
+  font-size: 13px;
+}
 th.zakljucni_trocifren:nth-child(1) {
-    width: 50px;
+  width: 50px;
 }
 th.zakljucni_trocifren:nth-child(2) {
-    width: 243px;
+  width: 243px;
 }
 th.zakljucni_trocifren:nth-child(3) {
-    width: 100px;
+  width: 100px;
 }
 th.zakljucni_trocifren:nth-child(4) {
-    width: 100px;
+  width: 100px;
 }
 th.zakljucni_trocifren:nth-child(5) {
-    width: 100px;
+  width: 100px;
 }
 th.zakljucni_trocifren:nth-child(6) {
-    width: 100px;
+  width: 100px;
 }
 th.zakljucni_trocifren:nth-child(7) {
-    width: 100px;
+  width: 100px;
 }
 th.zakljucni_trocifren:nth-child(8) {
-    width: 100px;
+  width: 100px;
 }
 th.zakljucni_trocifren:first-child {
-    -webkit-border-top-left-radius: 3px;
-    border-top-left-radius: 3px;
-    border-bottom-left-radius: 3px;
-    -moz-border-radius-topleft: 3px;
-    
-  }
-  th.zakljucni_trocifren:last-child {
-    -webkit-border-top-right-radius: 3px;
-    border-top-right-radius: 3px;
-    border-bottom-right-radius: 3px;
-    -moz-border-radius-topright: 3px;
-    
-  }
-  td.zakljucni_trocifren {
-    border-top: 1px solid #fff !important;
-    border-left: 1px solid #dfdce3;
-    line-height: 1;
-    padding: 4px;
-    color: #000;
-    border-bottom: 1px solid #ebe9ee;
-    font-size: 13px;
-  }
+  -webkit-border-top-left-radius: 3px;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+  -moz-border-radius-topleft: 3px;
+}
+th.zakljucni_trocifren:last-child {
+  -webkit-border-top-right-radius: 3px;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+  -moz-border-radius-topright: 3px;
+}
+td.zakljucni_trocifren {
+  border-top: 1px solid #fff !important;
+  border-left: 1px solid #dfdce3;
+  line-height: 1;
+  padding: 4px;
+  color: #000;
+  border-bottom: 1px solid #ebe9ee;
+  font-size: 13px;
+}
+.table_zakljucni_trocifren_donji_deo {
+  align-self: flex-end;
+  background-image: -webkit-linear-gradient(bottom, #f6f5f8 0%, #fafafa 50%);
+  height: 38px;
+  margin-top: auto;
+  border: 1px solid;
+  border-color: #ebe9ee;
+  border-radius: 2px;
+  padding: 5px;
+  width: 100%;
+}
+td.zakljucni_trocifren:nth-child(1) {
+  text-align: center;
+}
+td.zakljucni_trocifren:nth-child(2) {
+  text-align: left;
+}
+td.zakljucni_trocifren:nth-child(3),
+td.zakljucni_trocifren:nth-child(4),
+td.zakljucni_trocifren:nth-child(5),
+td.zakljucni_trocifren:nth-child(6),
+td.zakljucni_trocifren:nth-child(7),
+td.zakljucni_trocifren:nth-child(8) {
+  text-align: right;
+}
+tr.zakljucni_trocifren:last-child > td.zakljucni_trocifren:first-child {
+  border-bottom-left-radius: 5px;
+}
+tr.zakljucni_trocifren:last-child > td.zakljucni_trocifren:last-child {
+  border-bottom-right-radius: 5px;
+}
+tr.zakljucni_trocifren {
+  background: #fafafa;
+}
+tr.zakljucni_trocifren {
+  cursor: pointer;
+}
+tr.zakljucni_trocifren:nth-child(even) {
+  background: #f6f5f8;
+}
+tr.zakljucni_trocifren:hover,
+tr.zakljucni_trocifren:nth-child(even):hover {
+  background: #dfdce3;
+}
+input#zakljucni_trocifren_text_input {
+  border-radius: 2px;
+  padding-left: 2px;
+  border: 2px solid #d8d9ea;
+  font-size: 13px;
+  width: 100px;
+  height: 22px;
+}
