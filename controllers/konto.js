@@ -5,6 +5,8 @@ const Konto = require("../models/konto");
 const Okvir = require("../models/okvir");
 const Stav = require("../models/stav");
 const accounting = require("accounting-js");
+var PdfPrinter = require('pdfmake');
+var fs = require('fs');
 
 exports.getEditKonto = async (req, res, next) => {
   const user = req.user;
@@ -532,6 +534,27 @@ exports.getZakljucniTrocifreni = async (req, res, next) => {
     ]);
   }
 
+  //// PDF
+  
+  const fonts = {
+    Roboto: {
+      normal: 'fonts/Roboto-Regular.ttf',
+      bold: 'fonts/Roboto-Medium.ttf',
+      italics: 'fonts/Roboto-Italic.ttf',
+      bolditalics: 'fonts/Roboto-MediumItalic.ttf'
+    }
+  };
+  const printer = new PdfPrinter(fonts);
+  const docDefinition = {
+    // ...
+  };
+  
+  const options = {
+    // ...
+  }
+
+  //// PDF
+
   return res.status(200).render("includes/dashboard/zakljucni_trocifreni", {
     pageTitle: "",
     path: "/zakljucni_trocifreni",
@@ -545,3 +568,6 @@ exports.getZakljucniTrocifreni = async (req, res, next) => {
     validationErrors: []
   });
 };
+exports.getZakljucniTrocifreniPDF = async (req, res, next) => {
+  return res.status(200).json({})
+}

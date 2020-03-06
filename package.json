@@ -29,6 +29,7 @@
     "mongoose": "^5.7.1",
     "nodemailer": "^6.3.0",
     "nodemailer-sendgrid-transport": "^0.2.0",
+    "pdfmake": "^0.1.65",
     "serve-favicon": "^2.5.0"
   }
 }

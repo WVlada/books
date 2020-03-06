@@ -18,5 +18,6 @@ router.post("/konto_promet", isAuth, kontoController.postKontoPromet);
 
 router.get("/zakljucni_list", isAuth, kontoController.getZakljucniList);
 router.get("/zakljucni_trocifreni", isAuth, kontoController.getZakljucniTrocifreni);
+router.get("/zakljucni_trocifreni_pdf", isAuth, kontoController.getZakljucniTrocifreniPDF);
 
 module.exports = router;
