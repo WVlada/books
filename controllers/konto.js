@@ -241,8 +241,8 @@ exports.getZakljucniList = async (req, res, next) => {
   //.select("-_id number")
   const sva_konta_array_idova = sva_konta.map(e => e._id);
   const sva_konta_array_brojeva = sva_konta.map(e => e.number);
-  console.log(sva_konta_array_idova);
-  console.log(sva_konta_array_brojeva);
+  //console.log(sva_konta_array_idova);
+  //console.log(sva_konta_array_brojeva);
   const stavovi = await Stav.find({
     company: current_company_id,
     konto: sva_konta_array_idova,
@@ -275,9 +275,9 @@ exports.getZakljucniList = async (req, res, next) => {
     });
   }
 
-  console.log("+++++");
+  //console.log("+++++");
   //console.log(sredjeno);
-  console.log("+++++");
+  //console.log("+++++");
   let brojac = 0;
   let array = [];
   let trocifreni_array = [];
@@ -329,12 +329,12 @@ exports.getZakljucniList = async (req, res, next) => {
   ///    sredjen_objekat[trocifreni_broj] = m;
   ///  }
   ///}
-  console.log("111111");
+  //console.log("111111");
 
-  console.log("111111");
-  console.log("2222222");
+  //console.log("111111");
+  //console.log("2222222");
   //console.log(trocifreni_array)
-  console.log("2222222");
+  //console.log("2222222");
   let trocifreni_obj = {};
   for (let z = 0; z <= array.length - 1; z++) {
     let tr = array[z].key.slice(0, 3);
@@ -425,10 +425,10 @@ exports.getZakljucniList = async (req, res, next) => {
       }
     }
   }
-  console.log(array);
-  console.log("333");
-  console.log(aray_konta_name_and_number);
-  console.log("333");
+  //console.log(array);
+  //console.log("333");
+  //console.log(aray_konta_name_and_number);
+  //console.log("333");
   return res.status(200).render("includes/dashboard/zakljucni_list", {
     pageTitle: "",
     path: "/zakljucni_list",
@@ -514,13 +514,13 @@ exports.getZakljucniTrocifreni = async (req, res, next) => {
     }
   }
 
-  console.log(sva_konta_sa_prometom);
-  console.log(samo_array_trocifrenih);
+  //console.log(sva_konta_sa_prometom);
+  //console.log(samo_array_trocifrenih);
   let sorted_samo_array_trocifrenih = samo_array_trocifrenih.sort((a, b) => {
     return a > b;
   });
   let full_trocifreni = [];
-  console.log(sorted_samo_array_trocifrenih);
+  //console.log(sorted_samo_array_trocifrenih);
 
   for (let i = 0; i <= sorted_samo_array_trocifrenih.length - 1; i++) {
     full_trocifreni.push([
@@ -533,27 +533,6 @@ exports.getZakljucniTrocifreni = async (req, res, next) => {
       sva_konta_sa_prometom[sorted_samo_array_trocifrenih[i]].ukup_p
     ]);
   }
-
-  //// PDF
-  
-  const fonts = {
-    Roboto: {
-      normal: 'fonts/Roboto-Regular.ttf',
-      bold: 'fonts/Roboto-Medium.ttf',
-      italics: 'fonts/Roboto-Italic.ttf',
-      bolditalics: 'fonts/Roboto-MediumItalic.ttf'
-    }
-  };
-  const printer = new PdfPrinter(fonts);
-  const docDefinition = {
-    // ...
-  };
-  
-  const options = {
-    // ...
-  }
-
-  //// PDF
 
   return res.status(200).render("includes/dashboard/zakljucni_trocifreni", {
     pageTitle: "",
@@ -569,5 +548,104 @@ exports.getZakljucniTrocifreni = async (req, res, next) => {
   });
 };
 exports.getZakljucniTrocifreniPDF = async (req, res, next) => {
-  return res.status(200).json({})
+  const user = req.user;
+  const current_company_id = req.current_company_id;
+  const current_company_year = req.current_company_year;
+  const current_company = await Company.findOne({ _id: current_company_id });
+  const datum_start = `01-01-${current_company_year}`;
+  const datum_end = `12-31-${current_company_year}`;
+
+  const sva_konta = await Konto.find({
+    company: current_company_id
+  }).sort("number");
+  console.log(sva_konta)
+  const sva_konta_array_idova = sva_konta.map(e => e._id);
+  const sva_konta_array_brojeva = sva_konta.map(e => e.number);
+
+  const stavovi = await Stav.find({
+    company: current_company_id,
+    konto: sva_konta_array_idova,
+    nalog_date: { $gte: datum_start, $lte: datum_end }
+  })
+    .populate({ path: "konto", model: Konto, select: "number name" })
+    .populate({ path: "nalog", model: Nalog, select: "number" });
+
+  const m = stavovi.reduce(function(rv, elem) {
+    //elem je stav
+    (rv[elem.konto.number] = rv[elem.konto.number] || []).push(elem);
+    return rv;
+  }, {});
+  console.log(m)
+  // { '2001':
+  //  [ { duguje: 10000,
+  //      potrazuje: 0...
+  objekat = { content: [] }
+  for (var x in m){
+    let value_aray = [] //['valu1', 'value2']
+    let saldo = 0;
+    let ukup_dug = 0;
+    let ukup_potr = 0;
+    //let column_header_array = [] //['Konto', 'duguje, 'potrazuje']
+    for (let i = 0; i <= m[x].length - 1; i++) {
+      saldo += m[x][i].duguje - m[x][i].potrazuje;
+      ukup_dug += m[x][i].duguje;
+      ukup_potr += m[x][i].potrazuje;
+      value_aray.push([ {text: i, style:'cell_redni_broj'}, {text: m[x][i].opis, style: 'cell_description'}, {text: accounting.formatNumber(m[x][i].duguje), style: 'cell_number'}, {text: accounting.formatNumber(m[x][i].potrazuje), style: 'cell_number'}, {text: accounting.formatNumber(saldo), style: 'cell_number'} ] )
+    }
+    value_aray.push([ {text: '', style: 'red_zbir'}, {text: 'Total:', style: 'red_zbir'}, {text: accounting.formatNumber(ukup_dug), style: 'red_zbir'}, {text: accounting.formatNumber(ukup_potr), style: 'red_zbir'}, {text: accounting.formatNumber(saldo), style: 'red_zbir'} ] )
+    objekat.content.push(`\n`);// blanko red
+    objekat.content.push({text: `${x} - ${m[x][0].konto.name}`, style:'acc_number_and_name'});
+    let column_header_array = [{text: `No.`, style: 'table_header'},{text: 'Description', style: 'table_header'}, {text: 'Owes', style: 'table_header'}, {text: 'Claims', style: 'table_header'}, {text: 'Saldo', style: 'table_header'}]
+    objekat.content.push({table: { 
+                                    widths: [20, '*', 80, 80, 80],
+                                    body: [ 
+                                            column_header_array,
+                                            ...value_aray  ] }, style: 'table_style', layout: 'lightHorizontalLines' 
+                                          } )
+  }
+  objekat.styles = 	{
+    acc_number_and_name: {
+      fontSize: 10,
+    },
+		table_style: {
+			fontSize: 8,
+			bold: false,
+			margin: [0, 0, 0, 10] //// margin: [left, top, right, bottom]
+    },
+  red_zbir: {
+    italics: true,
+    bold: true,
+    fillColor: '#eeeeee',
+    alignment: 'center'
+  },
+  table_header: {
+    fontSize: 9,
+    alignment: 'center',
+    fillColor: '#a3a3a3',
+  },
+page_header_left: {
+  color: 'grey',
+  margin: [15,15,0,0],
+  italics: true,
+  fontSize: 10
+},
+page_header_right: {
+  color: 'grey',
+  margin: [0,15,15,0],
+  italics: true,
+  alignment: 'right',
+  fontSize: 10
+},
+cell_redni_broj: {
+  alignment: 'center'
+},
+cell_description: {
+  alignment: 'left'
+},
+cell_number: {
+  alignment: 'right'
+}}
+  objekat.header = [{columns: [{text: `Company: ${current_company.name}, year: ${current_company_year} `, style: 'page_header_left'}, {text: `Date: ${(new Date).getDate()}-${(new Date).getMonth()+1}-${(new Date).getUTCFullYear()} `, style: 'page_header_right'}]}]
+  console.log(objekat)
+  return res.status(200).json(objekat)
 }

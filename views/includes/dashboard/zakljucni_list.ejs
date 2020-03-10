@@ -97,9 +97,9 @@ $(document).off("click", "#zakljucni_trocifren_print_to_pdf").on("click", "#zakl
     complete: function() {
       zakljucni_list_row.data("requestRunning", false);
     },
-    success: function(html) {
+    success: function(json) {
       //$("div.centar").fadeOut(0).html(html).fadeIn(500)
-      pdfMake.createPdf({content:String(content.innerHTML)}).open({}, win);
+      pdfMake.createPdf(JSON.parse(json)).open({}, win);
       $('#loader').fadeOut();
     },
     beforeSend: function(){
