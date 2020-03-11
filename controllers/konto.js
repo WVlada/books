@@ -5,8 +5,8 @@ const Konto = require("../models/konto");
 const Okvir = require("../models/okvir");
 const Stav = require("../models/stav");
 const accounting = require("accounting-js");
-var PdfPrinter = require('pdfmake');
-var fs = require('fs');
+var PdfPrinter = require("pdfmake");
+var fs = require("fs");
 
 exports.getEditKonto = async (req, res, next) => {
   const user = req.user;
@@ -558,7 +558,7 @@ exports.getZakljucniTrocifreniPDF = async (req, res, next) => {
   const sva_konta = await Konto.find({
     company: current_company_id
   }).sort("number");
-  console.log(sva_konta)
+  console.log(sva_konta);
   const sva_konta_array_idova = sva_konta.map(e => e._id);
   const sva_konta_array_brojeva = sva_konta.map(e => e.number);
 
@@ -575,13 +575,16 @@ exports.getZakljucniTrocifreniPDF = async (req, res, next) => {
     (rv[elem.konto.number] = rv[elem.konto.number] || []).push(elem);
     return rv;
   }, {});
-  console.log(m)
+  console.log(m);
   // { '2001':
   //  [ { duguje: 10000,
   //      potrazuje: 0...
-  objekat = { content: [] }
-  for (var x in m){
-    let value_aray = [] //['valu1', 'value2']
+  objekat = {
+    content: [{ text: "Accounts overview", style: "report_title" }],
+    pageMargins: [40, 40, 40, 40]
+  };
+  for (var x in m) {
+    let value_aray = []; //['valu1', 'value2']
     let saldo = 0;
     let ukup_dug = 0;
     let ukup_potr = 0;
@@ -590,62 +593,415 @@ exports.getZakljucniTrocifreniPDF = async (req, res, next) => {
       saldo += m[x][i].duguje - m[x][i].potrazuje;
       ukup_dug += m[x][i].duguje;
       ukup_potr += m[x][i].potrazuje;
-      value_aray.push([ {text: i, style:'cell_redni_broj'}, {text: m[x][i].opis, style: 'cell_description'}, {text: accounting.formatNumber(m[x][i].duguje), style: 'cell_number'}, {text: accounting.formatNumber(m[x][i].potrazuje), style: 'cell_number'}, {text: accounting.formatNumber(saldo), style: 'cell_number'} ] )
+      value_aray.push([
+        { text: i, style: "cell_redni_broj" },
+        { text: m[x][i].opis, style: "cell_description" },
+        { text: accounting.formatNumber(m[x][i].duguje), style: "cell_number" },
+        {
+          text: accounting.formatNumber(m[x][i].potrazuje),
+          style: "cell_number"
+        },
+        { text: accounting.formatNumber(saldo), style: "cell_number" }
+      ]);
     }
-    value_aray.push([ {text: '', style: 'red_zbir'}, {text: 'Total:', style: 'red_zbir'}, {text: accounting.formatNumber(ukup_dug), style: 'red_zbir'}, {text: accounting.formatNumber(ukup_potr), style: 'red_zbir'}, {text: accounting.formatNumber(saldo), style: 'red_zbir'} ] )
-    objekat.content.push(`\n`);// blanko red
-    objekat.content.push({text: `${x} - ${m[x][0].konto.name}`, style:'acc_number_and_name'});
-    let column_header_array = [{text: `No.`, style: 'table_header'},{text: 'Description', style: 'table_header'}, {text: 'Owes', style: 'table_header'}, {text: 'Claims', style: 'table_header'}, {text: 'Saldo', style: 'table_header'}]
-    objekat.content.push({table: { 
-                                    widths: [20, '*', 80, 80, 80],
-                                    body: [ 
-                                            column_header_array,
-                                            ...value_aray  ] }, style: 'table_style', layout: 'lightHorizontalLines' 
-                                          } )
+    value_aray.push([
+      { text: "", style: "red_zbir" },
+      { text: "Total:", style: "red_zbir" },
+      { text: accounting.formatNumber(ukup_dug), style: "red_zbir" },
+      { text: accounting.formatNumber(ukup_potr), style: "red_zbir" },
+      { text: accounting.formatNumber(saldo), style: "red_zbir" }
+    ]);
+    objekat.content.push(`\n`); // blanko red
+    //objekat.content.push({
+    //  text: `${x} - ${m[x][0].konto.name}`,
+    //  style: "acc_number_and_name"
+    //});
+    let column_header_array = [
+      { text: `${x}`, style: "table_header" },
+      { text: `${m[x][0].konto.name}`, style: "table_header_description" },
+      { text: "Owes", style: "table_header" },
+      { text: "Claims", style: "table_header" },
+      { text: "Saldo", style: "table_header" }
+    ];
+    objekat.content.push({
+      table: {
+        widths: [30, "*", 80, 80, 80],
+        body: [column_header_array, ...value_aray]
+      },
+      style: "table_style",
+      layout: "lightHorizontalLines"
+    });
   }
-  objekat.styles = 	{
+
+  objekat.styles = {
+    table_header_description: {
+      fontSize: 9,
+      alignment: "left",
+      fillColor: "#a3a3a3"
+    },
+    footer_style: {
+      margin: [0, 10, 0, 0],
+      alignment: "center"
+    },
+    report_title: {
+      fontSize: 11,
+      italics: true,
+      bold: true,
+      alignment: "center"
+    },
     acc_number_and_name: {
-      fontSize: 10,
+      fontSize: 10
     },
-		table_style: {
-			fontSize: 8,
-			bold: false,
-			margin: [0, 0, 0, 10] //// margin: [left, top, right, bottom]
+    table_style: {
+      fontSize: 8,
+      bold: false,
+      margin: [0, 0, 0, 10] //// margin: [left, top, right, bottom]
     },
-  red_zbir: {
-    italics: true,
-    bold: true,
-    fillColor: '#eeeeee',
-    alignment: 'center'
-  },
-  table_header: {
-    fontSize: 9,
-    alignment: 'center',
-    fillColor: '#a3a3a3',
-  },
-page_header_left: {
-  color: 'grey',
-  margin: [15,15,0,0],
-  italics: true,
-  fontSize: 10
-},
-page_header_right: {
-  color: 'grey',
-  margin: [0,15,15,0],
-  italics: true,
-  alignment: 'right',
-  fontSize: 10
-},
-cell_redni_broj: {
-  alignment: 'center'
-},
-cell_description: {
-  alignment: 'left'
-},
-cell_number: {
-  alignment: 'right'
-}}
-  objekat.header = [{columns: [{text: `Company: ${current_company.name}, year: ${current_company_year} `, style: 'page_header_left'}, {text: `Date: ${(new Date).getDate()}-${(new Date).getMonth()+1}-${(new Date).getUTCFullYear()} `, style: 'page_header_right'}]}]
-  console.log(objekat)
-  return res.status(200).json(objekat)
-}
+    red_zbir: {
+      italics: true,
+      bold: true,
+      fillColor: "#eeeeee",
+      alignment: "center"
+    },
+    table_header: {
+      fontSize: 9,
+      alignment: "center",
+      fillColor: "#a3a3a3"
+    },
+    page_header_left: {
+      color: "grey",
+      margin: [15, 15, 0, 0],
+      italics: true,
+      fontSize: 10
+    },
+    page_header_right: {
+      color: "grey",
+      margin: [0, 15, 15, 0],
+      italics: true,
+      alignment: "right",
+      fontSize: 10
+    },
+    cell_redni_broj: {
+      alignment: "center"
+    },
+    cell_description: {
+      alignment: "left"
+    },
+    cell_number: {
+      alignment: "right"
+    }
+  };
+
+  objekat.header = [
+    {
+      columns: [
+        {
+          text: `${current_company.name}, ${current_company_year} `,
+          style: "page_header_left"
+        },
+        {
+          text: `Date: ${new Date().getDate()}-${new Date().getMonth() +
+            1}-${new Date().getUTCFullYear()} `,
+          style: "page_header_right"
+        }
+      ]
+    }
+  ];
+  // dynamic footers dont work on web workers
+  //objekat.footer = function(currentPage, pageCount) {
+  //  return [
+  //    {
+  //      text: `${currentPage.toString()} + " of " + ${pageCount}`,
+  //      style: "footer_style"
+  //    }
+  //  ];
+  //};
+  console.log(objekat);
+  return res.status(200).json(objekat);
+};
+
+exports.getZakljucniPDF = async (req, res, next) => {
+  const user = req.user;
+  const current_company_id = req.current_company_id;
+  const current_company_year = req.current_company_year;
+  const current_company = await Company.findOne({ _id: current_company_id });
+  const datum_start = `01-01-${current_company_year}`;
+  const datum_end = `12-31-${current_company_year}`;
+
+  const sva_konta = await Konto.find({
+    company: current_company_id
+  }).sort("number");
+  
+  const sva_konta_array_idova = sva_konta.map(e => e._id);
+  
+  const stavovi = await Stav.find({
+    company: current_company_id,
+    konto: sva_konta_array_idova,
+    nalog_date: { $gte: datum_start, $lte: datum_end }
+  })
+    .populate({ path: "konto", model: Konto, select: "number name" })
+    .populate({ path: "nalog", model: Nalog, select: "number" });
+
+  const m = stavovi.reduce(function(rv, elem) {
+    //elem je stav
+    (rv[elem.konto.number] = rv[elem.konto.number] || []).push(elem);
+    return rv;
+  }, {});
+  
+  let sva_konta_sa_prometom = {};
+  
+  for (var x in m) {
+    let poc_d = 0;
+    let poc_p = 0;
+    let dug = 0;
+    let pot = 0;
+    let ukup_d = 0;
+    let ukup_p = 0;
+    let saldo_d = 0;
+    let saldo_p = 0;
+    for (let i = 0; i <= m[x].length - 1; i++) {
+      if (m[x][i].type === "R") {
+        poc_d += m[x][i].duguje;
+        poc_p += m[x][i].potrazuje;
+      } else {
+        dug += m[x][i].duguje;
+        pot += m[x][i].potrazuje;
+      }
+    }
+    ukup_d = dug + poc_d;
+    ukup_p = pot + poc_p;
+
+    sva_konta_sa_prometom[x] = {}
+    sva_konta_sa_prometom[x].poc_d = poc_d;
+    sva_konta_sa_prometom[x].poc_p = poc_p;
+    sva_konta_sa_prometom[x].dug = dug;
+    sva_konta_sa_prometom[x].pot = pot;
+    sva_konta_sa_prometom[x].ukup_dug = ukup_d;
+    sva_konta_sa_prometom[x].ukup_pot = ukup_p;
+
+    (sva_konta_sa_prometom['array_konta'] = sva_konta_sa_prometom['array_konta'] || []).push(x)
+    
+    sva_konta_sa_prometom[x].saldo_d = 0;
+    sva_konta_sa_prometom[x].saldo_p = 0;
+
+    ukup_d - ukup_p > 0 ? sva_konta_sa_prometom[x].saldo_d = ukup_d - ukup_p : sva_konta_sa_prometom[x].saldo_p = ukup_p - ukup_d;
+  
+  }
+
+  
+  sva_konta_sa_prometom.array_konta = sva_konta_sa_prometom.array_konta.sort()
+  
+  for (let i=0; i <= sva_konta_sa_prometom.array_konta.length - 1; i++) {
+    let x = sva_konta_sa_prometom.array_konta[i].slice(0,3);
+    if (sva_konta_sa_prometom[x]) {
+          sva_konta_sa_prometom[x].dug += sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].dug;
+          sva_konta_sa_prometom[x].pot += sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].pot;
+          sva_konta_sa_prometom[x].poc_d += sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].poc_d;
+          sva_konta_sa_prometom[x].poc_p += sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].poc_p;
+          sva_konta_sa_prometom[x].ukup_dug += sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_dug;
+          sva_konta_sa_prometom[x].ukup_pot += sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_pot;
+    } else {
+          sva_konta_sa_prometom[x] = {};
+          sva_konta_sa_prometom[x].dug = sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].dug;
+          sva_konta_sa_prometom[x].pot = sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].pot;
+          sva_konta_sa_prometom[x].poc_d = sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].poc_d;
+          sva_konta_sa_prometom[x].poc_p = sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].poc_p;
+          sva_konta_sa_prometom[x].ukup_dug = sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_dug;
+          sva_konta_sa_prometom[x].ukup_pot = sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_pot;
+          sva_konta_sa_prometom.array_konta.push(x)
+    }
+    
+  }
+  sva_konta_sa_prometom.array_konta = sva_konta_sa_prometom.array_konta.sort()
+  //console.log(sva_konta_sa_prometom)
+
+  // ovde mi jos trocifrena konta nemaju saldo
+  for(let i=0; i<= sva_konta_sa_prometom.array_konta.length -1; i++){
+    if (sva_konta_sa_prometom.array_konta[i].length == 3){
+      sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].saldo_d = 0;
+      sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].saldo_p = 0;
+      sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_dug - 
+      sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_pot > 0 ? 
+      sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].saldo_d = 
+      sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_dug - 
+      sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_pot : 
+      sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].saldo_d =
+      sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_pot - sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_dug
+    }
+  }
+  console.log(sva_konta_sa_prometom)
+  //'4601':
+  // { poc_d: 0,
+  //   poc_p: 0,
+  //   dug: 50000,
+  //   pot: 1000000,
+  //   ukup_dug: 50000,
+  //   ukup_pot: 1000000,
+  //   saldo_d: 0,
+  //   saldo_p: 950000 },
+  //array_konta:
+  // [ '020',
+  //   '0201',
+  //   '200',
+  //   '2001',
+
+  objekat = {
+    content: [{ text: "Closing sheet", style: "report_title" }],
+    pageMargins: [40, 40, 40, 40],
+    pageOrientation: 'landscape',
+  };
+  //for (var x in m) {
+  //  let value_aray = []; //['valu1', 'value2']
+  //  //let saldo = 0;
+  //  let poc_dug = 0;
+  //  let poc_potr = 0;
+  //  let dug = 0;
+  //  let potr = 0;
+  //  let ukup_dug = 0;
+  //  let ukup_potr = 0;
+  //  //let column_header_array = [] //['Konto', 'duguje, 'potrazuje']
+  //  for (let i = 0; i <= m[x].length - 1; i++) {
+  //    if (m[x][i].nalog.type === 'R') {
+  //      poc_dug += m[x][i].duguje;
+  //      poc_potr += m[x][i].potrazuje;
+  //    } else {
+  //      dug += m[x][i].duguje;
+  //      potr += m[x][i].potrazuje;
+  //    }
+  //    ukup_dug += m[x][i].duguje;
+  //    ukup_potr += m[x][i].potrazuje;
+  //    //saldo += m[x][i].duguje - m[x][i].potrazuje;
+  //    //ukup_dug += m[x][i].duguje;
+  //    //ukup_potr += m[x][i].potrazuje;
+  //    //value_aray.push([
+  //    //  { text: i, style: "cell_redni_broj" },
+  //    //  { text: m[x][i].opis, style: "cell_description" },
+  //    //  { text: accounting.formatNumber(m[x][i].duguje), style: "cell_number" },
+  //    //  {
+  //    //    text: accounting.formatNumber(m[x][i].potrazuje),
+  //    //    style: "cell_number"
+  //    //  },
+  //    //  { text: accounting.formatNumber(saldo), style: "cell_number" }
+  //    //]);
+  //  }
+  //  value_aray.push([
+  //    { text: `${x}`, style: "red_zbir" },
+  //    { text: `${m[x][0].konto.name}`, style: "red_zbir" },
+  //    { text: accounting.formatNumber(poc_dug), style: "red_zbir" },
+  //    { text: accounting.formatNumber(poc_potr), style: "red_zbir" },
+  //    { text: accounting.formatNumber(dug), style: "red_zbir" },
+  //    { text: accounting.formatNumber(potr), style: "red_zbir" },
+  //    { text: accounting.formatNumber(ukup_dug), style: "red_zbir" },
+  //    { text: accounting.formatNumber(ukup_potr), style: "red_zbir" }
+  //  ]);
+  //  //objekat.content.push(`\n`); // blanko red
+  //  //objekat.content.push({
+  //  //  text: `${x} - ${m[x][0].konto.name}`,
+  //  //  style: "acc_number_and_name"
+  //  //});
+  //  //let column_header_array = [
+  //  //  { text: `${x}`, style: "table_header" },
+  //  //  { text: `${m[x][0].konto.name}`, style: "table_header_description" },
+  //  //  { text: "Owes", style: "table_header" },
+  //  //  { text: "Claims", style: "table_header" },
+  //  //  { text: "Owes", style: "table_header" },
+  //  //  { text: "Claims", style: "table_header" },
+  //  //  { text: "Saldo", style: "table_header" },
+  //  //  { text: "Saldo", style: "table_header" }
+  //  //];
+  //  objekat.content.push({
+  //    table: {
+  //      widths: [30, 200, 60, 60, 60, 60, 60, 60],
+  //      body: [...value_aray]
+  //    },
+  //    style: "table_style",
+  //    layout: "lightHorizontalLines"
+  //  });
+  //}
+//
+  //objekat.styles = {
+  //  table_header_description: {
+  //    fontSize: 9,
+  //    alignment: "left",
+  //    fillColor: "#a3a3a3"
+  //  },
+  //  footer_style: {
+  //    margin: [0, 10, 0, 0],
+  //    alignment: "center"
+  //  },
+  //  report_title: {
+  //    fontSize: 11,
+  //    italics: true,
+  //    bold: true,
+  //    alignment: "center"
+  //  },
+  //  acc_number_and_name: {
+  //    fontSize: 10
+  //  },
+  //  table_style: {
+  //    fontSize: 8,
+  //    bold: false,
+  //    margin: [0, 0, 0, 10] //// margin: [left, top, right, bottom]
+  //  },
+  //  red_zbir: {
+  //    italics: true,
+  //    bold: true,
+  //    fillColor: "#eeeeee",
+  //    alignment: "center"
+  //  },
+  //  table_header: {
+  //    fontSize: 9,
+  //    alignment: "center",
+  //    fillColor: "#a3a3a3"
+  //  },
+  //  page_header_left: {
+  //    color: "grey",
+  //    margin: [15, 15, 0, 0],
+  //    italics: true,
+  //    fontSize: 10
+  //  },
+  //  page_header_right: {
+  //    color: "grey",
+  //    margin: [0, 15, 15, 0],
+  //    italics: true,
+  //    alignment: "right",
+  //    fontSize: 10
+  //  },
+  //  cell_redni_broj: {
+  //    alignment: "center"
+  //  },
+  //  cell_description: {
+  //    alignment: "left"
+  //  },
+  //  cell_number: {
+  //    alignment: "right"
+  //  }
+  //};
+//
+  //objekat.header = [
+  //  {
+  //    columns: [
+  //      {
+  //        text: `${current_company.name}, ${current_company_year} `,
+  //        style: "page_header_left"
+  //      },
+  //      {
+  //        text: `Date: ${new Date().getDate()}-${new Date().getMonth() +
+  //          1}-${new Date().getUTCFullYear()} `,
+  //        style: "page_header_right"
+  //      }
+  //    ]
+  //  }
+  //];
+  //// dynamic footers dont work on web workers
+  ////objekat.footer = function(currentPage, pageCount) {
+  ////  return [
+  ////    {
+  ////      text: `${currentPage.toString()} + " of " + ${pageCount}`,
+  ////      style: "footer_style"
+  ////    }
+  ////  ];
+  ////};
+  //console.log(objekat);
+  //return res.status(200).json(objekat);
+};

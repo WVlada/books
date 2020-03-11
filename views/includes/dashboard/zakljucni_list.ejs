@@ -91,7 +91,7 @@ $(document).off("click", "#zakljucni_trocifren_print_to_pdf").on("click", "#zakl
   var content = document.getElementById('table')
   
   $.ajax({
-    url: "/zakljucni_trocifreni_pdf",
+    url: "/zakljucni_pdf",
     type: "get",
     dataType: "html",
     complete: function() {
