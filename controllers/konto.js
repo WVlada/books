@@ -749,7 +749,7 @@ exports.getZakljucniPDF = async (req, res, next) => {
   }, {});
   
   let sva_konta_sa_prometom = {};
-  console.log(m)
+  //console.log(m)
   for (var x in m) {
     let poc_d = 0;
     let poc_p = 0;
@@ -791,7 +791,6 @@ exports.getZakljucniPDF = async (req, res, next) => {
   
   }
 
-  
   sva_konta_sa_prometom.array_konta = sva_konta_sa_prometom.array_konta.sort()
   
   for (let i=0; i <= sva_konta_sa_prometom.array_konta.length - 1; i++) {
@@ -815,8 +814,19 @@ exports.getZakljucniPDF = async (req, res, next) => {
     }
     
   }
+  // SORT
   sva_konta_sa_prometom.array_konta = sva_konta_sa_prometom.array_konta.sort()
-  //console.log(sva_konta_sa_prometom)
+  
+  for(let i = 0; i<= sva_konta_sa_prometom.array_konta.length -1; i++){
+    if (sva_konta_sa_prometom.array_konta[i].length == 3){
+      
+    }
+
+
+  }
+  
+  console.log(sva_konta_sa_prometom.array_konta)
+  // SORT
 
   // ovde mi jos trocifrena konta nemaju saldo
   for(let i=0; i<= sva_konta_sa_prometom.array_konta.length -1; i++){
@@ -832,7 +842,7 @@ exports.getZakljucniPDF = async (req, res, next) => {
       sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_pot - sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_dug
     }
   }
-  console.log(sva_konta_sa_prometom)
+  //console.log(sva_konta_sa_prometom)
   //'4601':
   // { poc_d: 0,
   //   poc_p: 0,
