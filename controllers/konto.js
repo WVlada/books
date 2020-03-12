@@ -749,7 +749,7 @@ exports.getZakljucniPDF = async (req, res, next) => {
   }, {});
   
   let sva_konta_sa_prometom = {};
-  
+  console.log(m)
   for (var x in m) {
     let poc_d = 0;
     let poc_p = 0;
@@ -759,6 +759,7 @@ exports.getZakljucniPDF = async (req, res, next) => {
     let ukup_p = 0;
     let saldo_d = 0;
     let saldo_p = 0;
+    let name;
     for (let i = 0; i <= m[x].length - 1; i++) {
       if (m[x][i].type === "R") {
         poc_d += m[x][i].duguje;
@@ -770,6 +771,7 @@ exports.getZakljucniPDF = async (req, res, next) => {
     }
     ukup_d = dug + poc_d;
     ukup_p = pot + poc_p;
+    name = m[x][0].konto.name;
 
     sva_konta_sa_prometom[x] = {}
     sva_konta_sa_prometom[x].poc_d = poc_d;
@@ -778,6 +780,7 @@ exports.getZakljucniPDF = async (req, res, next) => {
     sva_konta_sa_prometom[x].pot = pot;
     sva_konta_sa_prometom[x].ukup_dug = ukup_d;
     sva_konta_sa_prometom[x].ukup_pot = ukup_p;
+    sva_konta_sa_prometom[x].name = name;
 
     (sva_konta_sa_prometom['array_konta'] = sva_konta_sa_prometom['array_konta'] || []).push(x)
     
@@ -844,12 +847,63 @@ exports.getZakljucniPDF = async (req, res, next) => {
   //   '0201',
   //   '200',
   //   '2001',
-
   objekat = {
-    content: [{ text: "Closing sheet", style: "report_title" }],
+    content: [ { 
+      table: {
+        widths: ['*', '*', '*', '*', '*', '*', '*', '*'],
+        body: [
+            [{ text:'start', colSpan: 2}, {},
+            { text:'turn', colSpan: 2}, {},
+            { text:'total', colSpan: 2}, {},
+            { text:'summary', colSpan: 2}, {} ],
+            [{text:'owes'},{text:'claims'},{text:'owes'},{text:'claims'},{text:'owes'},{text:'claims'},{text:'owes'},{text:'claims'}]
+          ]
+        
+    },
+    style: "closing_sheet_header_table",
+    layout: 'noBorders'}
+    ],
     pageMargins: [40, 40, 40, 40],
     pageOrientation: 'landscape',
   };
+  
+  let value_array = []
+  let column_header_array = []
+  for (let i = 0; i <= sva_konta_sa_prometom.array_konta.length-1; i ++){
+    //let sliced = sva_konta_sa_prometom.array_konta[i].slice(0,3);
+    value_array = []
+    column_header_array = []
+    if (sva_konta_sa_prometom.array_konta[i].length == 3) {
+      current_trocifreni = sva_konta_sa_prometom.array_konta[i];
+    } else {
+      column_header_array.push(
+        
+        { text: `${sva_konta_sa_prometom.array_konta[i]}`, style: "table_header" },
+        { text: `${sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].name}`, style: "table_header_description", colSpan: 7 }, {},{},{},{},{},{}
+        
+      )
+      value_array.push(
+        { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].poc_d, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number" },
+        { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].poc_p, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number" },
+        { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].dug, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number" },
+        { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].pot, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number" },
+        { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_dug, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number" },
+        { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_pot, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number" },
+        { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].saldo_d, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number" },
+        { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].saldo_p, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number" }
+      )
+    }
+    objekat.content.push({
+      table: {
+        widths: [81, 81, 81, 81, 81, 81, 81, 81],
+        body: [column_header_array, value_array]
+      },
+      style: "table_style",
+      layout: "lightHorizontalLines"
+    });
+   
+  }
+  
   //for (var x in m) {
   //  let value_aray = []; //['valu1', 'value2']
   //  //let saldo = 0;
@@ -909,90 +963,94 @@ exports.getZakljucniPDF = async (req, res, next) => {
   //  //  { text: "Saldo", style: "table_header" },
   //  //  { text: "Saldo", style: "table_header" }
   //  //];
-  //  objekat.content.push({
-  //    table: {
-  //      widths: [30, 200, 60, 60, 60, 60, 60, 60],
-  //      body: [...value_aray]
-  //    },
-  //    style: "table_style",
-  //    layout: "lightHorizontalLines"
-  //  });
+  
   //}
 //
-  //objekat.styles = {
-  //  table_header_description: {
-  //    fontSize: 9,
-  //    alignment: "left",
-  //    fillColor: "#a3a3a3"
-  //  },
-  //  footer_style: {
-  //    margin: [0, 10, 0, 0],
-  //    alignment: "center"
-  //  },
-  //  report_title: {
-  //    fontSize: 11,
-  //    italics: true,
-  //    bold: true,
-  //    alignment: "center"
-  //  },
-  //  acc_number_and_name: {
-  //    fontSize: 10
-  //  },
-  //  table_style: {
-  //    fontSize: 8,
-  //    bold: false,
-  //    margin: [0, 0, 0, 10] //// margin: [left, top, right, bottom]
-  //  },
-  //  red_zbir: {
-  //    italics: true,
-  //    bold: true,
-  //    fillColor: "#eeeeee",
-  //    alignment: "center"
-  //  },
-  //  table_header: {
-  //    fontSize: 9,
-  //    alignment: "center",
-  //    fillColor: "#a3a3a3"
-  //  },
-  //  page_header_left: {
-  //    color: "grey",
-  //    margin: [15, 15, 0, 0],
-  //    italics: true,
-  //    fontSize: 10
-  //  },
-  //  page_header_right: {
-  //    color: "grey",
-  //    margin: [0, 15, 15, 0],
-  //    italics: true,
-  //    alignment: "right",
-  //    fontSize: 10
-  //  },
-  //  cell_redni_broj: {
-  //    alignment: "center"
-  //  },
-  //  cell_description: {
-  //    alignment: "left"
-  //  },
-  //  cell_number: {
-  //    alignment: "right"
-  //  }
-  //};
+  objekat.styles = {
+    table_header: {
+      fontSize: 9,
+      alignment: "center",
+      fillColor: "#e6e6e6"
+    },
+    table_header_description: {
+      fontSize: 9,
+      alignment: "left",
+      fillColor: "#e6e6e6"
+    },
+    page_header_left: {
+      color: "grey",
+      margin: [15, 15, 0, 0],
+      italics: true,
+      fontSize: 10
+    },
+    page_header_center: {
+      color: "black",
+      alignment: "center",
+      margin: [0, 15, 0, 0],
+      italics: true,
+      bold: true,
+      fontSize: 11
+    },
+    page_header_right: {
+      color: "grey",
+      margin: [0, 15, 15, 0],
+      italics: true,
+      alignment: "right",
+      fontSize: 10
+    },
+    closing_sheet_header_table: {
+      fontSize: 9,
+      color: "grey",
+      alignment: 'center',
+      fillColor: "#eeeeee",
+    },
+    footer_style: {
+      margin: [0, 10, 0, 0],
+      alignment: "center"
+    },
+    acc_number_and_name: {
+      fontSize: 10
+    },
+    table_style: {
+      fontSize: 8,
+      bold: false,
+      margin: [0, 0, 0, 10] //// margin: [left, top, right, bottom]
+    },
+    red_zbir: {
+      italics: true,
+      bold: true,
+      fillColor: "#eeeeee",
+      alignment: "center"
+    },
+    cell_redni_broj: {
+      alignment: "center"
+    },
+    cell_description: {
+      alignment: "left"
+    },
+    cell_number: {
+      alignment: "right"
+    }
+  };
 //
-  //objekat.header = [
-  //  {
-  //    columns: [
-  //      {
-  //        text: `${current_company.name}, ${current_company_year} `,
-  //        style: "page_header_left"
-  //      },
-  //      {
-  //        text: `Date: ${new Date().getDate()}-${new Date().getMonth() +
-  //          1}-${new Date().getUTCFullYear()} `,
-  //        style: "page_header_right"
-  //      }
-  //    ]
-  //  }
-  //];
+  objekat.header = [
+    {
+      columns: [
+        {
+          text: `${current_company.name}, ${current_company_year} `,
+          style: "page_header_left"
+        },
+        {
+           text: `Closing sheet from ${datum_start} to ${datum_end}`, style: "page_header_center" 
+        },
+        {
+          text: `Date: ${new Date().getDate()}-${new Date().getMonth() +
+            1}-${new Date().getUTCFullYear()} `,
+          style: "page_header_right"
+        }
+      ]
+    }
+  ];
   //// dynamic footers dont work on web workers
   ////objekat.footer = function(currentPage, pageCount) {
   ////  return [
@@ -1003,5 +1061,5 @@ exports.getZakljucniPDF = async (req, res, next) => {
   ////  ];
   ////};
   //console.log(objekat);
-  //return res.status(200).json(objekat);
+  return res.status(200).json(objekat);
 };
