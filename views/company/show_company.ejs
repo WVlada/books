@@ -281,30 +281,32 @@ $(document)
         }
         });
       });
-      $(document)
-      .off("click", "#zakljucni_trocifreni")
-      .on("click", "#zakljucni_trocifreni", function() {
-        var me = $(this);
-        if (me.data("requestRunning")) {
+      $(document).off("click", "#print_to_pdf_dole").on("click", "#print_to_pdf_dole", function() {
+  var zakljucni_list_row = $(this);
+  
+  
+  if (zakljucni_list_row.data("requestRunning")) {
           return;
-        }
-        me.data("requestRunning", true);
-        $.ajax({
-          url: "/zakljucni_trocifreni",
-          type: "GET",
-          data: {
-          },
-          dataType: "html",
-          complete: function() {
-            me.data("requestRunning", false);
-          },
-          success: function(html) {
-            $("div.centar").fadeOut(0).html(html).fadeIn(500)
-            $('#loader').fadeOut();
-          },
-          beforeSend: function(){
-          $('#loader').fadeIn(200)
-        }
-        });
-      });
+  }
+  zakljucni_list_row.data("requestRunning", true);
+  var win = window.open('', '_blank');
+  
+  
+  $.ajax({
+    url: "/zakljucni_pdf",
+    type: "get",
+    dataType: "html",
+    complete: function() {
+      zakljucni_list_row.data("requestRunning", false);
+    },
+    success: function(json) {
+      //$("div.centar").fadeOut(0).html(html).fadeIn(500)
+      pdfMake.createPdf(JSON.parse(json)).open({}, win);
+      $('#loader').fadeOut();
+    },
+    beforeSend: function(){
+      $('#loader').fadeIn(200)
+    }
+  });
+});
 </script>

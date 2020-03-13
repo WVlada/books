@@ -810,23 +810,34 @@ exports.getZakljucniPDF = async (req, res, next) => {
           sva_konta_sa_prometom[x].poc_p = sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].poc_p;
           sva_konta_sa_prometom[x].ukup_dug = sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_dug;
           sva_konta_sa_prometom[x].ukup_pot = sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_pot;
-          sva_konta_sa_prometom.array_konta.push(x)
+          //sva_konta_sa_prometom.array_konta.push(x)
     }
     
   }
-  // SORT
+  // SORT sa ubacivanjem trocifrenih
   sva_konta_sa_prometom.array_konta = sva_konta_sa_prometom.array_konta.sort()
-  
-  for(let i = 0; i<= sva_konta_sa_prometom.array_konta.length -1; i++){
-    if (sva_konta_sa_prometom.array_konta[i].length == 3){
-      
-    }
-
-
-  }
-  
   console.log(sva_konta_sa_prometom.array_konta)
-  // SORT
+  
+  for(let i = 0; i <= sva_konta_sa_prometom.array_konta.length -1; i++){
+    let x;
+    let y;
+    if (sva_konta_sa_prometom.array_konta[i].length !=3)
+    {
+      x = sva_konta_sa_prometom.array_konta[i].slice(0,3)
+      if (i == sva_konta_sa_prometom.array_konta.length-1){
+        y = undefined;
+      }
+      else {
+        y = sva_konta_sa_prometom.array_konta[i+1].slice(0,3)
+      }
+      if (x != y)
+      {
+        sva_konta_sa_prometom.array_konta.splice(i+1, 0, x)
+      }
+    }
+  }
+  console.log(sva_konta_sa_prometom.array_konta)
+  // SORT sa ubacivanjem trocifrenih
 
   // ovde mi jos trocifrena konta nemaju saldo
   for(let i=0; i<= sva_konta_sa_prometom.array_konta.length -1; i++){
@@ -838,7 +849,7 @@ exports.getZakljucniPDF = async (req, res, next) => {
       sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].saldo_d = 
       sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_dug - 
       sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_pot : 
-      sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].saldo_d =
+      sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].saldo_p =
       sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_pot - sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_dug
     }
   }
@@ -862,10 +873,10 @@ exports.getZakljucniPDF = async (req, res, next) => {
       table: {
         widths: ['*', '*', '*', '*', '*', '*', '*', '*'],
         body: [
-            [{ text:'start', colSpan: 2}, {},
-            { text:'turn', colSpan: 2}, {},
-            { text:'total', colSpan: 2}, {},
-            { text:'summary', colSpan: 2}, {} ],
+            [{ text:'Start', colSpan: 2}, {},
+            { text:'Turnover', colSpan: 2}, {},
+            { text:'Total', colSpan: 2}, {},
+            { text:'Summary', colSpan: 2}, {} ],
             [{text:'owes'},{text:'claims'},{text:'owes'},{text:'claims'},{text:'owes'},{text:'claims'},{text:'owes'},{text:'claims'}]
           ]
         
@@ -885,11 +896,35 @@ exports.getZakljucniPDF = async (req, res, next) => {
     column_header_array = []
     if (sva_konta_sa_prometom.array_konta[i].length == 3) {
       current_trocifreni = sva_konta_sa_prometom.array_konta[i];
+      column_header_array.push(
+        
+        { text: `${current_trocifreni}`, style: "cell_header_trocifreni" },
+        { text: `Group ${current_trocifreni}`, style: "cell_header_trocifreni_description", colSpan: 7 }, {},{},{},{},{},{}
+        
+      )
+      value_array.push(
+        { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].poc_d, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number_trocifreni" },
+        { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].poc_p, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number_trocifreni" },
+        { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].dug, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number_trocifreni" },
+        { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].pot, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number_trocifreni" },
+        { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_dug, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number_trocifreni" },
+        { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_pot, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number_trocifreni" },
+        { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].saldo_d, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number_trocifreni" },
+        { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].saldo_p, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number_trocifreni" }
+      )
+      objekat.content.push({
+        table: {
+          widths: [81, 81, 81, 81, 81, 81, 81, 81],
+          body: [column_header_array, value_array]
+        },
+        style: "table_style_trocifreni",
+        layout: "lightHorizontalLines"
+      });
     } else {
       column_header_array.push(
         
-        { text: `${sva_konta_sa_prometom.array_konta[i]}`, style: "table_header" },
-        { text: `${sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].name}`, style: "table_header_description", colSpan: 7 }, {},{},{},{},{},{}
+        { text: `${sva_konta_sa_prometom.array_konta[i]}`, style: "cell_header" },
+        { text: `${sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].name}`, style: "cell_header_description", colSpan: 7 }, {},{},{},{},{},{}
         
       )
       value_array.push(
@@ -902,90 +937,48 @@ exports.getZakljucniPDF = async (req, res, next) => {
         { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].saldo_d, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number" },
         { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].saldo_p, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number" }
       )
+      objekat.content.push({
+        table: {
+          widths: [81, 81, 81, 81, 81, 81, 81, 81],
+          body: [column_header_array, value_array]
+        },
+        style: "table_style",
+        layout: "lightHorizontalLines"
+      });
     }
-    objekat.content.push({
-      table: {
-        widths: [81, 81, 81, 81, 81, 81, 81, 81],
-        body: [column_header_array, value_array]
-      },
-      style: "table_style",
-      layout: "lightHorizontalLines"
-    });
    
   }
-  
-  //for (var x in m) {
-  //  let value_aray = []; //['valu1', 'value2']
-  //  //let saldo = 0;
-  //  let poc_dug = 0;
-  //  let poc_potr = 0;
-  //  let dug = 0;
-  //  let potr = 0;
-  //  let ukup_dug = 0;
-  //  let ukup_potr = 0;
-  //  //let column_header_array = [] //['Konto', 'duguje, 'potrazuje']
-  //  for (let i = 0; i <= m[x].length - 1; i++) {
-  //    if (m[x][i].nalog.type === 'R') {
-  //      poc_dug += m[x][i].duguje;
-  //      poc_potr += m[x][i].potrazuje;
-  //    } else {
-  //      dug += m[x][i].duguje;
-  //      potr += m[x][i].potrazuje;
-  //    }
-  //    ukup_dug += m[x][i].duguje;
-  //    ukup_potr += m[x][i].potrazuje;
-  //    //saldo += m[x][i].duguje - m[x][i].potrazuje;
-  //    //ukup_dug += m[x][i].duguje;
-  //    //ukup_potr += m[x][i].potrazuje;
-  //    //value_aray.push([
-  //    //  { text: i, style: "cell_redni_broj" },
-  //    //  { text: m[x][i].opis, style: "cell_description" },
-  //    //  { text: accounting.formatNumber(m[x][i].duguje), style: "cell_number" },
-  //    //  {
-  //    //    text: accounting.formatNumber(m[x][i].potrazuje),
-  //    //    style: "cell_number"
-  //    //  },
-  //    //  { text: accounting.formatNumber(saldo), style: "cell_number" }
-  //    //]);
-  //  }
-  //  value_aray.push([
-  //    { text: `${x}`, style: "red_zbir" },
-  //    { text: `${m[x][0].konto.name}`, style: "red_zbir" },
-  //    { text: accounting.formatNumber(poc_dug), style: "red_zbir" },
-  //    { text: accounting.formatNumber(poc_potr), style: "red_zbir" },
-  //    { text: accounting.formatNumber(dug), style: "red_zbir" },
-  //    { text: accounting.formatNumber(potr), style: "red_zbir" },
-  //    { text: accounting.formatNumber(ukup_dug), style: "red_zbir" },
-  //    { text: accounting.formatNumber(ukup_potr), style: "red_zbir" }
-  //  ]);
-  //  //objekat.content.push(`\n`); // blanko red
-  //  //objekat.content.push({
-  //  //  text: `${x} - ${m[x][0].konto.name}`,
-  //  //  style: "acc_number_and_name"
-  //  //});
-  //  //let column_header_array = [
-  //  //  { text: `${x}`, style: "table_header" },
-  //  //  { text: `${m[x][0].konto.name}`, style: "table_header_description" },
-  //  //  { text: "Owes", style: "table_header" },
-  //  //  { text: "Claims", style: "table_header" },
-  //  //  { text: "Owes", style: "table_header" },
-  //  //  { text: "Claims", style: "table_header" },
-  //  //  { text: "Saldo", style: "table_header" },
-  //  //  { text: "Saldo", style: "table_header" }
-  //  //];
-  
-  //}
-//
   objekat.styles = {
-    table_header: {
+    cell_header: {
       fontSize: 9,
-      alignment: "center",
-      fillColor: "#e6e6e6"
+      alignment: "right",
+      fillColor: "#f6f5f8"
     },
-    table_header_description: {
+    cell_header_description: {
       fontSize: 9,
       alignment: "left",
-      fillColor: "#e6e6e6"
+      fillColor: "#f6f5f8"
+    },
+    cell_header_trocifreni: {
+      fontSize: 9,
+      alignment: "center",
+      fillColor: "#dcd7e6",
+      margin: [15,0,0,0]
+    },
+    cell_header_trocifreni_description: {
+      fontSize: 9,
+      alignment: "left",
+      fillColor: "#dcd7e6"
+    },
+    cell_number: {
+      alignment: "right",
+      fillColor: "#f6f5f8",
+      bold: false
+    },
+    cell_number_trocifreni: {
+      alignment: "right",
+      fillColor: "#dcd7e6",
+      bold: true
     },
     page_header_left: {
       color: "grey",
@@ -1010,9 +1003,11 @@ exports.getZakljucniPDF = async (req, res, next) => {
     },
     closing_sheet_header_table: {
       fontSize: 9,
-      color: "grey",
+      color: "white",
       alignment: 'center',
-      fillColor: "#eeeeee",
+      fillColor: "#b1adbf",
+      //fillColor: "#dcd7e6",
+      margin: [0, 0, 0, 15]
     },
     footer_style: {
       margin: [0, 10, 0, 0],
@@ -1024,22 +1019,14 @@ exports.getZakljucniPDF = async (req, res, next) => {
     table_style: {
       fontSize: 8,
       bold: false,
-      margin: [0, 0, 0, 10] //// margin: [left, top, right, bottom]
     },
-    red_zbir: {
-      italics: true,
-      bold: true,
-      fillColor: "#eeeeee",
-      alignment: "center"
-    },
-    cell_redni_broj: {
-      alignment: "center"
+    table_style_trocifreni: {
+      fontSize: 8,
+      bold: false,
+      margin: [0, 0, 0, 15] //// margin: [left, top, right, bottom]
     },
     cell_description: {
       alignment: "left"
-    },
-    cell_number: {
-      alignment: "right"
     }
   };
 //
