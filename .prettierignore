@@ -1,2 +1,3 @@
 models/seeds/ostali_nalozi.js
 models/seeds/seed_okvir.js
+controllers/konto.js

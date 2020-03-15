@@ -794,6 +794,7 @@ exports.getZakljucniPDF = async (req, res, next) => {
   sva_konta_sa_prometom.array_konta = sva_konta_sa_prometom.array_konta.sort()
   
   for (let i=0; i <= sva_konta_sa_prometom.array_konta.length - 1; i++) {
+    // ubacivanje trocifrenih
     let x = sva_konta_sa_prometom.array_konta[i].slice(0,3);
     if (sva_konta_sa_prometom[x]) {
           sva_konta_sa_prometom[x].dug += sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].dug;
@@ -812,32 +813,57 @@ exports.getZakljucniPDF = async (req, res, next) => {
           sva_konta_sa_prometom[x].ukup_pot = sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_pot;
           //sva_konta_sa_prometom.array_konta.push(x)
     }
-    
+    // ubacivanje jednocifrenih
+    let m = sva_konta_sa_prometom.array_konta[i].slice(0,1);
+    if (sva_konta_sa_prometom[m]) {
+          sva_konta_sa_prometom[m].dug += sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].dug;
+          sva_konta_sa_prometom[m].pot += sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].pot;
+          sva_konta_sa_prometom[m].poc_d += sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].poc_d;
+          sva_konta_sa_prometom[m].poc_p += sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].poc_p;
+          sva_konta_sa_prometom[m].ukup_dug += sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_dug;
+          sva_konta_sa_prometom[m].ukup_pot += sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_pot;
+    } else {
+          sva_konta_sa_prometom[m] = {};
+          sva_konta_sa_prometom[m].dug = sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].dug;
+          sva_konta_sa_prometom[m].pot = sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].pot;
+          sva_konta_sa_prometom[m].poc_d = sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].poc_d;
+          sva_konta_sa_prometom[m].poc_p = sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].poc_p;
+          sva_konta_sa_prometom[m].ukup_dug = sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_dug;
+          sva_konta_sa_prometom[m].ukup_pot = sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_pot;
+    }
   }
-  // SORT sa ubacivanjem trocifrenih
+  // SORT sa ubacivanjem trocifrenih i jednocifrenih
   sva_konta_sa_prometom.array_konta = sva_konta_sa_prometom.array_konta.sort()
   console.log(sva_konta_sa_prometom.array_konta)
-  
   for(let i = 0; i <= sva_konta_sa_prometom.array_konta.length -1; i++){
     let x;
     let y;
-    if (sva_konta_sa_prometom.array_konta[i].length !=3)
+    let m; // jednocifreni
+    let z; // jednocifreni
+    if (sva_konta_sa_prometom.array_konta[i].length !=3 && sva_konta_sa_prometom.array_konta[i].length !=1)
     {
       x = sva_konta_sa_prometom.array_konta[i].slice(0,3)
+      m = sva_konta_sa_prometom.array_konta[i].slice(0,1) // jednocifreni
       if (i == sva_konta_sa_prometom.array_konta.length-1){
         y = undefined;
+        z = undefined; // jednocifreni
       }
       else {
         y = sva_konta_sa_prometom.array_konta[i+1].slice(0,3)
+        z = sva_konta_sa_prometom.array_konta[i+1].slice(0,1)
       }
       if (x != y)
       {
         sva_konta_sa_prometom.array_konta.splice(i+1, 0, x)
       }
+      if (m != z)
+      {
+        sva_konta_sa_prometom.array_konta.splice(i+2, 0, m)
+      }
     }
   }
   console.log(sva_konta_sa_prometom.array_konta)
-  // SORT sa ubacivanjem trocifrenih
+  // SORT sa ubacivanjem trocifrenih i jednocifrenih
 
   // ovde mi jos trocifrena konta nemaju saldo
   for(let i=0; i<= sva_konta_sa_prometom.array_konta.length -1; i++){
@@ -853,7 +879,32 @@ exports.getZakljucniPDF = async (req, res, next) => {
       sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_pot - sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_dug
     }
   }
-  //console.log(sva_konta_sa_prometom)
+  // ovde mi jos jednocifrena konta nemaju saldo
+  for(let i=0; i<= sva_konta_sa_prometom.array_konta.length -1; i++){
+    if (sva_konta_sa_prometom.array_konta[i].length == 1){
+      sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].saldo_d = 0;
+      sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].saldo_p = 0;
+      sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_dug - 
+      sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_pot > 0 ? 
+      sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].saldo_d = 
+      sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_dug - 
+      sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_pot : 
+      sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].saldo_p =
+      sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_pot - sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_dug
+    }
+  }
+  //
+  sva_konta_sa_prometom['0'] ? sva_konta_sa_prometom['0'].name = 'LONG TERM ASSETS' :  undefined
+  sva_konta_sa_prometom['1'] ? sva_konta_sa_prometom['1'].name = 'CURRENT ASSETS' : undefined
+  sva_konta_sa_prometom['2'] ? sva_konta_sa_prometom['2'].name = 'CURRENT ASSETS' : undefined
+  sva_konta_sa_prometom['3'] ? sva_konta_sa_prometom['3'].name = 'CAPITAL' : undefined
+  sva_konta_sa_prometom['4'] ? sva_konta_sa_prometom['4'].name = 'LIABILITIES' : undefined
+  sva_konta_sa_prometom['5'] ? sva_konta_sa_prometom['5'].name = 'EXPENSES' : undefined
+  sva_konta_sa_prometom['6'] ? sva_konta_sa_prometom['6'].name = 'REVENUES' : undefined
+  //
+  console.log('***') 
+  console.log(sva_konta_sa_prometom)
+  console.log('***')
   //'4601':
   // { poc_d: 0,
   //   poc_p: 0,
@@ -920,7 +971,7 @@ exports.getZakljucniPDF = async (req, res, next) => {
         style: "table_style_trocifreni",
         layout: "lightHorizontalLines"
       });
-    } else {
+    } else if (sva_konta_sa_prometom.array_konta[i].length != 1) {
       column_header_array.push(
         
         { text: `${sva_konta_sa_prometom.array_konta[i]}`, style: "cell_header" },
@@ -945,10 +996,56 @@ exports.getZakljucniPDF = async (req, res, next) => {
         style: "table_style",
         layout: "lightHorizontalLines"
       });
+    } else { // jednocifreni
+      column_header_array.push(
+        
+        { text: `${sva_konta_sa_prometom.array_konta[i]}`, style: "cell_header_jednocifren" },
+        { text: `${sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].name}`, style: "cell_header_jednocifren_description", colSpan: 7 }, {},{},{},{},{},{}
+        
+      )
+      value_array.push(
+        { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].poc_d, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number_jednocifren" },
+        { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].poc_p, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number_jednocifren" },
+        { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].dug, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number_jednocifren" },
+        { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].pot, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number_jednocifren" },
+        { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_dug, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number_jednocifren" },
+        { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_pot, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number_jednocifren" },
+        { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].saldo_d, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number_jednocifren" },
+        { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].saldo_p, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number_jednocifren" }
+      )
+      objekat.content.push({
+        table: {
+          widths: [81, 81, 81, 81, 81, 81, 81, 81],
+          body: [column_header_array, value_array]
+        },
+        style: "table_style",
+        layout: "lightHorizontalLines",
+        pageBreak: 'after',
+        pageBreakAfter: function (currentNode, followingNodesOnPage,
+          nodesOnNextPage, previousNodesOnPage) {
+            console.log(currentNode)
+          return currentNode.pageNumbers.length < 1;
+      }
+      });
+      // jos sam u jednocifrenom elsu
+      
+
     }
    
   }
   objekat.styles = {
+    cell_header_jednocifren: {
+      alignment: "center",
+      fillColor: "#b1adbf"
+    },
+    cell_header_jednocifren_description: {
+      alignment: "left",
+      fillColor: "#b1adbf"
+    },
+    cell_number_jednocifren: {
+      alignment: "right",
+      fillColor: "#b1adbf"
+    },
     cell_header: {
       fontSize: 9,
       alignment: "right",
