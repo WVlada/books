@@ -232,18 +232,16 @@ exports.getZakljucniList = async (req, res, next) => {
 
   const datum_start = `01-01-${current_company_year}`;
   const datum_end = `12-31-${current_company_year}`;
-  //const konto_start_number = req.body.konto_start;
-  //const konto_end_number = req.body.konto_end;
+  
   //console.log(req.body);
   const sva_konta = await Konto.find({
     company: current_company_id
   }).sort("number");
 
-  //.select("-_id number")
+  
   const sva_konta_array_idova = sva_konta.map(e => e._id);
   const sva_konta_array_brojeva = sva_konta.map(e => e.number);
-  //console.log(sva_konta_array_idova);
-  //console.log(sva_konta_array_brojeva);
+  
   const stavovi = await Stav.find({
     company: current_company_id,
     konto: sva_konta_array_idova,
@@ -419,14 +417,16 @@ exports.getZakljucniList = async (req, res, next) => {
   const aray_konta_name_and_number = await Konto.find({
     _id: sva_konta_array_idova
   }).select(" name number");
+  //console.log(aray_konta_name_and_number)
   for (let i = 0; i <= array.length - 1; i++) {
     for (let j = 0; j <= aray_konta_name_and_number.length - 1; j++) {
       if (array[i].key == aray_konta_name_and_number[j].number) {
         array[i].name = aray_konta_name_and_number[j].name;
+        array[i]._id = aray_konta_name_and_number[j]._id;
       }
     }
   }
-  //console.log(array);
+  console.log(array);
   //console.log("333");
   //console.log(aray_konta_name_and_number);
   //console.log("333");
@@ -449,6 +449,7 @@ exports.getZakljucniTrocifreni = async (req, res, next) => {
   const current_company_id = req.current_company_id;
   const current_company_year = req.current_company_year;
   const current_company = await Company.findOne({ _id: current_company_id });
+  
   const datum_start = `01-01-${current_company_year}`;
   const datum_end = `12-31-${current_company_year}`;
 

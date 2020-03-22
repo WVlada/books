@@ -54,7 +54,7 @@ $(document).off("keyup", "#zakljucni_list_text_input").on("keyup", "#zakljucni_l
     $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
   });
 })
-$(document).off("dblclick", "tr.zakljucni_list_trocifren").on("dblclick", "tr.zakljucni_list_trocifren", function() {
+$(document).off("dblclick", "tr.zakljucni_list_obican").on("dblclick", "tr.zakljucni_list_obican", function() {
   var zakljucni_list_row = $(this);
   var konto = this.getAttribute('data-id');
   
