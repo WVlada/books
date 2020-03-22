@@ -7,6 +7,7 @@ const Stav = require("../models/stav");
 const accounting = require("accounting-js");
 var PdfPrinter = require("pdfmake");
 var fs = require("fs");
+var path = require('path');
 
 exports.getEditKonto = async (req, res, next) => {
   const user = req.user;
@@ -533,7 +534,7 @@ exports.getZakljucniTrocifreni = async (req, res, next) => {
       sva_konta_sa_prometom[sorted_samo_array_trocifrenih[i]].ukup_p
     ]);
   }
-
+  
   return res.status(200).render("includes/dashboard/zakljucni_trocifreni", {
     pageTitle: "",
     path: "/zakljucni_trocifreni",
@@ -547,7 +548,7 @@ exports.getZakljucniTrocifreni = async (req, res, next) => {
     validationErrors: []
   });
 };
-exports.getZakljucniTrocifreniPDF = async (req, res, next) => {
+exports.getKontoPrometPDF = async (req, res, next) => {
   const user = req.user;
   const current_company_id = req.current_company_id;
   const current_company_year = req.current_company_year;
@@ -637,7 +638,7 @@ exports.getZakljucniTrocifreniPDF = async (req, res, next) => {
     table_header_description: {
       fontSize: 9,
       alignment: "left",
-      fillColor: "#a3a3a3"
+      fillColor: "#b1adbf"
     },
     footer_style: {
       margin: [0, 10, 0, 0],
@@ -660,13 +661,13 @@ exports.getZakljucniTrocifreniPDF = async (req, res, next) => {
     red_zbir: {
       italics: true,
       bold: true,
-      fillColor: "#eeeeee",
+      fillColor: "#dcd7e6",
       alignment: "center"
     },
     table_header: {
       fontSize: 9,
       alignment: "center",
-      fillColor: "#a3a3a3"
+      fillColor: "#b1adbf"
     },
     page_header_left: {
       color: "grey",
@@ -1157,3 +1158,469 @@ exports.getZakljucniPDF = async (req, res, next) => {
   //console.log(objekat);
   return res.status(200).json(objekat);
 };
+exports.getZakljucniTrocifrenPDF = async (req, res, nex) => {
+  const pdfMakePrinter = require('pdfmake/src/printer');
+  
+  const current_company_id = req.current_company_id;
+  const current_company_year = req.current_company_year;
+  const current_company = await Company.findOne({ _id: current_company_id });
+  const datum_start = `01-01-${current_company_year}`;
+  const datum_end = `12-31-${current_company_year}`;
+
+  const sva_konta = await Konto.find({
+    company: current_company_id
+  }).sort("number");
+  
+  const sva_konta_array_idova = sva_konta.map(e => e._id);
+  
+  const stavovi = await Stav.find({
+    company: current_company_id,
+    konto: sva_konta_array_idova,
+    nalog_date: { $gte: datum_start, $lte: datum_end }
+  })
+    .populate({ path: "konto", model: Konto, select: "number name" })
+    .populate({ path: "nalog", model: Nalog, select: "number" });
+
+  const m = stavovi.reduce(function(rv, elem) {
+    //elem je stav
+    (rv[elem.konto.number] = rv[elem.konto.number] || []).push(elem);
+    return rv;
+  }, {});
+  
+  let sva_konta_sa_prometom = {};
+  //console.log(m)
+  for (var x in m) {
+    let poc_d = 0;
+    let poc_p = 0;
+    let dug = 0;
+    let pot = 0;
+    let ukup_d = 0;
+    let ukup_p = 0;
+    let saldo_d = 0;
+    let saldo_p = 0;
+    let name;
+    for (let i = 0; i <= m[x].length - 1; i++) {
+      if (m[x][i].type === "R") {
+        poc_d += m[x][i].duguje;
+        poc_p += m[x][i].potrazuje;
+      } else {
+        dug += m[x][i].duguje;
+        pot += m[x][i].potrazuje;
+      }
+    }
+    ukup_d = dug + poc_d;
+    ukup_p = pot + poc_p;
+    name = m[x][0].konto.name;
+
+    sva_konta_sa_prometom[x] = {}
+    sva_konta_sa_prometom[x].poc_d = poc_d;
+    sva_konta_sa_prometom[x].poc_p = poc_p;
+    sva_konta_sa_prometom[x].dug = dug;
+    sva_konta_sa_prometom[x].pot = pot;
+    sva_konta_sa_prometom[x].ukup_dug = ukup_d;
+    sva_konta_sa_prometom[x].ukup_pot = ukup_p;
+    sva_konta_sa_prometom[x].name = name;
+
+    (sva_konta_sa_prometom['array_konta'] = sva_konta_sa_prometom['array_konta'] || []).push(x)
+    
+    sva_konta_sa_prometom[x].saldo_d = 0;
+    sva_konta_sa_prometom[x].saldo_p = 0;
+
+    ukup_d - ukup_p > 0 ? sva_konta_sa_prometom[x].saldo_d = ukup_d - ukup_p : sva_konta_sa_prometom[x].saldo_p = ukup_p - ukup_d;
+  }
+  
+  sva_konta_sa_prometom.array_konta = sva_konta_sa_prometom.array_konta.sort()
+  
+  for (let i=0; i <= sva_konta_sa_prometom.array_konta.length - 1; i++) {
+    // ubacivanje trocifrenih
+    let x = sva_konta_sa_prometom.array_konta[i].slice(0,3);
+    if (sva_konta_sa_prometom[x]) {
+          sva_konta_sa_prometom[x].dug += sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].dug;
+          sva_konta_sa_prometom[x].pot += sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].pot;
+          sva_konta_sa_prometom[x].poc_d += sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].poc_d;
+          sva_konta_sa_prometom[x].poc_p += sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].poc_p;
+          sva_konta_sa_prometom[x].ukup_dug += sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_dug;
+          sva_konta_sa_prometom[x].ukup_pot += sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_pot;
+    } else {
+          sva_konta_sa_prometom[x] = {};
+          sva_konta_sa_prometom[x].dug = sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].dug;
+          sva_konta_sa_prometom[x].pot = sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].pot;
+          sva_konta_sa_prometom[x].poc_d = sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].poc_d;
+          sva_konta_sa_prometom[x].poc_p = sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].poc_p;
+          sva_konta_sa_prometom[x].ukup_dug = sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_dug;
+          sva_konta_sa_prometom[x].ukup_pot = sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_pot;
+          //sva_konta_sa_prometom.array_konta.push(x)
+    }
+    // ubacivanje jednocifrenih
+    let m = sva_konta_sa_prometom.array_konta[i].slice(0,1);
+    if (sva_konta_sa_prometom[m]) {
+          sva_konta_sa_prometom[m].dug += sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].dug;
+          sva_konta_sa_prometom[m].pot += sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].pot;
+          sva_konta_sa_prometom[m].poc_d += sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].poc_d;
+          sva_konta_sa_prometom[m].poc_p += sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].poc_p;
+          sva_konta_sa_prometom[m].ukup_dug += sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_dug;
+          sva_konta_sa_prometom[m].ukup_pot += sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_pot;
+    } else {
+          sva_konta_sa_prometom[m] = {};
+          sva_konta_sa_prometom[m].dug = sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].dug;
+          sva_konta_sa_prometom[m].pot = sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].pot;
+          sva_konta_sa_prometom[m].poc_d = sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].poc_d;
+          sva_konta_sa_prometom[m].poc_p = sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].poc_p;
+          sva_konta_sa_prometom[m].ukup_dug = sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_dug;
+          sva_konta_sa_prometom[m].ukup_pot = sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_pot;
+    }
+  }
+  // SORT sa ubacivanjem trocifrenih i jednocifrenih
+  sva_konta_sa_prometom.array_konta = sva_konta_sa_prometom.array_konta.sort()
+  console.log(sva_konta_sa_prometom.array_konta)
+  for(let i = 0; i <= sva_konta_sa_prometom.array_konta.length -1; i++){
+    let x;
+    let y;
+    let m; // jednocifreni
+    let z; // jednocifreni
+    if (sva_konta_sa_prometom.array_konta[i].length !=3 && sva_konta_sa_prometom.array_konta[i].length !=1)
+    {
+      x = sva_konta_sa_prometom.array_konta[i].slice(0,3)
+      m = sva_konta_sa_prometom.array_konta[i].slice(0,1) // jednocifreni
+      if (i == sva_konta_sa_prometom.array_konta.length-1){
+        y = undefined;
+        z = undefined; // jednocifreni
+      }
+      else {
+        y = sva_konta_sa_prometom.array_konta[i+1].slice(0,3)
+        z = sva_konta_sa_prometom.array_konta[i+1].slice(0,1)
+      }
+      if (x != y)
+      {
+        sva_konta_sa_prometom.array_konta.splice(i+1, 0, x)
+      }
+      if (m != z)
+      {
+        sva_konta_sa_prometom.array_konta.splice(i+2, 0, m)
+      }
+    }
+  }
+  console.log(sva_konta_sa_prometom.array_konta)
+  // SORT sa ubacivanjem trocifrenih i jednocifrenih
+
+  // ovde mi jos trocifrena konta nemaju saldo
+  for(let i=0; i<= sva_konta_sa_prometom.array_konta.length -1; i++){
+    if (sva_konta_sa_prometom.array_konta[i].length == 3){
+      sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].saldo_d = 0;
+      sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].saldo_p = 0;
+      sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_dug - 
+      sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_pot > 0 ? 
+      sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].saldo_d = 
+      sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_dug - 
+      sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_pot : 
+      sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].saldo_p =
+      sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_pot - sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_dug
+    }
+  }
+  // ovde mi jos jednocifrena konta nemaju saldo
+  for(let i=0; i<= sva_konta_sa_prometom.array_konta.length -1; i++){
+    if (sva_konta_sa_prometom.array_konta[i].length == 1){
+      sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].saldo_d = 0;
+      sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].saldo_p = 0;
+      sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_dug - 
+      sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_pot > 0 ? 
+      sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].saldo_d = 
+      sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_dug - 
+      sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_pot : 
+      sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].saldo_p =
+      sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_pot - sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_dug
+    }
+  }
+  //
+  sva_konta_sa_prometom['0'] ? sva_konta_sa_prometom['0'].name = 'LONG TERM ASSETS' :  undefined
+  sva_konta_sa_prometom['1'] ? sva_konta_sa_prometom['1'].name = 'CURRENT ASSETS' : undefined
+  sva_konta_sa_prometom['2'] ? sva_konta_sa_prometom['2'].name = 'CURRENT ASSETS' : undefined
+  sva_konta_sa_prometom['3'] ? sva_konta_sa_prometom['3'].name = 'CAPITAL' : undefined
+  sva_konta_sa_prometom['4'] ? sva_konta_sa_prometom['4'].name = 'LIABILITIES' : undefined
+  sva_konta_sa_prometom['5'] ? sva_konta_sa_prometom['5'].name = 'EXPENSES' : undefined
+  sva_konta_sa_prometom['6'] ? sva_konta_sa_prometom['6'].name = 'REVENUES' : undefined
+  //
+  console.log('***') 
+  console.log(sva_konta_sa_prometom)
+  console.log('***')
+  //'4601':
+  // { poc_d: 0,
+  //   poc_p: 0,
+  //   dug: 50000,
+  //   pot: 1000000,
+  //   ukup_dug: 50000,
+  //   ukup_pot: 1000000,
+  //   saldo_d: 0,
+  //   saldo_p: 950000 },
+  //array_konta:
+  // [ '020',
+  //   '0201',
+  //   '200',
+  //   '2001',
+  objekat = {
+    defaultStyle: {
+      font: 'Courier'
+    },
+    content: [ { 
+      table: {
+        widths: ['*', '*', '*', '*', '*', '*', '*', '*'],
+        body: [
+            [{ text:'Start', colSpan: 2}, {},
+            { text:'Turnover', colSpan: 2}, {},
+            { text:'Total', colSpan: 2}, {},
+            { text:'Summary', colSpan: 2}, {} ],
+            [{text:'owes'},{text:'claims'},{text:'owes'},{text:'claims'},{text:'owes'},{text:'claims'},{text:'owes'},{text:'claims'}]
+          ]
+        
+    },
+    style: "closing_sheet_header_table",
+    layout: 'noBorders'}
+    ],
+    pageMargins: [40, 40, 40, 40],
+    pageOrientation: 'landscape',
+  };
+  
+  let value_array = []
+  let column_header_array = []
+  for (let i = 0; i <= sva_konta_sa_prometom.array_konta.length-1; i ++){
+    //let sliced = sva_konta_sa_prometom.array_konta[i].slice(0,3);
+    value_array = []
+    column_header_array = []
+    if (sva_konta_sa_prometom.array_konta[i].length == 3) {
+      current_trocifreni = sva_konta_sa_prometom.array_konta[i];
+      column_header_array.push(
+        
+        { text: `${current_trocifreni}`, style: "cell_header_trocifreni" },
+        { text: `Group ${current_trocifreni}`, style: "cell_header_trocifreni_description", colSpan: 7 }, {},{},{},{},{},{}
+        
+      )
+      value_array.push(
+        { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].poc_d, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number_trocifreni" },
+        { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].poc_p, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number_trocifreni" },
+        { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].dug, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number_trocifreni" },
+        { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].pot, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number_trocifreni" },
+        { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_dug, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number_trocifreni" },
+        { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_pot, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number_trocifreni" },
+        { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].saldo_d, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number_trocifreni" },
+        { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].saldo_p, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number_trocifreni" }
+      )
+      objekat.content.push({
+        table: {
+          widths: [81, 81, 81, 81, 81, 81, 81, 81],
+          body: [column_header_array, value_array]
+        },
+        style: "table_style_trocifreni",
+        layout: "lightHorizontalLines"
+      });
+    } 
+    //else if (sva_konta_sa_prometom.array_konta[i].length != 1) {
+    //  column_header_array.push(
+    //    
+    //    { text: `${sva_konta_sa_prometom.array_konta[i]}`, style: "cell_header" },
+    //    { text: `${sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].name}`, style: "cell_header_description", colSpan: 7 }, {},{},{},{},{},{}
+    //    
+    //  )
+    //  value_array.push(
+    //    { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].poc_d, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number" },
+    //    { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].poc_p, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number" },
+    //    { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].dug, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number" },
+    //    { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].pot, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number" },
+    //    { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_dug, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number" },
+    //    { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_pot, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number" },
+    //    { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].saldo_d, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number" },
+    //    { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].saldo_p, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number" }
+    //  )
+    //  objekat.content.push({
+    //    table: {
+    //      widths: [81, 81, 81, 81, 81, 81, 81, 81],
+    //      body: [column_header_array, value_array]
+    //    },
+    //    style: "table_style",
+    //    layout: "lightHorizontalLines"
+    //  });
+    //} else { // jednocifreni
+    //  column_header_array.push(
+    //    
+    //    { text: `${sva_konta_sa_prometom.array_konta[i]}`, style: "cell_header_jednocifren" },
+    //    { text: `${sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].name}`, style: "cell_header_jednocifren_description", colSpan: 7 }, {},{},{},{},{},{}
+    //    
+    //  )
+    //  value_array.push(
+    //    { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].poc_d, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number_jednocifren" },
+    //    { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].poc_p, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number_jednocifren" },
+    //    { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].dug, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number_jednocifren" },
+    //    { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].pot, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number_jednocifren" },
+    //    { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_dug, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number_jednocifren" },
+    //    { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].ukup_pot, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number_jednocifren" },
+    //    { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].saldo_d, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number_jednocifren" },
+    //    { text: accounting.formatNumber(sva_konta_sa_prometom[sva_konta_sa_prometom.array_konta[i]].saldo_p, {precision: 2, thousand: '.', decimal: ','}), style: "cell_number_jednocifren" }
+    //  )
+    //  objekat.content.push({
+    //    table: {
+    //      widths: [81, 81, 81, 81, 81, 81, 81, 81],
+    //      body: [column_header_array, value_array]
+    //    },
+    //    style: "table_style",
+    //    layout: "lightHorizontalLines",
+    //    pageBreak: 'after',
+    //    pageBreakAfter: function (currentNode, followingNodesOnPage,
+    //      nodesOnNextPage, previousNodesOnPage) {
+    //        console.log(currentNode)
+    //      return currentNode.pageNumbers.length < 1;
+    //  }
+    //  });
+    //  // jos sam u jednocifrenom elsu
+    //  
+//
+    //}
+   
+  }
+  objekat.styles = {
+    cell_header_jednocifren: {
+      alignment: "center",
+      fillColor: "#b1adbf"
+    },
+    cell_header_jednocifren_description: {
+      alignment: "left",
+      fillColor: "#b1adbf"
+    },
+    cell_number_jednocifren: {
+      alignment: "right",
+      fillColor: "#b1adbf"
+    },
+    cell_header: {
+      fontSize: 9,
+      alignment: "right",
+      fillColor: "#f6f5f8"
+    },
+    cell_header_description: {
+      fontSize: 9,
+      alignment: "left",
+      fillColor: "#f6f5f8"
+    },
+    cell_header_trocifreni: {
+      fontSize: 9,
+      alignment: "center",
+      fillColor: "#dcd7e6",
+      margin: [15,0,0,0]
+    },
+    cell_header_trocifreni_description: {
+      fontSize: 9,
+      alignment: "left",
+      fillColor: "#dcd7e6"
+    },
+    cell_number: {
+      alignment: "right",
+      fillColor: "#f6f5f8",
+      bold: false
+    },
+    cell_number_trocifreni: {
+      alignment: "right",
+      fillColor: "#dcd7e6",
+      bold: true
+    },
+    page_header_left: {
+      color: "grey",
+      margin: [15, 15, 0, 0],
+      italics: true,
+      fontSize: 10
+    },
+    page_header_center: {
+      color: "black",
+      alignment: "center",
+      margin: [0, 15, 0, 0],
+      italics: false,
+      bold: true,
+      fontSize: 10
+    },
+    page_header_right: {
+      color: "grey",
+      margin: [0, 15, 15, 0],
+      italics: true,
+      alignment: "right",
+      fontSize: 10
+    },
+    closing_sheet_header_table: {
+      fontSize: 9,
+      color: "white",
+      alignment: 'center',
+      fillColor: "#b1adbf",
+      //fillColor: "#dcd7e6",
+      margin: [0, 0, 0, 15]
+    },
+    footer_style: {
+      margin: [0, 10, 0, 0],
+      alignment: "center"
+    },
+    acc_number_and_name: {
+      fontSize: 10
+    },
+    table_style: {
+      fontSize: 8,
+      bold: false,
+    },
+    table_style_trocifreni: {
+      fontSize: 8,
+      bold: false,
+      margin: [0, 0, 0, 15] //// margin: [left, top, right, bottom]
+    },
+    cell_description: {
+      alignment: "left"
+    }
+  };
+//
+  objekat.header = [
+    {
+      columns: [
+        {
+          text: `${current_company.name}, ${current_company_year} `,
+          style: "page_header_left"
+        },
+        {
+           text: `3 - digit closing sheet \n \n from ${datum_start} to ${datum_end}`, style: "page_header_center" 
+        },
+        {
+          text: `Date: ${new Date().getDate()}-${new Date().getMonth() +
+            1}-${new Date().getUTCFullYear()} `,
+          style: "page_header_right"
+        }
+      ]
+    }
+  ];
+
+
+
+
+  function generatePdf(objekat, callback) {
+    try {
+      var fontDescriptors = {
+        Courier: {
+          normal: 'Courier',
+          bold: 'Courier-Bold',
+          italics: 'Courier-Oblique',
+          bolditalics: 'Courier-BoldOblique'
+        }
+      };
+      const printer = new pdfMakePrinter(fontDescriptors);
+      const doc = printer.createPdfKitDocument(objekat);
+      let chunks = [];
+      doc.on('data', (chunk) => {
+        chunks.push(chunk);
+      });
+      doc.on('end', () => {
+        callback(Buffer.concat(chunks))
+      });
+      doc.end();
+    } catch(err) {
+      throw(err);
+    }
+  };
+  generatePdf(objekat, (response) => {
+    res.setHeader('Content-Type', 'application/pdf');
+    res.send(response); 
+  });
+}
+
+exports.getHTMLToPDF = (req, res, nex) => {
+  
+}

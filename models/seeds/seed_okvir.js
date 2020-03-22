@@ -47,8 +47,8 @@ await Okvir.create({ company: company, number: "47",  name: "VAT payable",      
 await Okvir.create({ company: company, number: "48",  name: "Other taxes, and contributions", type: "P" })
 await Okvir.create({ company: company, number: "49",  name: "Passive accruals",                     type: "P" })
  
-await Okvir.create({ company: company, number: "5",   name: "Expenses",     type: "P" })
-await Okvir.create({ company: company, number: "6",   name: "Revenues",     type: "P" })
+await Okvir.create({ company: company, number: "5",   name: "EXPENSES",     type: "P" })
+await Okvir.create({ company: company, number: "6",   name: "REVENUES",     type: "P" })
 console.log("Okvir seed completed.")
 }
 

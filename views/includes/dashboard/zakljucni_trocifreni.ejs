@@ -30,6 +30,7 @@
     <div class="table_zakljucni_trocifren_donji_deo">
       <span title="Enter search term to filter table rows."><i class="fas fa-filter" style="vertical-align:middle;margin: 1px;color: #6d687e;margin-left: 10px;margin-right: 10px;"></i></span>
       <input title="Enter search term to filter table rows." id="zakljucni_trocifren_text_input" class="zakljucni_trocifren_text_input" type=text></input>
+     <span id="zakljucni_trocifren_print_to_pdf" title="Print to PDF" class="zakljucni_list_print_to_pdf_icon"> <a id="a_zakljucni_trocifren_pdf" href="/zakljucni_trocifren_pdf"><i class="fas fa-print"></i></span></a>
     </div>
   
 <script>
@@ -39,7 +40,7 @@ $(document).off("keyup", "#zakljucni_trocifren_text_input").on("keyup", "#zaklju
     $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
   });
 })
-$(document).off("dblclick", "tr.zakljucni_trocifren_trocifren").on("dblclick", "tr.zakljucni_trocifren_trocifren", function() {
+$(document).off("dblclick", "tr.zakljucni_trocifren").on("dblclick", "tr.zakljucni_trocifren", function() {
   var zakljucni_trocifren_row = $(this);
   var konto = this.getAttribute('data-id');
   
@@ -64,6 +65,34 @@ $(document).off("dblclick", "tr.zakljucni_trocifren_trocifren").on("dblclick", "
     }
   });
 });
+//$(document).off("click", "#zakljucni_trocifren_print_to_pdf").on("click", "#zakljucni_trocifren_print_to_pdf", function() {
+//  var zakljucni_list_row = $(this);
+//  var konto = this.getAttribute('data-id');
+//  
+//  if (zakljucni_list_row.data("requestRunning")) {
+//          return;
+//  }
+//  zakljucni_list_row.data("requestRunning", true);
+//  var win = window.open('', '_blank');
+//  var content = document.getElementById('table')
+//  
+//  $.ajax({
+//    url: "/zakljucni_trocifren_pdf",
+//    type: "get",
+//    dataType: "html",
+//    complete: function() {
+//      zakljucni_list_row.data("requestRunning", false);
+//    },
+//    success: function(json) {
+//      //$("div.centar").fadeOut(0).html(html).fadeIn(500)
+//      pdfMake.createPdf(JSON.parse(json)).open({}, win);
+//      $('#loader').fadeOut();
+//    },
+//    beforeSend: function(){
+//      $('#loader').fadeIn(200)
+//    }
+//  });
+//});
 </script>
 </div>
   

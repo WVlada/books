@@ -44,7 +44,7 @@
     <div class="table_zakljucni_list_donji_deo">
       <span title="Enter search term to filter table rows."><i class="fas fa-filter" style="vertical-align:middle;margin: 1px;color: #6d687e;margin-left: 10px;margin-right: 10px;"></i></span>
       <input title="Enter search term to filter table rows." id="zakljucni_list_text_input" class="zakljucni_list_text_input" type=text></input>
-      <span id="zakljucni_trocifren_print_to_pdf" title="Print to PDF" class="zakljucni_list_print_to_pdf_icon"><i class="fas fa-print"></i></span>
+      <span id="zakljucni_print_to_pdf" title="Print to PDF" class="zakljucni_list_print_to_pdf_icon"><i class="fas fa-print"></i></span>
     </div>
     
 <script>
@@ -79,7 +79,7 @@ $(document).off("dblclick", "tr.zakljucni_list_trocifren").on("dblclick", "tr.za
     }
   });
 });
-$(document).off("click", "#zakljucni_trocifren_print_to_pdf").on("click", "#zakljucni_trocifren_print_to_pdf", function() {
+$(document).off("click", "#zakljucni_print_to_pdf").on("click", "#zakljucni_print_to_pdf", function() {
   var zakljucni_list_row = $(this);
   var konto = this.getAttribute('data-id');
   
