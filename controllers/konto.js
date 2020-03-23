@@ -224,21 +224,44 @@ exports.postKontoPromet = async (req, res, next) => {
     validationErrors: []
   });
 };
+exports.getZakljucniListOdabir = async (req, res, next) => {
+  const user = req.user;
+  const current_company_id = req.current_company_id;
+  const current_company_year = req.current_company_year;
+  const current_company = await Company.findOne({ _id: current_company_id });
+  const datum_start = `${current_company_year}-01-01`
+  console.log(datum_start)
+  return res.status(200).render("includes/dashboard/zakljucni_list_odabir", {
+    pageTitle: "",
+    path: "/zakljucni_list_odabir",
+    hasError: false,
+    user: user,
+    datum_start: datum_start,
+    current_company: current_company,
+    current_company_year: current_company_year,
+    successMessage: null,
+    infoMessage: null,
+    validationErrors: []
+  });
+};
 exports.getZakljucniList = async (req, res, next) => {
   const user = req.user;
   const current_company_id = req.current_company_id;
   const current_company_year = req.current_company_year;
   const current_company = await Company.findOne({ _id: current_company_id });
 
-  const datum_start = `01-01-${current_company_year}`;
-  const datum_end = `12-31-${current_company_year}`;
+  const datum_start = `${current_company_year}-01-01`;
+  let datum_end;
+  if (req.query.datumend){
+    datum_end = req.query.datumend;
+  } else {
+    datum_end = `${current_company_year}-12-31`;
+  }
   
-  //console.log(req.body);
   const sva_konta = await Konto.find({
     company: current_company_id
   }).sort("number");
 
-  
   const sva_konta_array_idova = sva_konta.map(e => e._id);
   const sva_konta_array_brojeva = sva_konta.map(e => e.number);
   
@@ -426,7 +449,7 @@ exports.getZakljucniList = async (req, res, next) => {
       }
     }
   }
-  console.log(array);
+  //console.log(array);
   //console.log("333");
   //console.log(aray_konta_name_and_number);
   //console.log("333");
@@ -436,6 +459,7 @@ exports.getZakljucniList = async (req, res, next) => {
     hasError: false,
     user: user,
     array: array,
+    datum_end: datum_end,
     trocifreni_obj: trocifreni_obj,
     current_company: current_company,
     accounting: accounting,
@@ -444,14 +468,39 @@ exports.getZakljucniList = async (req, res, next) => {
     validationErrors: []
   });
 };
-exports.getZakljucniTrocifreni = async (req, res, next) => {
+exports.getZakljucniListTrocifrenOdabir = async (req, res, next) => {
+  const user = req.user;
+  const current_company_id = req.current_company_id;
+  const current_company_year = req.current_company_year;
+  const current_company = await Company.findOne({ _id: current_company_id });
+  const datum_start = `${current_company_year}-01-01`
+  
+  return res.status(200).render("includes/dashboard/zakljucni_list_trocifren_odabir", {
+    pageTitle: "",
+    path: "/zakljucni_list_trocifren_odabir",
+    hasError: false,
+    user: user,
+    datum_start: datum_start,
+    current_company: current_company,
+    current_company_year: current_company_year,
+    successMessage: null,
+    infoMessage: null,
+    validationErrors: []
+  });
+};
+exports.getZakljucniTrocifren = async (req, res, next) => {
   const user = req.user;
   const current_company_id = req.current_company_id;
   const current_company_year = req.current_company_year;
   const current_company = await Company.findOne({ _id: current_company_id });
   
-  const datum_start = `01-01-${current_company_year}`;
-  const datum_end = `12-31-${current_company_year}`;
+  const datum_start = `${current_company_year}-01-01`;
+  let datum_end;
+  if (req.query.datumend){
+    datum_end = req.query.datumend;
+  } else {
+    datum_end = `${current_company_year}-12-31`;
+  }
 
   const sva_konta = await Konto.find({
     company: current_company_id
@@ -536,11 +585,12 @@ exports.getZakljucniTrocifreni = async (req, res, next) => {
     ]);
   }
   
-  return res.status(200).render("includes/dashboard/zakljucni_trocifreni", {
+  return res.status(200).render("includes/dashboard/zakljucni_trocifren", {
     pageTitle: "",
-    path: "/zakljucni_trocifreni",
+    path: "/zakljucni_trocifren",
     hasError: false,
     user: user,
+    datum_end: datum_end,
     full_trocifreni: full_trocifreni,
     current_company: current_company,
     accounting: accounting,
@@ -727,8 +777,16 @@ exports.getZakljucniPDF = async (req, res, next) => {
   const current_company_id = req.current_company_id;
   const current_company_year = req.current_company_year;
   const current_company = await Company.findOne({ _id: current_company_id });
-  const datum_start = `01-01-${current_company_year}`;
-  const datum_end = `12-31-${current_company_year}`;
+  const datum_start = `${current_company_year}-01-01`;
+  
+  //console.log(req.query)
+  let datum_end;
+  if (req.query.datumend) {
+    datum_end = req.query.datumend
+  } else { 
+    datum_end = `${current_company_year}-12-31`;
+  }
+  
 
   const sva_konta = await Konto.find({
     company: current_company_id
@@ -1022,13 +1080,13 @@ exports.getZakljucniPDF = async (req, res, next) => {
         },
         style: "table_style",
         layout: "lightHorizontalLines",
-        pageBreak: 'after',
-        pageBreakAfter: function (currentNode, followingNodesOnPage,
-          nodesOnNextPage, previousNodesOnPage) {
-            console.log(currentNode)
-          return currentNode.pageNumbers.length < 1;
-      }
-      });
+        pageBreak: 'after'//,
+        //pageBreakAfter: function (currentNode, followingNodesOnPage,
+        //  nodesOnNextPage, previousNodesOnPage) {
+        //    console.log(currentNode)
+        //  return currentNode.pageNumbers.length < 1;
+        //  }
+        });
       // jos sam u jednocifrenom elsu
       
 
@@ -1165,8 +1223,13 @@ exports.getZakljucniTrocifrenPDF = async (req, res, nex) => {
   const current_company_id = req.current_company_id;
   const current_company_year = req.current_company_year;
   const current_company = await Company.findOne({ _id: current_company_id });
-  const datum_start = `01-01-${current_company_year}`;
-  const datum_end = `12-31-${current_company_year}`;
+  const datum_start = `${current_company_year}-01-01`;
+  let datum_end;
+  if (req.query.datumend){
+    datum_end = req.query.datumend;
+  } else {
+    datum_end = `${current_company_year}-12-31`;
+  }
 
   const sva_konta = await Konto.find({
     company: current_company_id

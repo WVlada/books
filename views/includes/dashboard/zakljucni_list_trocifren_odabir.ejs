@@ -1,0 +1,151 @@
+<div id="zakljucni_list_trocifren_odabir_modal_background"></div>
+
+<div class="zakljucni_list_trocifren_odabir_modal_placeholder">
+  <div class="modal_title_bar">
+    <span class="modal_title_bar_span">Korisnik: <%= user.email %></span>
+    <% if (infoMessage) { %>
+    <div id="user-message" class="user-message-div">
+      <div class="user-message user-message--info">
+        <ul class="user-message-error-list">
+          <li><%= infoMessage %></li>
+        </ul>
+      </div>
+    </div>
+    <% } %> <% if (validationErrors.length > 0) { %>
+    <div id="user-message" class="user-message-div">
+      <div class="user-message user-message--error">
+        <ul class="user-message-error-list">
+          <% validationErrors.forEach(error=>{ %>
+          <li><%= error.msg %></li>
+          <% }) %>
+        </ul>
+      </div>
+    </div>
+    <% } %> <% if (successMessage) { %>
+    <div id="user-message" class="user-message-div">
+      <div class="user-message user-message--success">
+        <ul class="user-message-error-list">
+          <li><%= successMessage %></li>
+        </ul>
+      </div>
+    </div>
+    <% } %>
+  </div>
+
+  <div id="zakljucni_list_trocifren_odabir_dijalog">
+    <form
+      id="zakljucni_list_trocifren_odabir_form"
+      class="zakljucni_list_trocifren_odabir_form"
+      action="/zakljucni_list"
+      method="POST"
+    >
+      <div class="row">
+        
+        <div class="col-md">
+          <div class="zakljucni_list_trocifren_odabir_slika_div">
+            <p class="zakljucni_list_trocifren_odabir_slika_text_iznad">
+              3 - digit Closing sheet <br>
+              from - to date
+            </p>
+            <img
+              class="zakljucni_list_trocifren_odabir_slika"
+              src="../../images/dashboard/reports1.png"
+              alt="Add account"
+            />
+          </div>
+        </div>
+        <div class="col-md">
+            <p class="zakljucni_list_trocifren_odabir_slika_text_ispod">
+              Select start date:
+            </p>
+            <div class="form-control">
+              
+              <input disabled name="datumstart" id="datum_start" type="date" class="novi_nalog_input" value="<%= datum_start %>">
+            </div>
+            <p class="zakljucni_list_trocifren_odabir_slika_text_ispod">
+              Select end date:
+            </p>
+            <div class="form-control">
+              <input name="datumend" id="datum_end" type="date" class="novi_nalog_input" value="">
+        </div>
+          </div>
+        </div>
+        
+        <div class="row">
+        
+          <div class="col-md">
+            <p class="zakljucni_list_trocifren_odabir_slika_text_ispod">
+              
+            </p>
+            <div class="form-control zakljucni_list_trocifren_odabir_form-control">
+              
+            </div>
+            <p class="zakljucni_list_trocifren_odabir_slika_text_ispod">
+              
+            </p>
+            <div class="form-control zakljucni_list_trocifren_odabir_form-control">
+              
+          </div>
+        </div>
+          
+        </div>
+        
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+      
+      </form>
+    </div>
+    
+<div class="modal_footer">
+  <div class="modal_footer_button_set">
+    <button id="zakljucni_list_trocifren_odabir_ok_form_button">
+      OK
+    </button>
+    <button id="zakljucni_list_trocifren_odabir_cancel_form_button">
+      Cancel
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+$(document).off('click', '#zakljucni_list_trocifren_odabir_ok_form_button').on('click', '#zakljucni_list_trocifren_odabir_ok_form_button', function()        
+  { var me = $(this);
+    var cancel_button = document.getElementById("zakljucni_list_trocifren_odabir_cancel_form_button")
+    var error_inputs = []
+    if (me.data('requestRunning')) 
+      { return; }
+    me.data('requestRunning', true);
+    cancel_button.setAttribute('requestRunning', true);
+    
+    $.ajax({
+        type: 'GET',
+        url: '/zakljucni_trocifren',
+        data: $('#zakljucni_list_trocifren_odabir_form').serialize(), 
+        success: function(response) {
+          var modal_placeholder = document.getElementById("zakljucni_list_trocifren_odabir_placeholder")
+          modal_placeholder.innerHTML = "";
+          $("div.centar").fadeOut(0).html(response).fadeIn(500)
+          $('#loader').fadeOut();
+         },
+         error: function(error){
+          me.data('requestRunning', false);
+          $('#loader').fadeOut();
+         },
+         beforeSend: function(){
+          $('#loader').fadeIn(200)
+        }
+    });
+  
+  });
+$(document).off('click', '#zakljucni_list_trocifren_odabir_cancel_form_button').on('click', '#zakljucni_list_trocifren_odabir_cancel_form_button', function()        
+  { 
+    var modal_placeholder = document.getElementById("zakljucni_list_trocifren_odabir_placeholder")
+    $(modal_placeholder).fadeOut(700);
+      setTimeout(function() {
+        modal_placeholder.innerHTML = "";
+   }, 1500);
+  }
+);
+
+  </script>
+</div>

@@ -1,0 +1,131 @@
+#zakljucni_list_odabir_modal_background {
+  z-index: 100;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #aaa;
+  opacity: 0.3;
+  text-align: center;
+}
+.zakljucni_list_odabir_modal_placeholder {
+  position: relative;
+  margin: 0px auto;
+  height: auto;
+  width: 550px;
+  top: 50px;
+  z-index: 101;
+  border: 1px solid #c5c5c5;
+  padding: 1px;
+  outline: 0;
+  opacity: 1 !important;
+  background-color: #f8f8f8;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  border-bottom-right-radius: 2px;
+  border-bottom-left-radius: 2px;
+}
+#zakljucni_list_odabir_placeholder {
+  position: absolute;
+  margin: 0px auto;
+  top: 50px;
+  width: 100%;
+}
+#zakljucni_list_odabir_dijalog {
+  background-image: -webkit-linear-gradient(top, #fff9e8 0%, #d8d9ea 100%);
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  border-bottom-right-radius: 2px;
+  border-bottom-left-radius: 2px;
+  padding-bottom: 30px;
+}
+.zakljucni_list_odabir_slika_div {
+  text-align: center;
+  padding-top: 10px;
+}
+.zakljucni_list_odabir_slika {
+  width: 100px;
+  height: 100px;
+}
+.zakljucni_list_odabir_slika_text {
+  font-size: 14px;
+  font-weight: 500;
+  color: #49435b;
+  margin-top: 15px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+.zakljucni_list_odabir_slika_text_iznad {
+  font-size: 14px;
+  font-weight: 700;
+  color: #49435b;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+.zakljucni_list_odabir_slika_text_ispod {
+  margin-top: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #919094;
+  margin-bottom: 0px;
+  padding-left: 12px;
+}
+
+.new_nalog_form {
+  padding-top: 10px;
+}
+.form-control {
+  font-size: 13px;
+  border: none;
+  background-color: transparent;
+  height: auto !important;
+}
+.zakljucni_list_odabir_form-control {
+  padding: 2px;
+}
+.zakljucni_list_odabir_input {
+  padding-left: 2px;
+  border-radius: 2px;
+  border: 2px solid #d8d9ea;
+  font-size: 13px;
+  height: 25px;
+  width: 100px;
+}
+.zakljucni_list_odabir_input_date {
+  width: 130px;
+}
+.zakljucni_list_odabir_input_konto_number {
+  margin-left: 10px;
+}
+.zakljucni_list_odabir_input_error {
+  padding-left: 2px;
+  border-radius: 2px;
+  border: 2px solid rgb(214, 147, 147);
+  font-size: 13px;
+  height: 25px;
+  width: 100px;
+}
+.zakljucni_list_odabir_horizontal_input_div {
+  margin-top: 6px;
+}
+.zakljucni_list_odabir_horizontal_input {
+  display: inline;
+}
+.zakljucni_list_odabir_konto_name {
+  padding: 10px;
+}
+#odabir_konta_start {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 500px;
+  height: 30px;
+}
+#odabir_konta_end {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 500px;
+  height: 30px;
+}

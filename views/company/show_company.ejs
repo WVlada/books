@@ -100,12 +100,12 @@
 				</finbutton>
 			</div>
 			<div class="dole_grid_item_6">	
-				<finbutton id="zakljucni_list">
+				<finbutton id="zakljucni_list_odabir">
 					Cls. sheet
 				</finbutton>
 			</div>
 			<div class="dole_grid_item_6">	
-					<finbutton id="zakljucni_trocifreni">
+					<finbutton id="zakljucni_list_trocifren_odabir">
 						3-Cls. sheet
 					</finbutton>
 			</div>
@@ -134,6 +134,10 @@
 <div id="konto_placeholder">
 </div>
 <div id="konto_promet_odabir_placeholder">
+</div>
+<div id="zakljucni_list_odabir_placeholder">
+</div>
+<div id="zakljucni_list_trocifren_odabir_placeholder">
 </div>
 
 <script>
@@ -256,15 +260,15 @@ $(document)
         });
       });
       $(document)
-      .off("click", "#zakljucni_list")
-      .on("click", "#zakljucni_list", function() {
+      .off("click", "#zakljucni_list_odabir")
+      .on("click", "#zakljucni_list_odabir", function() {
         var me = $(this);
         if (me.data("requestRunning")) {
           return;
         }
         me.data("requestRunning", true);
         $.ajax({
-          url: "/zakljucni_list",
+          url: "/zakljucni_list_odabir",
           type: "GET",
           data: {
           },
@@ -273,7 +277,7 @@ $(document)
             me.data("requestRunning", false);
           },
           success: function(html) {
-            $("div.centar").fadeOut(0).html(html).fadeIn(500)
+            $("#zakljucni_list_odabir_placeholder").fadeOut(0).html(html).fadeIn(500)
             $('#loader').fadeOut();
           },
           beforeSend: function(){
@@ -282,15 +286,15 @@ $(document)
         });
       });
       $(document)
-      .off("click", "#zakljucni_trocifreni")
-      .on("click", "#zakljucni_trocifreni", function() {
+      .off("click", "#zakljucni_list_trocifren_odabir")
+      .on("click", "#zakljucni_list_trocifren_odabir", function() {
         var me = $(this);
         if (me.data("requestRunning")) {
           return;
         }
         me.data("requestRunning", true);
         $.ajax({
-          url: "/zakljucni_trocifreni",
+          url: "/zakljucni_list_trocifren_odabir",
           type: "GET",
           data: {
           },
@@ -299,7 +303,7 @@ $(document)
             me.data("requestRunning", false);
           },
           success: function(html) {
-            $("div.centar").fadeOut(0).html(html).fadeIn(500)
+            $("#zakljucni_list_trocifren_odabir_placeholder").fadeOut(0).html(html).fadeIn(500)
             $('#loader').fadeOut();
           },
           beforeSend: function(){
@@ -307,6 +311,32 @@ $(document)
         }
         });
       });
+      //$(document)
+      //.off("click", "#zakljucni_trocifreni")
+      //.on("click", "#zakljucni_trocifreni", function() {
+      //  var me = $(this);
+      //  if (me.data("requestRunning")) {
+      //    return;
+      //  }
+      //  me.data("requestRunning", true);
+      //  $.ajax({
+      //    url: "/zakljucni_trocifreni",
+      //    type: "GET",
+      //    data: {
+      //    },
+      //    dataType: "html",
+      //    complete: function() {
+      //      me.data("requestRunning", false);
+      //    },
+      //    success: function(html) {
+      //      $("div.centar").fadeOut(0).html(html).fadeIn(500)
+      //      $('#loader').fadeOut();
+      //    },
+      //    beforeSend: function(){
+      //    $('#loader').fadeIn(200)
+      //  }
+      //  });
+      //});
       $(document).off("click", "#print_to_pdf_dole").on("click", "#print_to_pdf_dole", function() {
   var zakljucni_list_row = $(this);
   

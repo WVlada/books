@@ -44,7 +44,7 @@
     <div class="table_zakljucni_list_donji_deo">
       <span title="Enter search term to filter table rows."><i class="fas fa-filter" style="vertical-align:middle;margin: 1px;color: #6d687e;margin-left: 10px;margin-right: 10px;"></i></span>
       <input title="Enter search term to filter table rows." id="zakljucni_list_text_input" class="zakljucni_list_text_input" type=text></input>
-      <span id="zakljucni_print_to_pdf" title="Print to PDF" class="zakljucni_list_print_to_pdf_icon"><i class="fas fa-print"></i></span>
+      <span data-datumend="<%= datum_end %>" id="zakljucni_print_to_pdf" title="Print to PDF" class="zakljucni_list_print_to_pdf_icon"><i class="fas fa-print"></i></span>
     </div>
     
 <script>
@@ -89,10 +89,12 @@ $(document).off("click", "#zakljucni_print_to_pdf").on("click", "#zakljucni_prin
   zakljucni_list_row.data("requestRunning", true);
   var win = window.open('', '_blank');
   var content = document.getElementById('table')
+  var datumend = this.getAttribute('data-datumend');
   
   $.ajax({
     url: "/zakljucni_pdf",
     type: "get",
+    data: {datumend: datumend},
     dataType: "html",
     complete: function() {
       zakljucni_list_row.data("requestRunning", false);

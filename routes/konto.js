@@ -13,7 +13,10 @@ router.get("/konto_promet_odabir", isAuth, kontoController.getKontoPrometOdabir)
 router.post("/konto_promet", isAuth, kontoController.postKontoPromet);
 
 router.get("/zakljucni_list", isAuth, kontoController.getZakljucniList);
-router.get("/zakljucni_trocifreni", isAuth, kontoController.getZakljucniTrocifreni);
+router.get("/zakljucni_list_odabir", isAuth, kontoController.getZakljucniListOdabir);
+
+router.get("/zakljucni_trocifren", isAuth, kontoController.getZakljucniTrocifren);
+router.get("/zakljucni_list_trocifren_odabir", isAuth, kontoController.getZakljucniListTrocifrenOdabir);
 router.get("/zakljucni_pdf", isAuth, kontoController.getZakljucniPDF);
 router.get("/zakljucni_trocifren_pdf", isAuth, kontoController.getZakljucniTrocifrenPDF);
 
