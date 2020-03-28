@@ -143,7 +143,7 @@ $(document).on("click", "#zakljucni", function() {
 $(document).on("click", "#accordion_zakljucni_trocifren", function() {
   var accordion_zakljucni_trocifren_dugme = $(this);
   $.ajax({
-    url: "/zakljucni_trocifreni",
+    url: "/zakljucni_trocifren",
     type: "get",
     data: { "": "" },
     dataType: "html",

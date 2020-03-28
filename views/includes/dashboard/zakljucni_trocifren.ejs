@@ -40,31 +40,31 @@ $(document).off("keyup", "#zakljucni_trocifren_text_input").on("keyup", "#zaklju
     $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
   });
 })
-$(document).off("dblclick", "tr.zakljucni_trocifren").on("dblclick", "tr.zakljucni_trocifren", function() {
-  var zakljucni_trocifren_row = $(this);
-  var konto = this.getAttribute('data-id');
-  
-  if (zakljucni_trocifren_row.data("requestRunning")) {
-          return;
-  }
-  zakljucni_trocifren_row.data("requestRunning", true);
-  $.ajax({
-    url: "/show_konto",
-    type: "get",
-    data: { konto_id: konto },
-    dataType: "html",
-    complete: function() {
-      zakljucni_trocifren_row.data("requestRunning", false);
-    },
-    success: function(html) {
-      $("div.centar").fadeOut(0).html(html).fadeIn(500)
-      $('#loader').fadeOut();
-    },
-    beforeSend: function(){
-      $('#loader').fadeIn(200)
-    }
-  });
-});
+//$(document).off("dblclick", "tr.zakljucni_trocifren").on("dblclick", "tr.zakljucni_trocifren", function() {
+//  var zakljucni_trocifren_row = $(this);
+//  var konto = this.getAttribute('data-id');
+//  
+//  if (zakljucni_trocifren_row.data("requestRunning")) {
+//          return;
+//  }
+//  zakljucni_trocifren_row.data("requestRunning", true);
+//  $.ajax({
+//    url: "/show_konto",
+//    type: "get",
+//    data: { konto_id: konto },
+//    dataType: "html",
+//    complete: function() {
+//      zakljucni_trocifren_row.data("requestRunning", false);
+//    },
+//    success: function(html) {
+//      $("div.centar").fadeOut(0).html(html).fadeIn(500)
+//      $('#loader').fadeOut();
+//    },
+//    beforeSend: function(){
+//      $('#loader').fadeIn(200)
+//    }
+//  });
+//});
 //$(document).off("click", "#zakljucni_trocifren_print_to_pdf").on("click", "#zakljucni_trocifren_print_to_pdf", function() {
 //  var zakljucni_list_row = $(this);
 //  var konto = this.getAttribute('data-id');

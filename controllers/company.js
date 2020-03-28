@@ -172,7 +172,7 @@ exports.postNewCompanyRoot = (req, res, next) => {
 };
 // AJAX
 const NALOGS_PER_PAGE = 22;
-exports.getDnevnikNaloga = (req, res, next) => {
+exports.getDnevnikNaloga = async (req, res, next) => {
   const user = req.user;
   const current_company_id = req.current_company_id;
   const current_company_year = req.current_company_year;
@@ -186,71 +186,53 @@ exports.getDnevnikNaloga = (req, res, next) => {
   console.log(req.query.page);
   console.log(page);
   console.log("/get_dnevnik");
-  let totalNalogs;
-  Nalog.find({ company: current_company_id, year: current_company_year })
-    .countDocuments()
-    .then(numOfNalogs => {
-      totalNalogs = numOfNalogs;
-      if (totalNalogs == 0) {
-        return res.status(200).render("includes/dashboard/nothing_to_display", {
-          pageTitle: "",
-          path: "/nothing_to_display",
-          hasError: false,
-          successMessage: null,
-          infoMessage: "There are no ledger entries.",
-          validationErrors: []
-        });
-      }
-      if (page > Math.ceil(totalNalogs / NALOGS_PER_PAGE)) {
-        if (totalNalogs != 0) {
-          page = Math.ceil(totalNalogs / NALOGS_PER_PAGE);
-        }
-      }
-      return Nalog.find({
-        company: current_company_id,
-        year: current_company_year
-      })
-        .skip((page - 1) * NALOGS_PER_PAGE) //paginacija
-        .limit(NALOGS_PER_PAGE); //paginacija
-    })
-    .then(result => {
-      nalozi = result;
-    })
-    .then(result => {
-      Company.find({ user: user._id })
-        .then(result => {
-          companies = result;
-        })
-        .then(com => {
-          //current_company = user.current_company;
-        })
-        .then(result => {
-          return res.status(200).render("includes/dashboard/dnevnik", {
-            pageTitle: "",
-            accounting: accounting,
-            path: "/dnevnik",
-            hasError: false,
-            user: user,
-            //current_company: current_company,
-            current_company_year: current_company_year,
-            years: current_company_years,
-            companies: companies,
-            nalozi: nalozi,
-            currentPage: page,
-            hasNextPage: NALOGS_PER_PAGE * page < totalNalogs,
-            hasPreviousPage: page > 1,
-            nextPage: page + 1,
-            previousPage: page - 1,
-            lastPage: Math.ceil(totalNalogs / NALOGS_PER_PAGE),
-            successMessage: null,
-            infoMessage: null,
-            validationErrors: []
-          });
-        })
-        .catch(err => {
-          console.log(err);
-        });
+  let totalNalogs = await Nalog.find({
+    company: current_company_id,
+    year: current_company_year
+  }).countDocuments();
+  if (totalNalogs == 0) {
+    return res.status(200).render("includes/dashboard/nothing_to_display", {
+      pageTitle: "",
+      path: "/nothing_to_display",
+      hasError: false,
+      successMessage: null,
+      infoMessage: "There are no ledger entries.",
+      validationErrors: []
     });
+  }
+  if (page > Math.ceil(totalNalogs / NALOGS_PER_PAGE)) {
+    if (totalNalogs != 0) {
+      page = Math.ceil(totalNalogs / NALOGS_PER_PAGE);
+    }
+  }
+  let nalozi = await Nalog.find({
+    company: current_company_id,
+    year: current_company_year
+  })
+    .skip((page - 1) * NALOGS_PER_PAGE)
+    .limit(NALOGS_PER_PAGE);
+  let companies = await Company.find({ user: user._id });
+  return res.status(200).render("includes/dashboard/dnevnik", {
+    pageTitle: "",
+    accounting: accounting,
+    path: "/dnevnik",
+    hasError: false,
+    user: user,
+    //current_company: current_company,
+    current_company_year: current_company_year,
+    years: current_company_years,
+    companies: companies,
+    nalozi: nalozi,
+    currentPage: page,
+    hasNextPage: NALOGS_PER_PAGE * page < totalNalogs,
+    hasPreviousPage: page > 1,
+    nextPage: page + 1,
+    previousPage: page - 1,
+    lastPage: Math.ceil(totalNalogs / NALOGS_PER_PAGE),
+    successMessage: null,
+    infoMessage: null,
+    validationErrors: []
+  });
 };
 
 exports.changeCompany = async (req, res, next) => {

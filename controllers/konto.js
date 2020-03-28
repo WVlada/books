@@ -9,6 +9,8 @@ var PdfPrinter = require("pdfmake");
 var fs = require("fs");
 var path = require('path');
 
+
+
 exports.getEditKonto = async (req, res, next) => {
   const user = req.user;
   const current_company_id = req.current_company_id;
@@ -1686,5 +1688,6 @@ exports.getZakljucniTrocifrenPDF = async (req, res, nex) => {
 }
 
 exports.getHTMLToPDF = (req, res, nex) => {
-  
+ 
+ 
 }

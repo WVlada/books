@@ -189,14 +189,12 @@ exports.postNalog = async (req, res, next) => {
 
   // provera datuma naloga - moglo je i u routu
   if (datum_naloga.slice(0, 4) != current_company_year) {
-    return res
-      .status(400)
-      .json([
-        {
-          param: "datum_naloga",
-          msg: `Godina naloga mora biti ${current_company_year}.`
-        }
-      ]);
+    return res.status(400).json([
+      {
+        param: "datum_naloga",
+        msg: `Godina naloga mora biti ${current_company_year}.`
+      }
+    ]);
   }
   // provera datuma naloga - moglo je i u routu
   Company.findOne({ _id: company_id }).then(result => {
@@ -526,14 +524,12 @@ exports.updateNalog = async (req, res, next) => {
   });
   // provera datuma naloga - moglo je i u routu
   if (datum_naloga.slice(0, 4) != current_company_year) {
-    return res
-      .status(400)
-      .json([
-        {
-          param: "datum_naloga",
-          msg: `Godina naloga mora biti ${current_company_year}.`
-        }
-      ]);
+    return res.status(400).json([
+      {
+        param: "datum_naloga",
+        msg: `Godina naloga mora biti ${current_company_year}.`
+      }
+    ]);
   }
   // provera datuma naloga - moglo je i u routu
   await nalog.updateOne({

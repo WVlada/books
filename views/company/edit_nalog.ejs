@@ -179,7 +179,11 @@
   <div class="modal_footer">
     <!--<hr class="modal_footer_hr">-->
       <div class="modal_footer_button_set">
-          <button id="submit_form_button" >
+        <% if (nalog.locked) { %>
+        <button id="submit_form_button" disabled>
+          <% } else { %>
+        <button id="submit_form_button">
+            <% } %>
               OK
         </button>
         <button id="cancel_form_button">

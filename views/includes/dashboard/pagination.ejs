@@ -135,6 +135,27 @@
             }
           });
         }
+        if (page_link === "banks") {
+          $.ajax({
+            url: "/banks",
+            type: "get",
+            data: { page: page },
+            dataType: "html",
+            complete: function() {
+              dugme.setAttribute("requestRunning", false);
+            },
+            success: function(html) {
+              $("div.centar")
+                .fadeOut(0)
+                .html(html)
+                .fadeIn(500);
+              $("#loader").fadeOut();
+            },
+            beforeSend: function() {
+              $("#loader").fadeIn(200);
+            }
+          });
+        }
         //
       });
 

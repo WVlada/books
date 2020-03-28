@@ -46,6 +46,7 @@ exports.getKomitentIndex = async (req, res, next) => {
     hasError: false,
     komitenti: komitenti,
     user: user,
+    page_link: "komitenti",
     current_company: current_company,
     current_company_year: current_company_year,
     companies: companies,
@@ -59,6 +60,59 @@ exports.getKomitentIndex = async (req, res, next) => {
     nextPage: page + 1,
     previousPage: page - 1,
     lastPage: Math.ceil(totalKomitents / KOMITENTS_PER_PAGE)
+  });
+};
+exports.getKomitentBanksIndex = async (req, res, next) => {
+  const user = req.user;
+  const current_company_id = req.current_company_id;
+  const current_company_year = req.current_company_year;
+  const current_company = await Company.findOne({ _id: current_company_id });
+
+  let page = +req.query.page || 1;
+  let totalBanks;
+  let type = await Komitenttype.findOne({
+    company: current_company,
+    name: "Banka"
+  });
+  console.log("*************");
+  console.log(type);
+  console.log("*************");
+  const banks = await Komitent.find({
+    company: current_company,
+    type: type._id
+  })
+    .countDocuments()
+    .then(numberOfBanks => {
+      totalBanks = numberOfBanks;
+      if (page > Math.ceil(totalBanks / KOMITENTS_PER_PAGE)) {
+        if (totalBanks !== 0) {
+          page = Math.ceil(totalBanks / KOMITENTS_PER_PAGE);
+        }
+      }
+      return Komitent.find({ company: current_company, type: type })
+        .populate({ path: "type", model: Komitenttype })
+        .skip((page - 1) * KOMITENTS_PER_PAGE) //paginacija
+        .limit(KOMITENTS_PER_PAGE); //paginacija;
+    });
+
+  return res.status(200).render("includes/dashboard/komitent_index", {
+    pageTitle: "",
+    path: "/pregled_komitenata",
+    hasError: false,
+    komitenti: banks,
+    page_link: "banks",
+    user: user,
+    current_company: current_company,
+    current_company_year: current_company_year,
+    successMessage: null,
+    infoMessage: null,
+    validationErrors: [],
+    currentPage: page,
+    hasNextPage: KOMITENTS_PER_PAGE * page < totalBanks,
+    hasPreviousPage: page > 1,
+    nextPage: page + 1,
+    previousPage: page - 1,
+    lastPage: Math.ceil(totalBanks / KOMITENTS_PER_PAGE)
   });
 };
 

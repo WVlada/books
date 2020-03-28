@@ -1,32 +1,30 @@
-		<% if (infoMessage) { %>
-            <div id="user-message" class="user-message-div">
-              <div class="user-message user-message--info">
-                <ul class="user-message-error-list">
-                  <li><%= infoMessage %></li>
-                </ul>
-              </div>
-            </div>
-            <% } %> <% if (validationErrors.length > 0) { %>
-            <div id="user-message" class="user-message-div">
-              <div class="user-message user-message--error">
-                <ul class="user-message-error-list">
-                  <% validationErrors.forEach(error=>{ %>
-                  <li><%= error.msg %></li>
-                  <% }) %>
-                </ul>
-              </div>
-            </div>
-            <% } %> <% if (successMessage) { %>
-            <div id="user-message" class="user-message-div">
-              <div class="user-message user-message--success">
-                <ul class="user-message-error-list">
-                  <li><%= successMessage %></li>
-                </ul>
-              </div>
-            </div>
-            <% } %>
-		
-	
+<% if (infoMessage) { %>
+<div id="user-message" class="user-message-div">
+  <div class="user-message user-message--info">
+    <ul class="user-message-error-list">
+      <li><%= infoMessage %></li>
+    </ul>
+  </div>
+</div>
+<% } %> <% if (validationErrors.length > 0) { %>
+<div id="user-message" class="user-message-div">
+  <div class="user-message user-message--error">
+    <ul class="user-message-error-list">
+      <% validationErrors.forEach(error=>{ %>
+      <li><%= error.msg %></li>
+      <% }) %>
+    </ul>
+  </div>
+</div>
+<% } %> <% if (successMessage) { %>
+<div id="user-message" class="user-message-div">
+  <div class="user-message user-message--success">
+    <ul class="user-message-error-list">
+      <li><%= successMessage %></li>
+    </ul>
+  </div>
+</div>
+<% } %>
 
 <div
   id="table"
@@ -217,22 +215,21 @@
         $.ajax({
           url: "/dnevnik_naloga",
           type: "GET",
-          data: {
-          },
+          data: {},
           dataType: "html",
           complete: function() {
             me.data("requestRunning", false);
           },
           success: function(html) {
             $("div.centar").html(html);
-            $('#loader').hide();
+            $("#loader").hide();
           },
-          beforeSend: function(){
-          $('#loader').show();
-        }
+          beforeSend: function() {
+            $("#loader").show();
+          }
         });
       });
-      $(document)
+    $(document)
       .off("click", ".newNalogKomitent")
       .on("click", ".newNalogKomitent", function() {
         var me = $(this);
@@ -243,22 +240,46 @@
         $.ajax({
           url: "/komitenti",
           type: "GET",
-          data: {
-          },
+          data: {},
           dataType: "html",
           complete: function() {
             me.data("requestRunning", false);
           },
           success: function(html) {
             $("div.centar").html(html);
-            $('#loader').hide();
+            $("#loader").hide();
           },
-          beforeSend: function(){
-          $('#loader').show();
-        }
+          beforeSend: function() {
+            $("#loader").show();
+          }
         });
       });
-      $(document)
+    $(document)
+      .off("click", ".newNalogBanke")
+      .on("click", ".newNalogBanke", function() {
+        var me = $(this);
+        if (me.data("requestRunning")) {
+          return;
+        }
+        me.data("requestRunning", true);
+        $.ajax({
+          url: "/banks",
+          type: "GET",
+          data: {},
+          dataType: "html",
+          complete: function() {
+            me.data("requestRunning", false);
+          },
+          success: function(html) {
+            $("div.centar").html(html);
+            $("#loader").hide();
+          },
+          beforeSend: function() {
+            $("#loader").show();
+          }
+        });
+      });
+    $(document)
       .off("click", ".newNalogOpsti")
       .on("click", ".newNalogOpsti", function() {
         var me = $(this);
@@ -269,22 +290,24 @@
         $.ajax({
           url: "/new_nalog",
           type: "GET",
-          data: {
-          },
+          data: {},
           dataType: "html",
           complete: function() {
             me.data("requestRunning", false);
           },
           success: function(html) {
-            $("#nalog_placeholder").fadeOut(0).html(html).fadeIn(500)
-            $('#loader').fadeOut();
+            $("#nalog_placeholder")
+              .fadeOut(0)
+              .html(html)
+              .fadeIn(500);
+            $("#loader").fadeOut();
           },
-          beforeSend: function(){
-          $('#loader').fadeIn(200)
-        }
+          beforeSend: function() {
+            $("#loader").fadeIn(200);
+          }
         });
       });
-      $(document)
+    $(document)
       .off("click", ".not_implemented")
       .on("click", ".not_implemented", function() {
         var me = $(this);
@@ -295,36 +318,38 @@
         $.ajax({
           url: "/not_implemented",
           type: "GET",
-          data: {
-          },
+          data: {},
           dataType: "html",
           complete: function() {
             me.data("requestRunning", false);
           },
           success: function(html) {
-            $("div.centar").fadeOut(0).html(html).fadeIn(500)
-            $('#loader').fadeOut();
+            $("div.centar")
+              .fadeOut(0)
+              .html(html)
+              .fadeIn(500);
+            $("#loader").fadeOut();
           },
-          beforeSend: function(){
-          $('#loader').fadeIn(200)
-        }
+          beforeSend: function() {
+            $("#loader").fadeIn(200);
+          }
         });
       });
-var msgdiv = document.getElementById("user-message");
-var msg = document.getElementsByClassName("user-message");
+    var msgdiv = document.getElementById("user-message");
+    var msg = document.getElementsByClassName("user-message");
 
-if (msg.length > 0) {
-  for (i = 0; i < msg.length; i++) {
-    let message = msg[i]; // zanimljivo je probati sa msg[i] pa timeout :)
-    message.style.opacity = 1;
-    message.style.transition = "opacity 1s ease-in-out";
-    setTimeout(function() {
-      message.style.opacity = "0";
-    }, 1800);
-    setTimeout(function() {
-      message.style.visibility = "hidden";
-    }, 3000);
-  }
-}
+    if (msg.length > 0) {
+      for (i = 0; i < msg.length; i++) {
+        let message = msg[i]; // zanimljivo je probati sa msg[i] pa timeout :)
+        message.style.opacity = 1;
+        message.style.transition = "opacity 1s ease-in-out";
+        setTimeout(function() {
+          message.style.opacity = "0";
+        }, 1800);
+        setTimeout(function() {
+          message.style.visibility = "hidden";
+        }, 3000);
+      }
+    }
   </script>
 </div>

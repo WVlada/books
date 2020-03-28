@@ -74,7 +74,7 @@
 		<div class="dole_grid">
 			<div class="dole_grid_item_1">
 				<finbutton id="novi_nalog">
-					Novi nalog
+					New entry
 				</finbutton>
 			</div>
 			<div class="dole_grid_item_2">	
@@ -120,8 +120,8 @@
 				</finbutton>
 			</div>
 			<div class="dole_grid_item_6">	
-				<finbutton id="print_to_pdf_dole">
-							To PDF
+				<finbutton id="close_year_dole">
+							Close year
 				</finbutton>
 			</div>
 		</div>
@@ -337,7 +337,7 @@ $(document)
       //  }
       //  });
       //});
-      $(document).off("click", "#print_to_pdf_dole").on("click", "#print_to_pdf_dole", function() {
+      $(document).off("click", "#close_year_dole").on("click", "#close_year_dole", function() {
   var zakljucni_list_row = $(this);
   
   
@@ -345,19 +345,19 @@ $(document)
           return;
   }
   zakljucni_list_row.data("requestRunning", true);
-  var win = window.open('', '_blank');
+  //var win = window.open('', '_blank');
   
   
   $.ajax({
-    url: "/zakljucni_pdf",
+    url: "/close_year",
     type: "get",
     dataType: "html",
     complete: function() {
       zakljucni_list_row.data("requestRunning", false);
     },
     success: function(json) {
-      //$("div.centar").fadeOut(0).html(html).fadeIn(500)
-      pdfMake.createPdf(JSON.parse(json)).open({}, win);
+      $("div.centar").fadeOut(0).html(html).fadeIn(500)
+      //pdfMake.createPdf(JSON.parse(json)).open({}, win);
       $('#loader').fadeOut();
     },
     beforeSend: function(){
