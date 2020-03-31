@@ -90,7 +90,7 @@
   border: 2px solid #d8d9ea;
   font-size: 13px;
   height: 25px;
-  width: 100px;
+  width: 480px;
 }
 .konto_promet_odabir_input_date {
   width: 130px;
@@ -230,7 +230,7 @@ td.konto_promet:nth-child(3) {
 }
 td.konto_promet:nth-child(4) {
   text-align: left;
-  min-width: 346px;
+  min-width: 325px;
 }
 td.konto_promet:nth-child(5) {
   text-align: right;
@@ -242,7 +242,8 @@ td.konto_promet:nth-child(6) {
 }
 td.konto_promet:nth-child(7) {
   text-align: right;
-  min-width: 101.58px;
+  /*min-width: 101.58px;*/
+  min-width: 120px;
   width: auto;
 }
 
