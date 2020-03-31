@@ -166,6 +166,13 @@ exports.postKontoPromet = async (req, res, next) => {
   const sva_konta_array_brojeva = sva_konta.map(e => e.number);
   console.log(sva_konta_array_idova);
   console.log(sva_konta_array_brojeva);
+  const svi_acc_info = await Konto.find({company: current_company_id, number: sva_konta_array_brojeva}).select('name number')
+  console.log("****");
+  for(let j=0; j<= sva_konta_array_brojeva.length-1; j++){
+    console.log(svi_acc_info.filter((function(e){return e.number == sva_konta_array_brojeva[j]})))
+  }
+  //console.log(ff);
+  console.log("****");
   const stavovi = await Stav.find({
     company: current_company_id,
     konto: sva_konta_array_idova,
@@ -186,7 +193,7 @@ exports.postKontoPromet = async (req, res, next) => {
   }
 
   console.log("****");
-  console.log(stavovi);
+  //console.log(stavovi);
   console.log("****");
   // prolazak samo jednom kroz 2 liste
   let sredjeno = new Map();
@@ -211,7 +218,7 @@ exports.postKontoPromet = async (req, res, next) => {
     });
   }
   console.log("****");
-  console.log(sredjeno);
+  //console.log(sredjeno);
   console.log("****");
   return res.status(200).render("includes/dashboard/konto_promet", {
     pageTitle: "",
@@ -220,6 +227,7 @@ exports.postKontoPromet = async (req, res, next) => {
     user: user,
     current_company: current_company,
     sredjeno: sredjeno,
+    svi_acc_info: svi_acc_info,
     accounting: accounting,
     successMessage: null,
     infoMessage: null,
@@ -852,7 +860,12 @@ exports.getZakljucniPDF = async (req, res, next) => {
     ukup_d - ukup_p > 0 ? sva_konta_sa_prometom[x].saldo_d = ukup_d - ukup_p : sva_konta_sa_prometom[x].saldo_p = ukup_p - ukup_d;
   
   }
-
+  // u slucaju da nema uopste nigde prometa, red u kojem se postavlja 'array_konta'
+  // nece biti pokrenut, pa ga u tom slucaju treba posebno postaviti
+  if (!sva_konta_sa_prometom['array_konta']){
+    sva_konta_sa_prometom['array_konta'] = []
+  }
+  
   sva_konta_sa_prometom.array_konta = sva_konta_sa_prometom.array_konta.sort()
   
   for (let i=0; i <= sva_konta_sa_prometom.array_konta.length - 1; i++) {
@@ -1294,7 +1307,11 @@ exports.getZakljucniTrocifrenPDF = async (req, res, nex) => {
 
     ukup_d - ukup_p > 0 ? sva_konta_sa_prometom[x].saldo_d = ukup_d - ukup_p : sva_konta_sa_prometom[x].saldo_p = ukup_p - ukup_d;
   }
-  
+  // u slucaju da nema uopste nigde prometa, red u kojem se postavlja 'array_konta'
+  // nece biti pokrenut, pa ga u tom slucaju treba posebno postaviti
+  if (!sva_konta_sa_prometom['array_konta']){
+    sva_konta_sa_prometom['array_konta'] = []
+  }
   sva_konta_sa_prometom.array_konta = sva_konta_sa_prometom.array_konta.sort()
   
   for (let i=0; i <= sva_konta_sa_prometom.array_konta.length - 1; i++) {

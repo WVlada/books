@@ -78,25 +78,25 @@
 				</finbutton>
 			</div>
 			<div class="dole_grid_item_2">	
-				<finbutton id="odabir_kartice_button">
-					Kartica
-				</finbutton>
-			</div>
-			<div class="dole_grid_item_3">	
 				<finbutton id="konto_promet_odabir">
 					Promet
-				</finbutton>
-				<div id="promet_od_do_placeholder">
+        </finbutton>
+        <div id="promet_od_do_placeholder">
 				</div>
 			</div>
-			<div class="dole_grid_item_4">
+			<div class="dole_grid_item_3">	
 				<finbutton id="new_client">
 					New client
 				</finbutton>
 			</div>
-			<div class="dole_grid_item_5">	
+			<div class="dole_grid_item_4">
 				<finbutton id="konto_new">
 					Add acc.
+				</finbutton>
+			</div>
+			<div class="dole_grid_item_5">	
+				<finbutton id="#">
+					#
 				</finbutton>
 			</div>
 			<div class="dole_grid_item_6">	
@@ -115,8 +115,8 @@
 				</finbutton>
 			</div>
 			<div class="dole_grid_item_6">	
-				<finbutton id="print_to_pdf_dole_trocifren">
-							3dig. to PDF
+				<finbutton id="#">
+							#
 				</finbutton>
 			</div>
 			<div class="dole_grid_item_6">	
@@ -365,34 +365,34 @@ $(document)
     }
   });
 });
-$(document).off("click", "#print_to_pdf_dole_trocifren").on("click", "#print_to_pdf_dole_trocifren", function() {
-  var zakljucni_list_row = $(this);
-  
-  
-  if (zakljucni_list_row.data("requestRunning")) {
-          return;
-  }
-  zakljucni_list_row.data("requestRunning", true);
-  var win = window.open('', '_blank');
-  
-  
-  $.ajax({
-    url: "/zakljucni_pdf_trocifren",
-    type: "get",
-    dataType: "html",
-    complete: function() {
-      zakljucni_list_row.data("requestRunning", false);
-    },
-    success: function(json) {
-      //$("div.centar").fadeOut(0).html(html).fadeIn(500)
-      pdfMake.createPdf(JSON.parse(json)).open({}, win);
-      $('#loader').fadeOut();
-    },
-    beforeSend: function(){
-      $('#loader').fadeIn(200)
-    }
-  });
-});
+//$(document).off("click", "#print_to_pdf_dole_trocifren").on("click", "#print_to_pdf_dole_trocifren", function() {
+//  var zakljucni_list_row = $(this);
+//  
+//  
+//  if (zakljucni_list_row.data("requestRunning")) {
+//          return;
+//  }
+//  zakljucni_list_row.data("requestRunning", true);
+//  var win = window.open('', '_blank');
+//  
+//  
+//  $.ajax({
+//    url: "/zakljucni_trocifren_pdf",
+//    type: "get",
+//    dataType: "html",
+//    complete: function() {
+//      zakljucni_list_row.data("requestRunning", false);
+//    },
+//    success: function(json) {
+//      //$("div.centar").fadeOut(0).html(html).fadeIn(500)
+//      pdfMake.createPdf(JSON.parse(json)).open({}, win);
+//      $('#loader').fadeOut();
+//    },
+//    beforeSend: function(){
+//      $('#loader').fadeIn(200)
+//    }
+//  });
+//});
 $(document).off("click", "#konto_promet_pdf").on("click", "#konto_promet_pdf", function() {
   var zakljucni_list_row = $(this);
   

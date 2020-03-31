@@ -184,6 +184,14 @@ th.konto_promet {
   text-align: center;
   font-size: 13px;
 }
+th.konto_promet_blank {
+  padding: 6px;
+  display: table-cell;
+}
+th.konto_promet_account_name {
+  font-weight: 500;
+  font-size: 14px;
+}
 th.konto_promet:nth-child(1) {
   min-width: 100px;
   text-align: center;
@@ -197,7 +205,7 @@ th.konto_promet:nth-child(3) {
   min-width: 50px;
 }
 th.konto_promet:nth-child(4) {
-  min-width: 343px;
+  min-width: 325px;
 }
 th.konto_promet:nth-child(5) {
   min-width: 120px;

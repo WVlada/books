@@ -3,13 +3,18 @@
   <% for (let [key, value] of sredjeno) { %>
   <table class="konto_promet">
     <% if (brojcanik == 0) { %>
-      <thead class="konto_promet_thead_zero">
+      <thead class="konto_promet_thead">
     <% } else { %>
         <thead class="konto_promet_thead">
     <% } %>
       <tr class="konto_promet ">
         <th class="konto_promet "><%= key %></th>
-        <th class="konto_promet "><%= key %></th>
+        <th class="konto_promet_blank"></th>
+        <th class="konto_promet_blank"></th>
+        <th class="konto_promet_account_name"><%= (svi_acc_info.filter((function(e){return e.number == key})))[0].name %></th>
+        <th class="konto_promet_blank"></th>
+        <th class="konto_promet_blank"></th>
+        <th class="konto_promet_blank"></th>
       </tr>
       <tr class="konto_promet">
         <th class="konto_promet">Date</th>
