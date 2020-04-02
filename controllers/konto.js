@@ -37,19 +37,19 @@ exports.postEditKonto = async (req, res, next) => {
   const number = req.body.number;
   const konto_id = req.body.konto_id;
   console.log(req.body);
-  if (number.length < 4 || number.length > 6) {
-    return res.status(400).json([
-      {
-        param: "number",
-        msg: "Number must be greater then 3 and less then 6 digits."
-      }
-    ]);
-  }
   if (name.length < 4 || name.length > 30) {
     return res.status(400).json([
       {
         param: "name",
         msg: "Name must be greater then 3 and less then 30 characters."
+      }
+    ]);
+  }
+  if (number.length < 4 || number.length > 6) {
+    return res.status(400).json([
+      {
+        param: "number",
+        msg: "Number must be greater then 3 and less then 6 digits."
       }
     ]);
   }

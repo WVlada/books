@@ -1,15 +1,13 @@
-<link rel="stylesheet" href="/css/stanje-obaveza.css" />
-
 <div id="stanje_obaveza_okvir_div" style="position:relative">
   <div class="tab">
-    <button class="tablinks" onclick="openCity(event, 'Dužnici')">
-      Dužnici
+    <button class="tablinks" onclick="openTab(event, 'Duznici')">
+      Debtors
     </button>
-    <button class="tablinks" onclick="openCity(event, 'Poverioci')">
-      Poverioci
+    <button class="tablinks" onclick="openTab(event, 'Poverioci')">
+      Creditors
     </button>
-    <button class="tablinks" onclick="openCity(event, 'Banke')">Banke</button>
-    <button style="float:right" class="refresh_dugme">
+    <button class="tablinks" onclick="openTab(event, 'Banke')">Banks</button>
+    <button class="refresh_dugme">
       <i
         id="refresh_dugme"
         class="fa fa-sync"
@@ -19,21 +17,19 @@
     </button>
   </div>
   <!-- Tab content -->
-  <div id="Dužnici" class="tabcontent prvi">
+  <div id="Duznici" class="tabcontent prvi">
     <table class="stanje_obaveza_okvir_table">
       <tbody>
-        <!-- @komitenti_koji_duguju.first(10).each do |red|  -->
+        <% for(let i=0; i <= array_kupaca_sorted.length -1; i++) { %>
         <tr class="stanje_obaveza_okvir_table">
           <td class="stanje_obaveza_okvir_table">
-            <!-- link_to "#{red[0].name}", controller: "komitent", action:
-            "show", komitent_id: red[0].id, remote: true -->
+            <a href="#" data-id="<%=array_kupaca_sorted[i].id %>" class="stanje_obaveza_link"> <%= array_kupaca_sorted[i].name %> </a>
           </td>
           <td class="stanje_obaveza_okvir_table">
-            <!-- number_to_currency(red[1][2], unit: "", separator: ",",
-            delimiter: ".") -->
+            <%= accounting.formatNumber(array_kupaca_sorted[i].saldo) %>
           </td>
         </tr>
-        <!-- end -->
+        <% } %>
       </tbody>
     </table>
   </div>
@@ -41,18 +37,16 @@
   <div id="Poverioci" class="tabcontent">
     <table class="stanje_obaveza_okvir_table">
       <tbody>
-        <!-- @komitenti_koji_potrazuju.first(10).each do |red| -->
+        <% for(let i=0; i <= array_dobavljaca_sorted.length -1; i++) { %>
         <tr class="stanje_obaveza_okvir_table">
           <td class="stanje_obaveza_okvir_table">
-            <!-- link_to "#{red[0].name}", controller: "komitent", action:
-            "show", komitent_id: red[0].id, remote: true -->
+            <a href="#" data-id="<%=array_dobavljaca_sorted[i].id %>" class="stanje_obaveza_link"> <%= array_dobavljaca_sorted[i].name %> </a>
           </td>
           <td class="stanje_obaveza_okvir_table">
-            <!-- number_to_currency(red[1][2], unit: "", separator: ",",
-            delimiter: ".", negative_format: '-%n') -->
+            <%= accounting.formatNumber(array_dobavljaca_sorted[i].saldo) %>
           </td>
         </tr>
-        <!-- end  -->
+        <% } %>
       </tbody>
     </table>
   </div>
@@ -60,23 +54,21 @@
   <div id="Banke" class="tabcontent">
     <table class="stanje_obaveza_okvir_table">
       <tbody>
-        <!-- unless @samo_banke == nil  @samo_banke.first(10).each do |banka|
-        -->
+        <% for(let i=0; i <= array_banaka_sorted.length -1; i++) { %>
         <tr class="stanje_obaveza_okvir_table">
           <td class="stanje_obaveza_okvir_table">
-            <!-- link_to "#{banka.name}", controller: "komitent", action: "show",
-            komitent_id: banka.id, remote: true-->
+            <a href="#" data-id="<%=array_banaka_sorted[i].id %>" class="stanje_obaveza_link"> <%= array_banaka_sorted[i].name %> </a>
           </td>
           <td class="stanje_obaveza_okvir_table">
-            <!-- number_to_currency(red[1][2], unit: "", separator: ",",
-            delimiter: ".", negative_format: '-%n') -->
+            <%= accounting.formatNumber(array_banaka_sorted[i].saldo) %>
           </td>
         </tr>
+        <% } %>
       </tbody>
     </table>
   </div>
   <script>
-    function openCity(evt, cityName) {
+    function openTab(evt, TabName) {
       // Declare all variables
       var i, tabcontent, tablinks;
 
@@ -94,7 +86,7 @@
       }
 
       // Show the current tab, and add an "active" class to the button that opened the tab
-      document.getElementById(cityName).style.display = "block";
+      document.getElementById(TabName).style.display = "block";
       evt.currentTarget.className += " active";
     }
 
@@ -102,15 +94,57 @@
       .off("click", "button.refresh_dugme")
       .on("click", "button.refresh_dugme", function() {
         var me = $("#refresh_dugme");
+        if (me.data("requestRunning")) {
+          return;
+        }
+        me.data("requestRunning", true);
         me.addClass("fa-spin");
-
         $.ajax({
           url: "/refresh_stanje_obaveza",
           type: "get",
           data: { "": "" },
-          dataType: "script",
-          success: function() {
+          dataType: "html",
+          complete: function() {
+            me.data("requestRunning", false);
+          },
+          success: function(html) {
+            $("div.desno")
+              .fadeOut(0)
+              .html(html)
+              .fadeIn(500);
+            //$("#loader").fadeOut();
             me.removeClass("fa-spin");
+          },
+          beforeSend: function(){
+          //$('#loader').fadeIn(200)
+        }
+        });
+      });
+      $(document)
+      .off("click", "a.stanje_obaveza_link")
+      .on("click", "a.stanje_obaveza_link", function() {
+        var me = $(this);
+        if (me.data("requestRunning")) {
+          return;
+        }
+        me.data("requestRunning", true);
+        
+        $.ajax({
+          url: "/komitent",
+          type: "get",
+          data: { 
+            komitent_id: me.data("id"),
+             },
+          dataType: "html",
+          complete: function() {
+            me.data("requestRunning", false);
+          },
+          success: function(html) {
+            $("div.centar").fadeOut(0).html(html).fadeIn(500)
+            $('#loader').fadeOut();
+          },
+            beforeSend: function(){
+              $('#loader').fadeIn(200)
           }
         });
       });

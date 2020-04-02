@@ -11,7 +11,7 @@ const ObjectId = require("mongoose").Types.ObjectId;
 
 const { validationResult } = require("express-validator");
 
-exports.getCompany = (req, res, next) => {
+exports.getCompany = async (req, res, next) => {
   console.log(req.body);
   const user = req.user;
   const current_company_id = req.current_company_id;
@@ -23,6 +23,106 @@ exports.getCompany = (req, res, next) => {
   console.log(current_company_year);
   console.log(current_company_years);
   console.log("/show_company");
+  // stanje obaveza desno
+  const datum_start = `01-01-${current_company_year}`;
+  const datum_end = `12-31-${current_company_year}`;
+  const svi_stavovi = await Stav.find({
+    company: current_company_id,
+    nalog_date: { $gte: datum_start, $lte: datum_end }
+  })
+    .where("sifra_komitenta")
+    .ne(null);
+  //console.log(svi_stavovi);
+  const svi_komitenti = await Stav.find({
+    company: current_company_id,
+    nalog_date: { $gte: datum_start, $lte: datum_end }
+  })
+    .where("sifra_komitenta")
+    .ne(null)
+    .populate({ path: "sifra_komitenta", select: "name type" })
+    .populate({
+      path: "sifra_komitenta",
+      populate: { path: "type", selct: "name", model: komitenttype }
+    })
+    .select("duguje potrazuje sifra_komitenta");
+
+  //console.log(svi_komitenti);
+  let array_objekata = [];
+  for (let i = 0; i <= svi_komitenti.length - 1; i++) {
+    let objekat = {};
+    objekat.sifra = svi_komitenti[i].sifra_komitenta._id;
+    objekat.name = svi_komitenti[i].sifra_komitenta.name;
+    objekat.type = svi_komitenti[i].sifra_komitenta.type.name; //Kupac
+    objekat.duguje = svi_komitenti[i].duguje;
+    objekat.potrazuje = svi_komitenti[i].potrazuje;
+    array_objekata.push(objekat);
+  }
+  //console.log(array_objekata);
+  // CIMANJE METOD
+  //let arr = [];
+  //let arr2 = [];
+  //for (let i = 0; i <= array_objekata.length - 1; i++) {
+  //  if (arr.includes(array_objekata[i].sifra)) {
+  //    arr2[array_objekata[i].sifra].duguje += array_objekata[i].duguje;
+  //    arr2[array_objekata[i].sifra].potrazuje += array_objekata[i].potrazuje;
+  //  } else {
+  //    arr2[array_objekata[i].sifra] = array_objekata[i];
+  //    arr.push(array_objekata[i].sifra);
+  //  }
+  //}
+  //console.log("----");
+  //console.log(arr2);
+  // CIMANJE METOD
+  // COOL METOD
+  let f = array_objekata.reduce(function(prValue, e) {
+    if (prValue[e.sifra]) {
+      prValue[e.sifra].duguje += e.duguje;
+      prValue[e.sifra].potrazuje += e.potrazuje;
+    } else {
+      prValue[e.sifra] = {};
+      prValue[e.sifra].id = e.sifra;
+      prValue[e.sifra].duguje = e.duguje;
+      prValue[e.sifra].potrazuje = e.potrazuje;
+      prValue[e.sifra].name = e.name;
+      prValue[e.sifra].type = e.type;
+    }
+    return prValue;
+  }, {});
+  //console.log(f);
+  let array_banaka = [];
+  let array_kupaca = [];
+  let array_dobavljaca = [];
+  for (let i in f) {
+    f[i].saldo = f[i].duguje - f[i].potrazuje;
+    if (f[i].type == "Banka") {
+      array_banaka.push(f[i]);
+    } else if (f[i].type == "Kupac") {
+      array_kupaca.push(f[i]);
+    } else {
+      array_dobavljaca.push(f[i]);
+    }
+  }
+  console.log(array_kupaca);
+  let array_banaka_sorted = array_banaka.sort((a, b) => {
+    return a.saldo > b.saldo;
+  });
+  let array_kupaca_sorted = array_kupaca.sort((a, b) => {
+    return a.saldo < b.saldo;
+  });
+  let array_dobavljaca_sorted = array_dobavljaca.sort((a, b) => {
+    return a.saldo > b.saldo;
+  });
+  console.log("--------");
+  console.log(array_kupaca_sorted);
+  console.log("--------");
+  console.log("--------");
+  console.log(array_banaka_sorted);
+  console.log("--------");
+  console.log("--------");
+  console.log(array_dobavljaca_sorted);
+  console.log("--------");
+  // COOL METOD
+  // stanje obaveza desno
   Company.find({ user: user._id })
     .then(result => {
       if (result.length === 0) {
@@ -40,6 +140,10 @@ exports.getCompany = (req, res, next) => {
           user: user,
           companies: companies,
           current_company: current_company,
+          array_banaka_sorted: array_banaka_sorted.slice(0, 10),
+          array_dobavljaca_sorted: array_dobavljaca_sorted.slice(0, 10),
+          array_kupaca_sorted: array_kupaca_sorted.slice(0, 10),
+          accounting: accounting,
           years: current_company_years,
           current_company_year: current_company_year,
           pageTitle: `Company: ${current_company.name}`,
@@ -342,12 +446,15 @@ exports.getShowKonto = async (req, res, next) => {
     _id: req.current_company_id
   });
   const companies = await Company.find({ user: user });
+  const datum_start = `01-01-${current_company_year}`;
+  const datum_end = `12-31-${current_company_year}`;
 
   const konto_id = req.query.konto_id;
   const konto = await Konto.findById(konto_id);
   const svi_stavovi = await Stav.find({
     company: current_company,
-    konto: konto
+    konto: konto,
+    nalog_date: { $gte: datum_start, $lte: datum_end }
   })
     .populate({ path: "nalog", model: Nalog })
     .sort({ date: "asc" });
@@ -399,5 +506,110 @@ exports.getNotImplemented = (req, res, next) => {
     successMessage: null,
     infoMessage: "Functionality not implemented in this software version.",
     validationErrors: []
+  });
+};
+exports.getRefreshStanjeObaveza = async (req, res, next) => {
+  const user = req.user;
+  const current_company_id = req.current_company_id;
+  const current_company_year = req.current_company_year;
+  const current_company_years = req.current_company_years;
+  console.log("/show_company");
+  console.log(user);
+  console.log(current_company_id);
+  console.log(current_company_year);
+  console.log(current_company_years);
+  console.log("/show_company");
+  // stanje obaveza desno
+  const datum_start = `01-01-${current_company_year}`;
+  const datum_end = `12-31-${current_company_year}`;
+  const svi_stavovi = await Stav.find({
+    company: current_company_id,
+    nalog_date: { $gte: datum_start, $lte: datum_end }
+  })
+    .where("sifra_komitenta")
+    .ne(null);
+  //console.log(svi_stavovi);
+  const svi_komitenti = await Stav.find({
+    company: current_company_id,
+    nalog_date: { $gte: datum_start, $lte: datum_end }
+  })
+    .where("sifra_komitenta")
+    .ne(null)
+    .populate({ path: "sifra_komitenta", select: "name type" })
+    .populate({
+      path: "sifra_komitenta",
+      populate: { path: "type", selct: "name", model: komitenttype }
+    })
+    .select("duguje potrazuje sifra_komitenta");
+
+  //console.log(svi_komitenti);
+  let array_objekata = [];
+  for (let i = 0; i <= svi_komitenti.length - 1; i++) {
+    let objekat = {};
+    objekat.sifra = svi_komitenti[i].sifra_komitenta._id;
+    objekat.name = svi_komitenti[i].sifra_komitenta.name;
+    objekat.type = svi_komitenti[i].sifra_komitenta.type.name; //Kupac
+    objekat.duguje = svi_komitenti[i].duguje;
+    objekat.potrazuje = svi_komitenti[i].potrazuje;
+    array_objekata.push(objekat);
+  }
+
+  let f = array_objekata.reduce(function(prValue, e) {
+    if (prValue[e.sifra]) {
+      prValue[e.sifra].duguje += e.duguje;
+      prValue[e.sifra].potrazuje += e.potrazuje;
+    } else {
+      prValue[e.sifra] = {};
+      prValue[e.sifra].id = e.sifra;
+      prValue[e.sifra].duguje = e.duguje;
+      prValue[e.sifra].potrazuje = e.potrazuje;
+      prValue[e.sifra].name = e.name;
+      prValue[e.sifra].type = e.type;
+    }
+    return prValue;
+  }, {});
+  //console.log(f);
+  let array_banaka = [];
+  let array_kupaca = [];
+  let array_dobavljaca = [];
+  for (let i in f) {
+    f[i].saldo = f[i].duguje - f[i].potrazuje;
+    if (f[i].type == "Banka") {
+      array_banaka.push(f[i]);
+    } else if (f[i].type == "Kupac") {
+      array_kupaca.push(f[i]);
+    } else {
+      array_dobavljaca.push(f[i]);
+    }
+  }
+  console.log(array_kupaca);
+  let array_banaka_sorted = array_banaka.sort((a, b) => {
+    return a.saldo > b.saldo;
+  });
+  let array_kupaca_sorted = array_kupaca.sort((a, b) => {
+    return a.saldo < b.saldo;
+  });
+  let array_dobavljaca_sorted = array_dobavljaca.sort((a, b) => {
+    return a.saldo > b.saldo;
+  });
+  console.log("--------");
+  console.log(array_kupaca_sorted);
+  console.log("--------");
+  console.log("--------");
+  console.log(array_banaka_sorted);
+  console.log("--------");
+  console.log("--------");
+  console.log(array_dobavljaca_sorted);
+  console.log("--------");
+
+  return res.render("includes/stanje_obaveza", {
+    user: user,
+    array_banaka_sorted: array_banaka_sorted.slice(0, 10),
+    array_dobavljaca_sorted: array_dobavljaca_sorted.slice(0, 10),
+    array_kupaca_sorted: array_kupaca_sorted.slice(0, 10),
+    accounting: accounting,
+    infoMessage: null,
+    validationErrors: [],
+    successMessage: null
   });
 };

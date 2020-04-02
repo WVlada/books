@@ -240,7 +240,7 @@ exports.postNalog = async (req, res, next) => {
               number: i,
               nalog: result._id,
               nalog_date: datum_naloga,
-              type: result.id
+              type: result.type
             });
             await stav.save();
             nalog.stavovi.push(stav);

@@ -69,4 +69,10 @@ router.get("/tok_dokumentacije", isAuth, companyController.getTokDokumentacije);
 
 router.get("/not_implemented", isAuth, companyController.getNotImplemented);
 
+router.get(
+  "/refresh_stanje_obaveza",
+  isAuth,
+  companyController.getRefreshStanjeObaveza
+);
+
 module.exports = router;
