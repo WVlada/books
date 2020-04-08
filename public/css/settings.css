@@ -1,12 +1,47 @@
 .user_slika {
-    margin: 10px;
+  margin: 10px;
 }
 .companysettings_slika {
-    margin: 10px;
+  margin: 10px;
 }
 .settings_preferences_slika {
-    margin: 10px;
+  margin: 10px;
 }
 h5 {
-    color: #bbb
+  color: #bbb;
+}
+
+#add_new_company_button {
+  color: #6d687e;
+  margin-top: 4px;
+}
+.settings_add_new_company_div_p {
+  margin-left: 10px;
+}
+.h3_settings {
+  font-size: 13px;
+  font-weight: 700;
+  color: grey;
+}
+.h3_settings_detail {
+  font-size: 13px;
+  font-weight: 700;
+  color: grey;
+  text-decoration: underline;
+}
+.settings_user_preference_notify_sucess {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 0.75rem;
+  font-size: 14px;
+  z-index: 2;
+  background-color: rgba(209, 230, 179, 0.96);
+  border-color: #709a33;
+  color: #547326;
+  border-width: 1px;
+  padding: 3px;
+  box-shadow: 0 8px 26px 0 rgba(0, 0, 0, 0.3);
+  text-align: center;
+  border-radius: 4px;
+  visibility: hidden;
 }

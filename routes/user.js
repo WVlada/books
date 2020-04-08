@@ -89,6 +89,10 @@ router.get("/create_company", userController.createCompany);
 
 router.get("/logout", userController.getLogout);
 router.get("/settings", userController.getSettings);
+router.get("/settings_tutorial_tips", userController.getSettingsTutorialTips);
+router.get("/settings_autosave", userController.getSettingsAutosave);
+router.get("/settings_permisions", userController.getSettingsPermisions);
+
 router.get("/auth/linkedin/callback", userController.getLinkedin);
 router.get("/back_to_login", userController.getBackToLogin);
 

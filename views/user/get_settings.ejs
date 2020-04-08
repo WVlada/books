@@ -32,18 +32,18 @@
         height="60"
         width="60"
       />
-      <h5>Name:</h5>
-      <p><%= user.email %></p>
-      <h5>Last name:</h5>
-      <p><%= user.email %></p>
-      <h5>Telephone:</h5>
-      <p><%= user.email %></p>
-      <h5>E-mail:</h5>
-      <p><%= user.email %></p>
-      <h5>Mobile:</h5>
-      <p><%= user.email %></p>
-      <h5>Adress:</h5>
-      <p><%= user.email %></p>
+      <h3 class="h3_settings_detail">Name:</h3>
+      <p><%= user.name ? user.name : 'n/a' %></p>
+      <h3 class="h3_settings_detail">Last name:</h3>
+      <p><%= user.last_name ? user.last_name : 'n/a' %></p>
+      <h3 class="h3_settings_detail">Telephone:</h3>
+      <p><%= user.telephone ? user.telephone : 'n/a' %></p>
+      <h3 class="h3_settings_detail">E-mail:</h3>
+      <p><%= user.email ? user.email : 'n/a' %></p>
+      <h3 class="h3_settings_detail">Mobile:</h3>
+      <p><%= user.mobile ? user.mobile : 'n/a' %></p>
+      <h3 class="h3_settings_detail">Adress:</h3>
+      <p><%= user.adress ? user.adress : 'n/a' %></p>
     </div>
     <!-- USER TAB-->
 
@@ -52,26 +52,26 @@
       <div class="row">
         <div class="col-md-4">
           <img
-            src="../../../images/usermr.png"
+            src="../../../images/dashboard/companysettings.png"
             class="companysettings_slika"
             height="60"
             width="60"
           />
-          <h4>All companies:</h4>
+          <h3 class="h3_settings">
+            All companies:
+          </h3>
           <div class="company_vertical_menu">
             <% for (let i=0; i <= companies.length -1; i++) { %> <% if
             (companies[i]._id === company._id) { %>
             <span
-              data-id="`settings_company"
-              ${current_company._id}`
+              data-id="<%= current_company._id %>"
               class="company_select_span active"
               onclick="company_select(event)"
               ><%= company.name %></span
             >
             <% } else { %>
             <span
-              data-id="`settings_company"
-              ${companies[i]._id}`
+              data-id="<%= companies[i]._id %>"
               class="company_select_span"
               onclick="company_select(event)"
               ><%= companies[i].name %></span
@@ -79,11 +79,14 @@
             <% } %> <% } %>
           </div>
 
-          <div>
-            <buttoni id="new_company_button" style="float: left;">
-              <i class="fa fa-plus-square"></i>
+          <div class="settings_add_new_company_div">
+            <buttoni
+              id="add_new_company_button"
+              style="float: left; margin-right: 5px;"
+            >
+              <i class="fa fa-plus-square fa-lg"></i>
             </buttoni>
-            <p style="float: left; margin-top:13px;margin-left: 5px;">
+            <p class="settings_add_new_company_div_p">
               Add new company
             </p>
           </div>
@@ -91,26 +94,23 @@
         </div>
 
         <div class="col-md-8">
-          
           <% for (let i=0; i <= companies.length -1; i++) { %>
-          <div
-            id="`settings_company"
-            ${companies[i]._id}`
-            class="company_settings_display"
-          >
-            <h5>Name:</h5>
-            <%= companies[i].name %>
-            <h5>MB:</h5>
-            <%= companies[i].mb %>
-            <h5>Tax ID:</h5>
-            <%= companies[i].pib %>
-            <h5>Adress:</h5>
-            <%= companies[i].adress %>
-            <h5>Telephone:</h5>
-            <%= companies[i].telephone %>
-            <h5>Email:</h5>
-            <%= companies[i].email %>
-            <h5>Registered years:</h5>
+          <div id="<%= companies[i]._id %>" class="company_settings_display">
+            <h3 class="h3_settings_detail">Name:</h3>
+            <p><%= companies[i].name %></p>
+            <h3 class="h3_settings_detail">MB:</h3>
+            <p><%= companies[i].mb %></p>
+            <h3 class="h3_settings_detail">Tax ID:</h3>
+            <p><%= companies[i].pib %></p>
+            <h3 class="h3_settings_detail">Adress:</h3>
+            <p><%= companies[i].adress ? companies[i].adress : "n/a" %></p>
+            <h3 class="h3_settings_detail">Telephone:</h3>
+            <p>
+              <%= companies[i].telephone ? companies[i].telephone : "n/a" %>
+            </p>
+            <h3 class="h3_settings_detail">Email:</h3>
+            <p><%= companies[i].email ? companies[i].email : 'n/a' %></p>
+            <h3 class="h3_settings_detail">Registered years:</h3>
 
             <% if (companies[i].year.length > 0) { %>
             <select>
@@ -128,27 +128,27 @@
     <!-- PREFERENCES TAB-->
     <div id="preferences" class="settings_tabcontent">
       <img
-        src="../../../images/usermr.png"
+        src="../../../images/dashboard/settingspreferences.png"
         class="settings_preferences_slika"
         height="60"
         width="60"
       />
-      <h4>Preferences</h4>
+      <h3 class="h3_settings">Preferences</h3>
 
       <p>Disable tutorial tips:</p>
       <label class="switch">
-        <% if (user.program_preference.tutorialtip === true) { %>
+        <% if (user.tutorial_tips === true) { %>
         <input
           id="settings_tutorial"
           type="checkbox"
           checked
-          onclick="settings_tutorial_change()"
+          onclick="settings_tutorial_change(event)"
         />
         <% } else { %>
         <input
           id="settings_tutorial"
           type="checkbox"
-          onclick="settings_tutorial_change()"
+          onclick="settings_tutorial_change(event)"
         />
         <% } %>
         <span class="slider round"></span>
@@ -156,18 +156,18 @@
 
       <p>Autosave on logout:</p>
       <label class="switch">
-        <% if (user.program_preference.autosave === true) { %>
+        <% if (user.autosave === true) { %>
         <input
           id="settings_autosave"
           type="checkbox"
           checked
-          onclick="settings_autosave_change()"
+          onclick="settings_autosave_change(event)"
         />
         <% } else { %>
         <input
           id="settings_autosave"
           type="checkbox"
-          onclick="settings_autosave_change()"
+          onclick="settings_autosave_change(event)"
         />
         <% } %>
         <span class="slider round"></span>
@@ -175,7 +175,7 @@
 
       <p>User permissions:</p>
       <label class="switch">
-        <% if (user.program_preference.permissions === true) { %>
+        <% if (user.permisions === true) { %>
         <input
           id="settings_permisions"
           type="checkbox"
@@ -192,7 +192,14 @@
         <span class="slider round"></span>
       </label>
 
-      <div id="settings_user_preference_placeholder"></div>
+      <div id="settings_user_preference_placeholder">
+        <div
+          class="settings_user_preference_notify_sucess"
+          style="visibility: visible; display: none;"
+        >
+          <i class="fa fa-check-circle"></i> Option changed succesfuly.
+        </div>
+      </div>
     </div>
     <!-- PREFERENCES TAB-->
   </div>
@@ -204,10 +211,17 @@
   </div>
   <script>
     document.getElementById("settings_defaultOpen").click();
-    if (document.getElementsByClassName("company_select_span active") != null) {
+    if (
+      document.getElementsByClassName("company_select_span active")[0] != null
+    ) {
       document.getElementsByClassName("company_select_span active")[0].click();
     }
-
+    companycontent = document.getElementsByClassName(
+      "company_settings_display"
+    );
+    for (i = 0; i < companycontent.length; i++) {
+      companycontent[i].style.display = "none";
+    }
     function openSetting(evt, linkName) {
       var i, tabcontent, tablinks;
       tabcontent = document.getElementsByClassName("settings_tabcontent");
@@ -279,9 +293,178 @@
       evt.currentTarget.className += " active";
     }
 
-    function close_dialog(){
+    function close_dialog() {
       var dialog_placeholder = document.getElementById("settings_placeholder");
-      dialog_placeholder.innerHTML='';
+      dialog_placeholder.innerHTML = "";
+    }
+
+    function settings_permisions_change(event) {
+      var me = event.target;
+      if (me.disabled) {
+        return;
+      }
+      me.disabled = true;
+      if ($("#settings_permisions").is(":checked")) {
+        // checkbox is checked
+        $.ajax({
+          url: "/settings_permisions",
+          type: "get",
+          data: { settings_permisions: true },
+          dataType: "script",
+          success: function() {
+            var info_msg = document.getElementsByClassName(
+              "settings_user_preference_notify_sucess"
+            )[0];
+            info_msg.style.display = "block";
+            info_msg.style.visibility = "visible";
+            info_msg.style.opacity = 1;
+            info_msg.style.transition = "opacity 1s ease-in-out";
+            setTimeout(function() {
+              info_msg.style.opacity = "0";
+            }, 1800);
+            setTimeout(function() {
+              info_msg.style.visibility = "hidden";
+              me.disabled = false;
+            }, 3000);
+          }
+        });
+      } else {
+        // checkbox is not checked
+        $.ajax({
+          url: "/settings_permisions",
+          type: "get",
+          data: { settings_permisions: false },
+          dataType: "script",
+          success: function() {
+            var info_msg = document.getElementsByClassName(
+              "settings_user_preference_notify_sucess"
+            )[0];
+            info_msg.style.display = "block";
+            info_msg.style.visibility = "visible";
+            info_msg.style.opacity = 1;
+            info_msg.style.transition = "opacity 1s ease-in-out";
+            setTimeout(function() {
+              info_msg.style.opacity = "0";
+            }, 1800);
+            setTimeout(function() {
+              info_msg.style.visibility = "hidden";
+              me.disabled = false;
+            }, 3000);
+          }
+        });
+      }
+    }
+    function settings_autosave_change(event) {
+      var me = event.target;
+      if (me.disabled) {
+        return;
+      }
+      me.disabled = true;
+      if ($("#settings_autosave").is(":checked")) {
+        // checkbox is checked
+        $.ajax({
+          url: "/settings_autosave",
+          type: "get",
+          data: { settings_autosave: true },
+          dataType: "script",
+          success: function() {
+            var info_msg = document.getElementsByClassName(
+              "settings_user_preference_notify_sucess"
+            )[0];
+            info_msg.style.display = "block";
+            info_msg.style.visibility = "visible";
+            info_msg.style.opacity = 1;
+            info_msg.style.transition = "opacity 1s ease-in-out";
+            setTimeout(function() {
+              info_msg.style.opacity = "0";
+            }, 1800);
+            setTimeout(function() {
+              info_msg.style.visibility = "hidden";
+              me.disabled = false;
+            }, 3000);
+          }
+        });
+      } else {
+        // checkbox is not checked
+        $.ajax({
+          url: "/settings_autosave",
+          type: "get",
+          data: { settings_autosave: false },
+          dataType: "script",
+          success: function() {
+            var info_msg = document.getElementsByClassName(
+              "settings_user_preference_notify_sucess"
+            )[0];
+            info_msg.style.display = "block";
+            info_msg.style.visibility = "visible";
+            info_msg.style.opacity = 1;
+            info_msg.style.transition = "opacity 1s ease-in-out";
+            setTimeout(function() {
+              info_msg.style.opacity = "0";
+            }, 1800);
+            setTimeout(function() {
+              info_msg.style.visibility = "hidden";
+              me.disabled = false;
+            }, 3000);
+          }
+        });
+      }
+    }
+    function settings_tutorial_change(event) {
+      var me = event.target;
+      if (me.disabled) {
+        return;
+      }
+      me.disabled = true;
+      if ($("#settings_tutorial").is(":checked")) {
+        // checkbox is checked
+        $.ajax({
+          url: "/settings_tutorial_tips",
+          type: "get",
+          data: { settings_tutorial: true },
+          dataType: "script",
+          success: function() {
+            var info_msg = document.getElementsByClassName(
+              "settings_user_preference_notify_sucess"
+            )[0];
+            info_msg.style.display = "block";
+            info_msg.style.visibility = "visible";
+            info_msg.style.opacity = 1;
+            info_msg.style.transition = "opacity 1s ease-in-out";
+            setTimeout(function() {
+              info_msg.style.opacity = "0";
+            }, 1800);
+            setTimeout(function() {
+              info_msg.style.visibility = "hidden";
+              me.disabled = false;
+            }, 3000);
+          }
+        });
+      } else {
+        // checkbox is not checked
+        $.ajax({
+          url: "/settings_tutorial_tips",
+          type: "get",
+          data: { settings_tutorial: false },
+          dataType: "script",
+          success: function() {
+            var info_msg = document.getElementsByClassName(
+              "settings_user_preference_notify_sucess"
+            )[0];
+            info_msg.style.display = "block";
+            info_msg.style.visibility = "visible";
+            info_msg.style.opacity = 1;
+            info_msg.style.transition = "opacity 1s ease-in-out";
+            setTimeout(function() {
+              info_msg.style.opacity = "0";
+            }, 1800);
+            setTimeout(function() {
+              info_msg.style.visibility = "hidden";
+              me.disabled = false;
+            }, 3000);
+          }
+        });
+      }
     }
   </script>
 </div>

@@ -67,6 +67,12 @@
       </tbody>
     </table>
   </div>
+
+
+  <div class="desni_grafik" style="position:absolute;bottom: 51px;">
+    <%- include("./graph_revenue_expenses.ejs", { meseci: meseci, iznosi_prihodi: iznosi_prihodi, iznosi_rashodi: iznosi_rashodi } ) %>
+  </div>
+  
   <script>
     function openTab(evt, TabName) {
       // Declare all variables

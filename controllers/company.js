@@ -26,23 +26,23 @@ exports.getCompany = async (req, res, next) => {
   // stanje obaveza desno
   const datum_start = `01-01-${current_company_year}`;
   const datum_end = `12-31-${current_company_year}`;
-  const svi_stavovi = await Stav.find({
-    company: current_company_id,
-    nalog_date: { $gte: datum_start, $lte: datum_end }
-  })
-    .where("sifra_komitenta")
-    .ne(null);
+  //const svi_stavovi = await Stav.find({
+  //  company: current_company_id,
+  //  nalog_date: { $gte: datum_start, $lte: datum_end },
+  //})
+  //  .where("sifra_komitenta")
+  //  .ne(null);
   //console.log(svi_stavovi);
   const svi_komitenti = await Stav.find({
     company: current_company_id,
-    nalog_date: { $gte: datum_start, $lte: datum_end }
+    nalog_date: { $gte: datum_start, $lte: datum_end },
   })
     .where("sifra_komitenta")
     .ne(null)
     .populate({ path: "sifra_komitenta", select: "name type" })
     .populate({
       path: "sifra_komitenta",
-      populate: { path: "type", selct: "name", model: komitenttype }
+      populate: { path: "type", selct: "name", model: komitenttype },
     })
     .select("duguje potrazuje sifra_komitenta");
 
@@ -74,7 +74,7 @@ exports.getCompany = async (req, res, next) => {
   //console.log(arr2);
   // CIMANJE METOD
   // COOL METOD
-  let f = array_objekata.reduce(function(prValue, e) {
+  let f = array_objekata.reduce(function (prValue, e) {
     if (prValue[e.sifra]) {
       prValue[e.sifra].duguje += e.duguje;
       prValue[e.sifra].potrazuje += e.potrazuje;
@@ -102,7 +102,7 @@ exports.getCompany = async (req, res, next) => {
       array_dobavljaca.push(f[i]);
     }
   }
-  console.log(array_kupaca);
+  //console.log(array_kupaca);
   let array_banaka_sorted = array_banaka.sort((a, b) => {
     return a.saldo > b.saldo;
   });
@@ -112,26 +112,78 @@ exports.getCompany = async (req, res, next) => {
   let array_dobavljaca_sorted = array_dobavljaca.sort((a, b) => {
     return a.saldo > b.saldo;
   });
-  console.log("--------");
-  console.log(array_kupaca_sorted);
-  console.log("--------");
-  console.log("--------");
-  console.log(array_banaka_sorted);
-  console.log("--------");
-  console.log("--------");
-  console.log(array_dobavljaca_sorted);
-  console.log("--------");
   // COOL METOD
   // stanje obaveza desno
+
+  // GRAFIK DESNO
+  let iznosi_prihodi = [];
+  let iznosi_rashodi = [];
+
+  let svi_stavovi = await Stav.find({
+    company: current_company_id,
+    nalog_date: { $gte: datum_start, $lte: datum_end },
+  }).populate({ path: "konto", model: Konto, select: "number name" });
+  console.log(svi_stavovi[0].nalog_date.getMonth());
+  // .getMonth()// 0 januar
+  let d = {
+    0: 0,
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 0,
+    6: 0,
+    7: 0,
+    8: 0,
+    9: 0,
+    10: 0,
+    11: 0,
+  };
+  let p = {
+    0: 0,
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 0,
+    6: 0,
+    7: 0,
+    8: 0,
+    9: 0,
+    10: 0,
+    11: 0,
+  };
+  let meseci = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+
+  for (let i = 0; i < svi_stavovi.length; i++) {
+    console.log(svi_stavovi[i].konto.number[0]);
+    if (svi_stavovi[i].konto.number[0] == 5) {
+      console.log("**");
+      d[svi_stavovi[i].nalog_date.getMonth()] += svi_stavovi[i].duguje;
+      d[svi_stavovi[i].nalog_date.getMonth()] -= svi_stavovi[i].potrazuje;
+    } else if (svi_stavovi[i].konto.number[0] == 6) {
+      p[svi_stavovi[i].nalog_date.getMonth()] -= svi_stavovi[i].duguje;
+      p[svi_stavovi[i].nalog_date.getMonth()] += svi_stavovi[i].potrazuje;
+    }
+  }
+  for (let i = 0; i <= 11; i++) {
+    iznosi_rashodi.push(d[i]);
+    iznosi_prihodi.push(p[i]);
+  }
+  console.log(iznosi_prihodi);
+  console.log(iznosi_rashodi);
+  console.log(meseci);
+  // GRAFIK DESNO
+
   Company.find({ user: user._id })
-    .then(result => {
+    .then((result) => {
       if (result.length === 0) {
         res.redirect("/new_company");
       } else {
         let current_company;
         let companies = result;
         // filter mi ne radi iz nekog razloga....
-        result.map(elem => {
+        result.map((elem) => {
           elem["_id"].toString() == current_company_id.toString()
             ? (current_company = elem)
             : next;
@@ -144,17 +196,20 @@ exports.getCompany = async (req, res, next) => {
           array_dobavljaca_sorted: array_dobavljaca_sorted.slice(0, 10),
           array_kupaca_sorted: array_kupaca_sorted.slice(0, 10),
           accounting: accounting,
+          meseci: meseci,
+          iznosi_prihodi: iznosi_prihodi,
+          iznosi_rashodi: iznosi_rashodi,
           years: current_company_years,
           current_company_year: current_company_year,
           pageTitle: `Company: ${current_company.name}`,
           path: "/tok_dokumentacije",
           infoMessage: null,
           validationErrors: [],
-          successMessage: null
+          successMessage: null,
         });
       }
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
     });
 };
@@ -185,10 +240,10 @@ exports.getNewCompanyRoot = (req, res, next) => {
       pib: pib,
       email: email,
       adress: adress,
-      telephone: telephone
+      telephone: telephone,
     },
     successMessage: null,
-    validationErrors: []
+    validationErrors: [],
   });
 };
 exports.postNewCompanyRoot = (req, res, next) => {
@@ -215,17 +270,17 @@ exports.postNewCompanyRoot = (req, res, next) => {
         pib: pib,
         adress: adress,
         email: email,
-        telephone: telephone
+        telephone: telephone,
       },
       successMessage: null,
       infoMessage: null,
-      validationErrors: errors.array()
+      validationErrors: errors.array(),
     });
   }
   Company.findOne({ pib: pib })
     // findOne vraca null ako ne postoji
     // find vraca prazan array ako ne postoji
-    .then(result => {
+    .then((result) => {
       if (result) {
         return res.status(422).render("company/new_company", {
           pageTitle: "New company",
@@ -238,12 +293,12 @@ exports.postNewCompanyRoot = (req, res, next) => {
             pib: pib,
             adress: adress,
             email: email,
-            telephone: telephone
+            telephone: telephone,
           },
           successMessage: null,
           infoMessage:
             "Company with same pib and year already exists. To be added as a user to existing company, contact FinBooks! administrators.",
-          validationErrors: []
+          validationErrors: [],
         });
       } else {
         const company = new Company({
@@ -253,16 +308,16 @@ exports.postNewCompanyRoot = (req, res, next) => {
           pib: pib,
           adress: adress,
           user: user,
-          vrste_naloga: ["R", "N", "I", "Z"]
+          vrste_naloga: ["R", "N", "I", "Z"],
         });
         company
           .save()
-          .then(result => {
-            user.addCompany(company).then(result => {
+          .then((result) => {
+            user.addCompany(company).then((result) => {
               user.setActiveCompany(company);
             });
           })
-          .then(async result => {
+          .then(async (result) => {
             if (checkbox) {
               console.log("checkbox true");
               await company.createDefaultTransactions(user);
@@ -292,7 +347,7 @@ exports.getDnevnikNaloga = async (req, res, next) => {
   console.log("/get_dnevnik");
   let totalNalogs = await Nalog.find({
     company: current_company_id,
-    year: current_company_year
+    year: current_company_year,
   }).countDocuments();
   if (totalNalogs == 0) {
     return res.status(200).render("includes/dashboard/nothing_to_display", {
@@ -301,7 +356,7 @@ exports.getDnevnikNaloga = async (req, res, next) => {
       hasError: false,
       successMessage: null,
       infoMessage: "There are no ledger entries.",
-      validationErrors: []
+      validationErrors: [],
     });
   }
   if (page > Math.ceil(totalNalogs / NALOGS_PER_PAGE)) {
@@ -311,7 +366,7 @@ exports.getDnevnikNaloga = async (req, res, next) => {
   }
   let nalozi = await Nalog.find({
     company: current_company_id,
-    year: current_company_year
+    year: current_company_year,
   })
     .skip((page - 1) * NALOGS_PER_PAGE)
     .limit(NALOGS_PER_PAGE);
@@ -335,7 +390,7 @@ exports.getDnevnikNaloga = async (req, res, next) => {
     lastPage: Math.ceil(totalNalogs / NALOGS_PER_PAGE),
     successMessage: null,
     infoMessage: null,
-    validationErrors: []
+    validationErrors: [],
   });
 };
 
@@ -370,12 +425,12 @@ exports.getKontniPlan = async (req, res, next) => {
   const user = req.user;
   const companies = await Company.find({ user: user });
   const current_company = await Company.findOne({
-    _id: req.current_company_id
+    _id: req.current_company_id,
   });
   const page = +req.page || 1;
   let totalKontos;
   const kontos = await Konto.find({
-    company: current_company
+    company: current_company,
   }); //
   //.countDocuments()
   //.then(numberOfKontos => {
@@ -385,10 +440,10 @@ exports.getKontniPlan = async (req, res, next) => {
   //    .limit(KONTNI_PLAN_PER_PAGE); //paginacija;
   //});
   const okvir = await Okvir.find({
-    company: current_company
+    company: current_company,
   }).sort({ number: 1 });
   const sva_konta = await Konto.find({ company: current_company }).sort({
-    number: 1
+    number: 1,
   });
   const sva_konta_i_okvir = [];
 
@@ -397,7 +452,7 @@ exports.getKontniPlan = async (req, res, next) => {
     if (okvir[i].number.length == 2) {
       let num = okvir[i].number;
       let regex = new RegExp("^" + num);
-      sva_konta.map(konto => {
+      sva_konta.map((konto) => {
         if (konto.number.match(regex)) {
           sva_konta_i_okvir.push(konto);
         }
@@ -429,7 +484,7 @@ exports.getKontniPlan = async (req, res, next) => {
     years: years,
     successMessage: null,
     infoMessage: null,
-    validationErrors: [] //,
+    validationErrors: [], //,
     //currentPage: page,
     //hasNextPage: KONTNI_PLAN_PER_PAGE * page < totalKontos,
     //hasPreviousPage: page > 1,
@@ -443,7 +498,7 @@ exports.getShowKonto = async (req, res, next) => {
   const current_company_year = req.current_company_year;
   const years = req.current_company_years;
   const current_company = await Company.findOne({
-    _id: req.current_company_id
+    _id: req.current_company_id,
   });
   const companies = await Company.find({ user: user });
   const datum_start = `01-01-${current_company_year}`;
@@ -454,7 +509,7 @@ exports.getShowKonto = async (req, res, next) => {
   const svi_stavovi = await Stav.find({
     company: current_company,
     konto: konto,
-    nalog_date: { $gte: datum_start, $lte: datum_end }
+    nalog_date: { $gte: datum_start, $lte: datum_end },
   })
     .populate({ path: "nalog", model: Nalog })
     .sort({ date: "asc" });
@@ -477,7 +532,7 @@ exports.getShowKonto = async (req, res, next) => {
     years: years,
     successMessage: null,
     infoMessage: null,
-    validationErrors: [] //,
+    validationErrors: [], //,
     //currentPage: page,
     //hasNextPage: KONTNI_PLAN_PER_PAGE * page < totalKontos,
     //hasPreviousPage: page > 1,
@@ -494,7 +549,7 @@ exports.getTokDokumentacije = (req, res, next) => {
     hasError: false,
     successMessage: null,
     infoMessage: null,
-    validationErrors: []
+    validationErrors: [],
   });
 };
 exports.getNotImplemented = (req, res, next) => {
@@ -505,7 +560,7 @@ exports.getNotImplemented = (req, res, next) => {
     hasError: false,
     successMessage: null,
     infoMessage: "Functionality not implemented in this software version.",
-    validationErrors: []
+    validationErrors: [],
   });
 };
 exports.getRefreshStanjeObaveza = async (req, res, next) => {
@@ -524,21 +579,21 @@ exports.getRefreshStanjeObaveza = async (req, res, next) => {
   const datum_end = `12-31-${current_company_year}`;
   const svi_stavovi = await Stav.find({
     company: current_company_id,
-    nalog_date: { $gte: datum_start, $lte: datum_end }
+    nalog_date: { $gte: datum_start, $lte: datum_end },
   })
     .where("sifra_komitenta")
     .ne(null);
   //console.log(svi_stavovi);
   const svi_komitenti = await Stav.find({
     company: current_company_id,
-    nalog_date: { $gte: datum_start, $lte: datum_end }
+    nalog_date: { $gte: datum_start, $lte: datum_end },
   })
     .where("sifra_komitenta")
     .ne(null)
     .populate({ path: "sifra_komitenta", select: "name type" })
     .populate({
       path: "sifra_komitenta",
-      populate: { path: "type", selct: "name", model: komitenttype }
+      populate: { path: "type", selct: "name", model: komitenttype },
     })
     .select("duguje potrazuje sifra_komitenta");
 
@@ -554,7 +609,7 @@ exports.getRefreshStanjeObaveza = async (req, res, next) => {
     array_objekata.push(objekat);
   }
 
-  let f = array_objekata.reduce(function(prValue, e) {
+  let f = array_objekata.reduce(function (prValue, e) {
     if (prValue[e.sifra]) {
       prValue[e.sifra].duguje += e.duguje;
       prValue[e.sifra].potrazuje += e.potrazuje;
@@ -602,14 +657,77 @@ exports.getRefreshStanjeObaveza = async (req, res, next) => {
   console.log(array_dobavljaca_sorted);
   console.log("--------");
 
+  // GRAFIK DESNO
+  let iznosi_prihodi = [];
+  let iznosi_rashodi = [];
+
+  let svi_stavovi2 = await Stav.find({
+    company: current_company_id,
+    nalog_date: { $gte: datum_start, $lte: datum_end },
+  }).populate({ path: "konto", model: Konto, select: "number name" });
+  //console.log(svi_stavovi2[0].nalog_date.getMonth());
+  // .getMonth()// 0 januar
+  let d = {
+    0: 0,
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 0,
+    6: 0,
+    7: 0,
+    8: 0,
+    9: 0,
+    10: 0,
+    11: 0,
+  };
+  let p = {
+    0: 0,
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 0,
+    6: 0,
+    7: 0,
+    8: 0,
+    9: 0,
+    10: 0,
+    11: 0,
+  };
+  let meseci = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+
+  for (let i = 0; i < svi_stavovi2.length; i++) {
+    console.log(svi_stavovi2[i].konto.number[0]);
+    if (svi_stavovi2[i].konto.number[0] == 5) {
+      console.log("**");
+      d[svi_stavovi2[i].nalog_date.getMonth()] += svi_stavovi2[i].duguje;
+      d[svi_stavovi2[i].nalog_date.getMonth()] -= svi_stavovi2[i].potrazuje;
+    } else if (svi_stavovi2[i].konto.number[0] == 6) {
+      p[svi_stavovi2[i].nalog_date.getMonth()] -= svi_stavovi2[i].duguje;
+      p[svi_stavovi2[i].nalog_date.getMonth()] += svi_stavovi2[i].potrazuje;
+    }
+  }
+  for (let i = 0; i <= 11; i++) {
+    iznosi_rashodi.push(d[i]);
+    iznosi_prihodi.push(p[i]);
+  }
+  console.log(iznosi_prihodi);
+  console.log(iznosi_rashodi);
+  console.log(meseci);
+  // GRAFIK DESNO
+
   return res.render("includes/stanje_obaveza", {
     user: user,
     array_banaka_sorted: array_banaka_sorted.slice(0, 10),
     array_dobavljaca_sorted: array_dobavljaca_sorted.slice(0, 10),
     array_kupaca_sorted: array_kupaca_sorted.slice(0, 10),
     accounting: accounting,
+    meseci: meseci,
+    iznosi_prihodi: iznosi_prihodi,
+    iznosi_rashodi: iznosi_rashodi,
     infoMessage: null,
     validationErrors: [],
-    successMessage: null
+    successMessage: null,
   });
 };

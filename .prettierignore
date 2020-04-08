@@ -2,3 +2,5 @@ models/seeds/ostali_nalozi.js
 models/seeds/seed_okvir.js
 controllers/konto.js
 routes/konto.js
+views/includes/graph_revenue_expenses.ejs
+views/includes/graph_summarized_claims.ejs

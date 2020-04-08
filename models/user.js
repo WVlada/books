@@ -8,7 +8,7 @@ const Komitenttype = require("./komitenttype");
 const Okvir = require("./okvir");
 const Schema = mongoose.Schema;
 const seedOkvir = require("./seeds/seed_okvir");
-const seedZaDruguITrecu = require('./seeds/seed_za_drugu_i_trecu')
+const seedZaDruguITrecu = require("./seeds/seed_za_drugu_i_trecu");
 
 const userSchema = new Schema({
   email: {
@@ -46,6 +46,15 @@ const userSchema = new Schema({
     required: false
   },
   fromLinkedIn: {
+    type: Boolean
+  },
+  permisions: {
+    type: Boolean
+  },
+  autosave: {
+    type: Boolean
+  },
+  tutorial_tips: {
     type: Boolean
   }
 });
@@ -95,8 +104,8 @@ userSchema.methods.createMoreCompanies = async function(company) {
   await seedOkvir(company2);
   await seedOkvir(company3);
 
-  await seedZaDruguITrecu(this, company2)
-  await seedZaDruguITrecu(this, company3)
+  await seedZaDruguITrecu(this, company2);
+  await seedZaDruguITrecu(this, company3);
 };
 
 userSchema.methods.deleteAllConnectedRecords = async function() {

@@ -35,9 +35,17 @@ const companySchema = new Schema({
     { vrsta: "N", type: String },
     { vrsta: "Z", type: String },
     { vrsta: "I", type: String }
-  ]
+  ],
+  adress: {
+    type: String
+  },
+  email: {
+    type: String
+  },
+  telephone: {
+    type: String
+  }
 });
-
 
 companySchema.methods.createDefaultTransactions = async function(user) {
   await seedNalogs(this, user);
@@ -46,4 +54,3 @@ companySchema.methods.createDefaultTransactions = async function(user) {
 };
 
 module.exports = mongoose.model("Company", companySchema);
-
