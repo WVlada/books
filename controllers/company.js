@@ -123,7 +123,7 @@ exports.getCompany = async (req, res, next) => {
     company: current_company_id,
     nalog_date: { $gte: datum_start, $lte: datum_end },
   }).populate({ path: "konto", model: Konto, select: "number name" });
-  console.log(svi_stavovi[0].nalog_date.getMonth());
+  //console.log(svi_stavovi[0].nalog_date.getMonth());
   // .getMonth()// 0 januar
   let d = {
     0: 0,

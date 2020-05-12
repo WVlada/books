@@ -33,7 +33,20 @@
   </div>
 </div>
 <% } %>
-
+	<div id="welcome">
+		<div class="welcome">
+			<div class="welcome-title">
+        <h1>Welcome</h1>
+      </div>
+      <p>This app is made for presentation purposes.</p>
+      <h2>Chose Sign in with LinkedIn option to continue</h2>
+			<p><b>Signing in with LinkedIn account</b>, seeds database with example data. All app features are enabled, and functional. No user data is being stored (email, name etc...).</p>
+        <p>Clicking logout button, clears your user data and every change you might made.</p>
+      <br/>
+        <p><b>Registering with actual email adress</b> and password is also functional. Confirmation mail will be sent, which requires your working email. No example data will be seeded, application will start with blank database.</p>
+			<div class="click_to_continue">Click here to continue</div>
+		</div>
+	</div>
 <div class="slika-container">
   <div id="login_slika" class="col-md-6">
     <form class="login_form" action="/login" method="POST">
@@ -106,3 +119,24 @@
     }
   }
 </script>
+  <script
+    src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+    crossorigin="anonymous"
+  ></script>
+  <script>
+$(document).ready(function(){
+    $('#welcome').fadeIn(200)
+  }
+  )
+  $(document)
+      .off("click", "div.click_to_continue")
+      .on("click", "div.click_to_continue", function() {
+        $("#welcome").fadeOut();
+      })
+  </script>
+        
+
+  
+  
+
