@@ -84,7 +84,7 @@ userSchema.methods.createMoreCompanies = async function(company) {
     vrste_naloga: ["R", "N", "I", "Z"],
     name: "Software Inc.",
     mb: "12332112",
-    pib: "123321123",
+    pib: "123321123",//this breaks unique field restriction
     user: this
   });
   this.company.push({ _id: company2._id });

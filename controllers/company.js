@@ -17,6 +17,10 @@ exports.getCompany = async (req, res, next) => {
   const current_company_id = req.current_company_id;
   const current_company_year = req.current_company_year;
   const current_company_years = req.current_company_years;
+  if (req.session.isLoggedIn === true && req.user.company.length == 0) {
+    console.log("User is made, but he broke process on creating company, so he has no company to show");
+    return res.redirect("/");
+  }
   console.log("/show_company");
   console.log(user);
   console.log(current_company_id);
@@ -156,7 +160,7 @@ exports.getCompany = async (req, res, next) => {
   let meseci = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 
   for (let i = 0; i < svi_stavovi.length; i++) {
-    console.log(svi_stavovi[i].konto.number[0]);
+    //console.log(svi_stavovi[i].konto.number[0]);
     if (svi_stavovi[i].konto.number[0] == 5) {
       console.log("**");
       d[svi_stavovi[i].nalog_date.getMonth()] += svi_stavovi[i].duguje;
@@ -170,9 +174,9 @@ exports.getCompany = async (req, res, next) => {
     iznosi_rashodi.push(d[i]);
     iznosi_prihodi.push(p[i]);
   }
-  console.log(iznosi_prihodi);
-  console.log(iznosi_rashodi);
-  console.log(meseci);
+  //console.log(iznosi_prihodi);
+  //console.log(iznosi_rashodi);
+  //console.log(meseci);
   // GRAFIK DESNO
 
   Company.find({ user: user._id })
@@ -216,6 +220,10 @@ exports.getCompany = async (req, res, next) => {
 
 exports.getNewCompanyRoot = (req, res, next) => {
   const user = req.user;
+  if (user.company.length != 0){
+    console.log("you got here by typing adress in adress bar")
+    return res.redirect('/')
+  }
   let name = "";
   let mb = "";
   let pib = "";
@@ -230,10 +238,16 @@ exports.getNewCompanyRoot = (req, res, next) => {
     adress = "Bulevar Mihajla Pupina 120";
     telephone = "064555555";
   }
+  let infoMsg;
+  if (req.session["info"]) {
+    infoMsg = req.session["info"];
+  } else {
+    infoMsg = "Please enter data about the company";
+  }
   res.render("company/new_company", {
     pageTitle: "New company",
     path: "/new_company",
-    infoMessage: "Please enter data about the company",
+    infoMessage: infoMsg,
     oldInput: {
       name: name,
       mb: mb,

@@ -85,7 +85,7 @@ router.post(
 
 router.get("/confirm-email/:token", userController.confirmEmail); //ovo je param
 
-router.get("/create_company", userController.createCompany);
+//router.get("/create_company", userController.createCompany);
 
 router.get("/logout", userController.getLogout);
 router.get("/settings", userController.getSettings);
