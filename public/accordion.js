@@ -162,6 +162,50 @@ $(document).on("click", "#accordion_zakljucni_trocifren", function() {
     }
   });
 });
+$(document).on("click", "#graph_rev_exp", function() {
+  var graph_rev_exp_dugme = $(this);
+  $.ajax({
+    url: "/graph_rev_exp",
+    type: "get",
+    data: { "": "" },
+    dataType: "html",
+    complete: function() {
+      graph_rev_exp_dugme.data("requestRunning", false);
+    },
+    success: function(html) {
+      $("div.centar")
+        .fadeOut(0)
+        .html(html)
+        .fadeIn(500);
+      $("#loader").fadeOut();
+    },
+    beforeSend: function() {
+      $("#loader").fadeIn(200);
+    }
+  });
+});
+$(document).on("click", "#graph_days_due", function() {
+  var graph_days_due_dugme = $(this);
+  $.ajax({
+    url: "/graph_days_due",
+    type: "get",
+    data: { "": "" },
+    dataType: "html",
+    complete: function() {
+      graph_days_due_dugme.data("requestRunning", false);
+    },
+    success: function(html) {
+      $("div.centar")
+        .fadeOut(0)
+        .html(html)
+        .fadeIn(500);
+      $("#loader").fadeOut();
+    },
+    beforeSend: function() {
+      $("#loader").fadeIn(200);
+    }
+  });
+});
 $(document).on("click", "#overview_button", function() {
   $.ajax({
     url: "/overview",

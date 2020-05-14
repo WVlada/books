@@ -337,33 +337,29 @@ $(document)
       //  }
       //  });
       //});
-      $(document).off("click", "#close_year_dole").on("click", "#close_year_dole", function() {
-  var zakljucni_list_row = $(this);
-  
-  
-  if (zakljucni_list_row.data("requestRunning")) {
-          return;
-  }
-  zakljucni_list_row.data("requestRunning", true);
-  //var win = window.open('', '_blank');
-  
-  
-  $.ajax({
-    url: "/close_year",
-    type: "get",
-    dataType: "html",
-    complete: function() {
-      zakljucni_list_row.data("requestRunning", false);
-    },
-    success: function(json) {
-      $("div.centar").fadeOut(0).html(html).fadeIn(500)
-      //pdfMake.createPdf(JSON.parse(json)).open({}, win);
-      $('#loader').fadeOut();
-    },
-    beforeSend: function(){
-      $('#loader').fadeIn(200)
+  $(document).off("click", "#close_year_dole").on("click", "#close_year_dole", function() {
+    var close_year_button = $(this);
+    if (close_year_button.data("requestRunning")) {
+        return;
     }
-  });
+    close_year_button.data("requestRunning", true);
+    return;
+  //$.ajax({
+  //  url: "/close_year",
+  //  type: "get",
+  //  dataType: "html",
+  //  complete: function() {
+  //    zakljucni_list_row.data("requestRunning", false);
+  //  },
+  //  success: function(json) {
+  //    $("div.centar").fadeOut(0).html(html).fadeIn(500)
+  //    //pdfMake.createPdf(JSON.parse(json)).open({}, win);
+  //    $('#loader').fadeOut();
+  //  },
+  //  beforeSend: function(){
+  //    $('#loader').fadeIn(200)
+  //  }
+  //});
 });
 //$(document).off("click", "#print_to_pdf_dole_trocifren").on("click", "#print_to_pdf_dole_trocifren", function() {
 //  var zakljucni_list_row = $(this);

@@ -745,3 +745,166 @@ exports.getRefreshStanjeObaveza = async (req, res, next) => {
     successMessage: null,
   });
 };
+
+exports.getGraphRevExp = async (req, res, next) => {
+  // GRAFIK DESNO
+  const user = req.user;
+  const current_company_id = req.current_company_id;
+  const current_company_year = req.current_company_year;
+  const current_company_years = req.current_company_years;
+
+  const datum_start = `01-01-${current_company_year}`;
+  const datum_end = `12-31-${current_company_year}`;
+
+  let iznosi_prihodi = [];
+  let iznosi_rashodi = [];
+
+  let svi_stavovi2 = await Stav.find({
+    company: current_company_id,
+    nalog_date: { $gte: datum_start, $lte: datum_end },
+  }).populate({ path: "konto", model: Konto, select: "number name" });
+  //console.log(svi_stavovi2[0].nalog_date.getMonth());
+  // .getMonth()// 0 januar
+  let d = {
+    0: 0,
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 0,
+    6: 0,
+    7: 0,
+    8: 0,
+    9: 0,
+    10: 0,
+    11: 0,
+  };
+  let p = {
+    0: 0,
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 0,
+    6: 0,
+    7: 0,
+    8: 0,
+    9: 0,
+    10: 0,
+    11: 0,
+  };
+  let meseci = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+
+  for (let i = 0; i < svi_stavovi2.length; i++) {
+    console.log(svi_stavovi2[i].konto.number[0]);
+    if (svi_stavovi2[i].konto.number[0] == 5) {
+      console.log("**");
+      d[svi_stavovi2[i].nalog_date.getMonth()] += svi_stavovi2[i].duguje;
+      d[svi_stavovi2[i].nalog_date.getMonth()] -= svi_stavovi2[i].potrazuje;
+    } else if (svi_stavovi2[i].konto.number[0] == 6) {
+      p[svi_stavovi2[i].nalog_date.getMonth()] -= svi_stavovi2[i].duguje;
+      p[svi_stavovi2[i].nalog_date.getMonth()] += svi_stavovi2[i].potrazuje;
+    }
+  }
+  for (let i = 0; i <= 11; i++) {
+    iznosi_rashodi.push(d[i]);
+    iznosi_prihodi.push(p[i]);
+  }
+  console.log(iznosi_prihodi);
+  console.log(iznosi_rashodi);
+  console.log(meseci);
+  // GRAFIK DESNO
+
+  return res.render("includes/dashboard/graph_rev_exp.ejs", {
+    user: user,
+    
+    accounting: accounting,
+    meseci: meseci,
+    iznosi_prihodi: iznosi_prihodi,
+    iznosi_rashodi: iznosi_rashodi,
+    infoMessage: null,
+    validationErrors: [],
+    successMessage: null,
+  });
+};
+exports.getGraphDaysDue = async (req, res, next) => {
+  // GRAFIK DESNO
+  const user = req.user;
+  const current_company_id = req.current_company_id;
+  const current_company_year = req.current_company_year;
+  const current_company_years = req.current_company_years;
+
+  const datum_start = `01-01-${current_company_year}`;
+  const datum_end = `12-31-${current_company_year}`;
+
+  let iznosi_prihodi = [];
+  let iznosi_rashodi = [];
+
+  let svi_stavovi2 = await Stav.find({
+    company: current_company_id,
+    nalog_date: { $gte: datum_start, $lte: datum_end },
+  }).populate({ path: "konto", model: Konto, select: "number name" });
+  //console.log(svi_stavovi2[0].nalog_date.getMonth());
+  // .getMonth()// 0 januar
+  let d = {
+    0: 0,
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 0,
+    6: 0,
+    7: 0,
+    8: 0,
+    9: 0,
+    10: 0,
+    11: 0,
+  };
+  let p = {
+    0: 0,
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 0,
+    6: 0,
+    7: 0,
+    8: 0,
+    9: 0,
+    10: 0,
+    11: 0,
+  };
+  //let meseci = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+
+  for (let i = 0; i < svi_stavovi2.length; i++) {
+    console.log(svi_stavovi2[i].konto.number[0]);
+    if (svi_stavovi2[i].konto.number[0] == 5) {
+      console.log("**");
+      d[svi_stavovi2[i].nalog_date.getMonth()] += svi_stavovi2[i].duguje;
+      d[svi_stavovi2[i].nalog_date.getMonth()] -= svi_stavovi2[i].potrazuje;
+    } else if (svi_stavovi2[i].konto.number[0] == 6) {
+      p[svi_stavovi2[i].nalog_date.getMonth()] -= svi_stavovi2[i].duguje;
+      p[svi_stavovi2[i].nalog_date.getMonth()] += svi_stavovi2[i].potrazuje;
+    }
+  }
+  for (let i = 0; i <= 11; i++) {
+    iznosi_rashodi.push(d[i]);
+    iznosi_prihodi.push(p[i]);
+  }
+  console.log(iznosi_prihodi);
+  console.log(iznosi_rashodi);
+  //console.log(meseci);
+  // GRAFIK DESNO
+
+  return res.render("includes/dashboard/graph_days_due.ejs", {
+    user: user,
+    
+    accounting: accounting,
+    //meseci: meseci,
+    iznosi_prihodi: iznosi_prihodi,
+    iznosi_rashodi: iznosi_rashodi,
+    infoMessage: null,
+    validationErrors: [],
+    successMessage: null,
+  });
+};

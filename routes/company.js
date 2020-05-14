@@ -75,4 +75,7 @@ router.get(
   companyController.getRefreshStanjeObaveza
 );
 
+router.get("/graph_rev_exp", isAuth, companyController.getGraphRevExp);
+router.get("/graph_days_due", isAuth, companyController.getGraphDaysDue);
+
 module.exports = router;

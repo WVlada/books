@@ -1,0 +1,32 @@
+<div
+  id="table"
+>
+<canvas id="myChart" width="900px" height="572px" ></canvas>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js'>
+</script>
+<script>
+    
+    var ctx = document.getElementById('myChart');
+    var myLineChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: ["January", "Februar", "March", "April", "June", "July", "Avgust","September","Nevember","Oktober","December" ],
+        datasets: [{
+            label: 'expenses',
+            data: [<%= iznosi_rashodi %>],
+            borderColor: "#B0B1D2",
+            backgroundColor: "#B0B1D2",
+            fill: -1
+            },
+        {
+            label: 'revenues',
+            data: [<%= iznosi_prihodi %>],
+            borderColor: "#49435b",
+            backgroundColor: "#6c757d",
+            fill: -1
+        }]
+        },
+    options: {width: "100px" ,height: "100px", responsive: false}
+});
+</script>
+</div>
