@@ -179,6 +179,54 @@ exports.getCompany = async (req, res, next) => {
   //console.log(meseci);
   // GRAFIK DESNO
 
+  // GRAFIK LEVO
+  let svi_stavovi3 = await Stav.find({
+    company: current_company_id,
+    nalog_date: { $gte: datum_start, $lte: datum_end },
+    valuta: { $exists: true, $ne: null }, pozivnabroj: { $exists: true, $ne: null }
+  }).populate({ path: "konto", model: Konto, select: "number name" });
+  // problem je sto ovako racunato, i stavovi sa duguje saldom moraju imati
+  // polje valuta, da bi bili uzeti u obzir
+  obj = {}
+  //console.log(svi_stavovi3)
+  for (let i = 0; i <= svi_stavovi3.length-1; i++) {
+    if (obj[svi_stavovi3[i].pozivnabroj]){
+      obj[svi_stavovi3[i].pozivnabroj]['duguje'] += svi_stavovi3[i].duguje
+      obj[svi_stavovi3[i].pozivnabroj]['potrazuje'] += svi_stavovi3[i].potrazuje
+    }
+    else {
+      obj[svi_stavovi3[i].pozivnabroj] = {}
+      obj['svi_pozivi_array'] = []
+      obj['svi_pozivi_array'].push(svi_stavovi3[i].pozivnabroj)
+      obj[svi_stavovi3[i].pozivnabroj]['datum'] = svi_stavovi3[i].valuta
+      obj[svi_stavovi3[i].pozivnabroj]['duguje'] = svi_stavovi3[i].duguje
+      obj[svi_stavovi3[i].pozivnabroj]['potrazuje'] = svi_stavovi3[i].potrazuje
+    }
+  }
+  //console.log(obj)
+  const current_time_number = Date.now();
+  let les_30 = 0;
+  let les_90 = 0;
+  let more_90 = 0;
+  for(let i = 0; i <= obj.svi_pozivi_array.length -1 ; i++){
+    let t = new Date( obj[obj.svi_pozivi_array[i]].datum )
+    if (obj[obj.svi_pozivi_array[i]].potrazuje > obj[obj.svi_pozivi_array[i]].duguje){
+      // inner loop
+      if (current_time_number - t < (30*1000*60*60*24)){
+        les_30 += obj[obj.svi_pozivi_array[i]].potrazuje
+      }
+      else if (current_time_number - t < (90*1000*60*60*24)) {
+        les_90 += obj[obj.svi_pozivi_array[i]].potrazuje
+      }
+      else {
+        more_90 += obj[obj.svi_pozivi_array[i]].potrazuje
+      }
+    // inner loop
+    }  
+  }
+  const data = [les_30, les_90, more_90]
+  // GRAFIK LEVO
+
   Company.find({ user: user._id })
     .then((result) => {
       if (result.length === 0) {
@@ -203,6 +251,7 @@ exports.getCompany = async (req, res, next) => {
           meseci: meseci,
           iznosi_prihodi: iznosi_prihodi,
           iznosi_rashodi: iznosi_rashodi,
+          data: data,
           years: current_company_years,
           current_company_year: current_company_year,
           pageTitle: `Company: ${current_company.name}`,
@@ -828,7 +877,7 @@ exports.getGraphRevExp = async (req, res, next) => {
   });
 };
 exports.getGraphDaysDue = async (req, res, next) => {
-  // GRAFIK DESNO
+  // GRAFIK LEVO
   const user = req.user;
   const current_company_id = req.current_company_id;
   const current_company_year = req.current_company_year;
@@ -840,69 +889,56 @@ exports.getGraphDaysDue = async (req, res, next) => {
   let iznosi_prihodi = [];
   let iznosi_rashodi = [];
 
-  let svi_stavovi2 = await Stav.find({
+  let svi_stavovi3 = await Stav.find({
     company: current_company_id,
     nalog_date: { $gte: datum_start, $lte: datum_end },
+    valuta: { $exists: true, $ne: null }, pozivnabroj: { $exists: true, $ne: null }
   }).populate({ path: "konto", model: Konto, select: "number name" });
-  //console.log(svi_stavovi2[0].nalog_date.getMonth());
-  // .getMonth()// 0 januar
-  let d = {
-    0: 0,
-    1: 0,
-    2: 0,
-    3: 0,
-    4: 0,
-    5: 0,
-    6: 0,
-    7: 0,
-    8: 0,
-    9: 0,
-    10: 0,
-    11: 0,
-  };
-  let p = {
-    0: 0,
-    1: 0,
-    2: 0,
-    3: 0,
-    4: 0,
-    5: 0,
-    6: 0,
-    7: 0,
-    8: 0,
-    9: 0,
-    10: 0,
-    11: 0,
-  };
-  //let meseci = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
-
-  for (let i = 0; i < svi_stavovi2.length; i++) {
-    console.log(svi_stavovi2[i].konto.number[0]);
-    if (svi_stavovi2[i].konto.number[0] == 5) {
-      console.log("**");
-      d[svi_stavovi2[i].nalog_date.getMonth()] += svi_stavovi2[i].duguje;
-      d[svi_stavovi2[i].nalog_date.getMonth()] -= svi_stavovi2[i].potrazuje;
-    } else if (svi_stavovi2[i].konto.number[0] == 6) {
-      p[svi_stavovi2[i].nalog_date.getMonth()] -= svi_stavovi2[i].duguje;
-      p[svi_stavovi2[i].nalog_date.getMonth()] += svi_stavovi2[i].potrazuje;
+  // problem je sto ovako racunato, i stavovi sa duguje saldom moraju imati
+  // polje valuta, da bi bili uzeti u obzir
+  obj = {}
+  //console.log(svi_stavovi3)
+  for (let i = 0; i <= svi_stavovi3.length-1; i++) {
+    if (obj[svi_stavovi3[i].pozivnabroj]){
+      obj[svi_stavovi3[i].pozivnabroj]['duguje'] += svi_stavovi3[i].duguje
+      obj[svi_stavovi3[i].pozivnabroj]['potrazuje'] += svi_stavovi3[i].potrazuje
+    }
+    else {
+      obj[svi_stavovi3[i].pozivnabroj] = {}
+      obj['svi_pozivi_array'] = []
+      obj['svi_pozivi_array'].push(svi_stavovi3[i].pozivnabroj)
+      obj[svi_stavovi3[i].pozivnabroj]['datum'] = svi_stavovi3[i].valuta
+      obj[svi_stavovi3[i].pozivnabroj]['duguje'] = svi_stavovi3[i].duguje
+      obj[svi_stavovi3[i].pozivnabroj]['potrazuje'] = svi_stavovi3[i].potrazuje
     }
   }
-  for (let i = 0; i <= 11; i++) {
-    iznosi_rashodi.push(d[i]);
-    iznosi_prihodi.push(p[i]);
+  //console.log(obj)
+  const current_time_number = Date.now();
+  let les_30 = 0;
+  let les_90 = 0;
+  let more_90 = 0;
+  for(let i = 0; i <= obj.svi_pozivi_array.length -1 ; i++){
+    let t = new Date( obj[obj.svi_pozivi_array[i]].datum )
+    if (obj[obj.svi_pozivi_array[i]].potrazuje > obj[obj.svi_pozivi_array[i]].duguje){
+      // inner loop
+      if (current_time_number - t < (30*1000*60*60*24)){
+        les_30 += obj[obj.svi_pozivi_array[i]].potrazuje
+      }
+      else if (current_time_number - t < (90*1000*60*60*24)) {
+        les_90 += obj[obj.svi_pozivi_array[i]].potrazuje
+      }
+      else {
+        more_90 += obj[obj.svi_pozivi_array[i]].potrazuje
+      }
+    // inner loop
+    }  
   }
-  console.log(iznosi_prihodi);
-  console.log(iznosi_rashodi);
-  //console.log(meseci);
-  // GRAFIK DESNO
-
+  const data = [les_30, les_90, more_90]
+  //console.log(data)
   return res.render("includes/dashboard/graph_days_due.ejs", {
     user: user,
-    
     accounting: accounting,
-    //meseci: meseci,
-    iznosi_prihodi: iznosi_prihodi,
-    iznosi_rashodi: iznosi_rashodi,
+    data: data,
     infoMessage: null,
     validationErrors: [],
     successMessage: null,

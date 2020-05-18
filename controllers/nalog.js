@@ -574,7 +574,7 @@ exports.updateNalog = async (req, res, next) => {
         company: current_company_id,
         opis: opis_stava_array[i],
         sifra_komitenta: sifra_komitenta_array[i],
-        poziv_na_broj: poziv_na_broj_array[i],
+        pozivnabroj: poziv_na_broj_array[i],
         konto: array_konta_za_snimanje[i],
         duguje: Number(Number(duguje_array[i].replace(/,/g, "")).toFixed(2)),
         potrazuje: Number(

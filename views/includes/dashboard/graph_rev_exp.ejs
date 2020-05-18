@@ -10,7 +10,7 @@
     var myLineChart = new Chart(ctx, {
     type: 'line',
     data: {
-        labels: [<%= meseci.slice(0, 5) %>],
+        labels: [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "Oktober", "November", "December" ],
         datasets: [{
             label: 'expenses',
             data: [<%= iznosi_rashodi %>],

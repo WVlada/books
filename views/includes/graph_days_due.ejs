@@ -1,12 +1,10 @@
-<div
-  id="table"
->
-<canvas id="myChart" width="900px" height="572px" ></canvas>
+
+<canvas id="graph_days_due_levo" width="180px" height="180px" ></canvas>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js'>
 </script>
 <script>
     
-    var ctx = document.getElementById('myChart');
+    var ctx = document.getElementById('graph_days_due_levo');
     var myLineChart = new Chart(ctx, {
     type: 'doughnut',
     data: {
@@ -21,4 +19,4 @@
         }, options: { responsive: false}
 });
 </script>
-</div>
+
