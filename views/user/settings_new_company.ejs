@@ -1,0 +1,181 @@
+
+<div id="settings_new_company_modal_background">
+<div class="settings_slika-container">
+    <link rel="stylesheet" href="/css/new_company.css" />
+<script
+  src="https://kit.fontawesome.com/ca144eb439.js"
+  crossorigin="anonymous"
+></script>
+
+
+<% if (infoMessage) { %>
+<div id="user-message" class="settings_user-message-div">
+  <div class="settings_user-message user-message--info">
+    <ul class="user-message-error-list">
+      <li><%= infoMessage %></li>
+    </ul>
+  </div>
+</div>
+<% } %> <% if (validationErrors.length > 0) { %>
+<div id="user-message" class="settings_user-message-div">
+  <div class="settings_user-message user-message--error">
+    <ul class="user-message-error-list">
+      <% validationErrors.forEach(error=>{ %>
+      <li><%= error.msg %></li>
+      <% }) %>
+    </ul>
+  </div>
+</div>
+<% } %> <% if (successMessage) { %>
+<div id="user-message" class="settings_user-message-div">
+  <div class="settings_user-message user-message--success">
+    <ul class="user-message-error-list">
+      <li><%= successMessage %></li>
+    </ul>
+  </div>
+</div>
+<% } %>
+
+
+  <div class="slika-container_new_company">
+    <div id="settings_new_companysignup_slika" class="col-md-6">
+      <div class="new_company_slika_div">
+        <p class="new_company_slika_text_iznad">
+          Create new company
+        </p>
+        <img
+          class="new_company_slika"
+          src="../../images/company.png"
+          alt="New company"
+        />
+        <p class="new_company_slika_text">
+          
+        </p>
+        <p class="new_company_slika_text_ispod">
+          
+        </p>
+      </div>
+      <form class="new_company_form" action="/new_company" method="POST">
+        <div class="form-control">
+          <input
+            class="new_company_input new_company_input_name <%= validationErrors.find(e => e.param ==='name') ? 'invalid' : ''%>"
+            type="text"
+            placeholder="Company name"
+            name="name"
+            id="name"
+            value="<%= oldInput.name %>"
+          />
+        </div>
+        <div class="form-control">
+          <% date = new Date(Date.now()) %>
+          <select
+            name="year"
+            id="year"
+            class="new_company_input new_company_input_year <%= validationErrors.find(e => e.param ==='year') ? 'invalid' : ''%>"
+          >
+            <option><%= date.getFullYear() %></option>
+            <option><%= date.getFullYear()-3 %></option>
+            <option><%= date.getFullYear()-2 %></option>
+            <option><%= date.getFullYear()-1 %></option>
+            <option><%= date.getFullYear()+1 %></option>
+          </select>
+        </div>
+        <div class="settings_new_company_inline_div">
+          <div class="form-control new_company_inline">
+            <input
+              class="new_company_input new_company_input_mb <%= validationErrors.find(e => e.param ==='mb') ? 'invalid' : ''%>"
+              type="mb"
+              placeholder="mb: 8 digits"
+              name="mb"
+              id="mb"
+              value="<%= oldInput.mb %>"
+            />
+          </div>
+          <div class="form-control new_company_inline">
+            <input
+              class="new_company_input new_company_input_pib <%= validationErrors.find(e => e.param ==='pib') ? 'invalid' : ''%>"
+              type="pib"
+              placeholder="pib: 9 digits"
+              name="pib"
+              id="pib"
+              value="<%= oldInput.pib %>"
+            />
+          </div>
+        </div>
+
+        <div class="form-control">
+          <input
+            class="new_company_input new_company_input_adress <%= validationErrors.find(e => e.param ==='adress') ? 'invalid' : ''%>"
+            type="adress"
+            placeholder="Company adress"
+            name="adress"
+            id="adress"
+            value="<%= oldInput.adress %>"
+          />
+        </div>
+        <div class="form-control">
+          <input
+            class="new_company_input new_company_input_email <%= validationErrors.find(e => e.param ==='email') ? 'invalid' : ''%>"
+            type="email"
+            placeholder="Company e-mail"
+            name="email"
+            id="email"
+            value="<%= oldInput.email %>"
+          />
+        </div>
+        <div class="form-control">
+          <input
+            class="new_company_input new_company_input_telephone <%= validationErrors.find(e => e.param ==='telephone') ? 'invalid' : ''%>"
+            type="tel"
+            placeholder="Company telephone"
+            name="telephone"
+            id="telephone"
+            value="<%= oldInput.telephone %>"
+          />
+        </div>
+        <div class="form-control">
+          <p class="default_transactions_text">
+            Create default business transactions:
+          </p>
+          <input
+            class="new_company_input_checkbox <%= validationErrors.find(e => e.param ==='checkbox') ? 'invalid' : ''%>"
+            type="checkbox"
+            placeholder=""
+            name="checkbox"
+            id="checkbox"
+          />
+          <input
+            class=""
+            type="hidden"
+            name="checkbox_hidden"
+            id="checkbox_hidden"
+            value="true"
+          />
+        </div>
+        <button class="settings_new_company_button" type="submit">Create company</button>
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+      </form>
+      
+    </div>
+  </div>
+  <script>
+    var msgdiv = document.getElementById("settings_user-message");
+    var msg = document.getElementsByClassName("settings_user-message");
+
+    if (msg.length > 0) {
+      for (i = 0; i < msg.length; i++) {
+        let message = msg[i]; // zanimljivo je probati sa msg[i] pa timeout :)
+        message.style.opacity = 1;
+        message.style.transition = "opacity 1s ease-in-out";
+        setTimeout(function() {
+          message.style.opacity = "0";
+        }, 1800);
+        setTimeout(function() {
+          message.style.visibility = "hidden";
+        }, 3000);
+      }
+    }
+   
+  </script>
+</div>
+</div>

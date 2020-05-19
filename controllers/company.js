@@ -188,6 +188,7 @@ exports.getCompany = async (req, res, next) => {
   // problem je sto ovako racunato, i stavovi sa duguje saldom moraju imati
   // polje valuta, da bi bili uzeti u obzir
   obj = {}
+  obj['svi_pozivi_array'] = []
   //console.log(svi_stavovi3)
   for (let i = 0; i <= svi_stavovi3.length-1; i++) {
     if (obj[svi_stavovi3[i].pozivnabroj]){
@@ -196,7 +197,6 @@ exports.getCompany = async (req, res, next) => {
     }
     else {
       obj[svi_stavovi3[i].pozivnabroj] = {}
-      obj['svi_pozivi_array'] = []
       obj['svi_pozivi_array'].push(svi_stavovi3[i].pozivnabroj)
       obj[svi_stavovi3[i].pozivnabroj]['datum'] = svi_stavovi3[i].valuta
       obj[svi_stavovi3[i].pozivnabroj]['duguje'] = svi_stavovi3[i].duguje

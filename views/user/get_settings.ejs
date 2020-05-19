@@ -86,11 +86,12 @@
             >
               <i class="fa fa-plus-square fa-lg"></i>
             </buttoni>
+            <div id="settings_new_company_placeholder">
+            </div>
             <p class="settings_add_new_company_div_p">
               Add new company
             </p>
           </div>
-          <div id="new_company_dialog_placeholder"></div>
         </div>
 
         <div class="col-md-8">
@@ -466,5 +467,29 @@
         });
       }
     }
+    $(document).off('click', '#add_new_company_button').on('click', '#add_new_company_button', function()        
+    { 
+      var me = $(this);
+      
+      if (me.data('requestRunning')) 
+        { return; }
+        me.data('requestRunning', true);
+        
+        $.ajax({
+          type: 'GET',
+          url: '/settings_new_company',
+          success: function(response) {
+            $("#settings_new_company_placeholder").fadeOut(0).html(response).fadeIn(500)
+            $('#loader').fadeOut();
+           },
+           complete: function() {
+            me.data("requestRunning", false);
+            },
+           beforeSend: function(){
+              $('#loader').fadeIn(200)
+            }
+        });  
+    }
+);
   </script>
 </div>

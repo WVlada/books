@@ -294,3 +294,68 @@ div.text {
   margin-top: 5px;
   margin-bottom: 5px;
 }
+/* NEW COMPANY SETTINGS */
+#settings_new_company_modal_background {
+  z-index: 10;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #aaa;
+  opacity: 0.3;
+  text-align: center;
+} 
+#settings_new_company_modal_placeholder {
+  opacity: 1 !important;
+}
+#settings_new_companysignup_slika {
+  width: 400px;
+  height: 620px;
+  background-image: -webkit-linear-gradient(top, #fff9e8 0%, #d8d9ea 100%);
+  margin: 0 auto;
+  
+  box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.5);
+  border-radius: 2px;
+}
+.settings_slika-container {
+  z-index: 100;
+  
+}
+.settings_new_company_inline_div {
+  margin-left: 15px;
+}
+.settings_new_company_button {
+  margin: 20px auto;
+  margin-bottom: 0px;
+  border-radius: 4px;
+  background-image: -webkit-linear-gradient(top, #6d687e 0%, #49435b 100%);
+  color: white;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  padding-left: 10px;
+  padding-right: 10px;
+  text-align: center;
+  display: block;
+  cursor: pointer;
+  box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.5);
+}
+.settings_user-message-div {
+  z-index: 10;
+  top: 100px;
+  position: relative;
+  text-align: center;
+  width: max-content;
+  margin-left: 30%;
+}
+.settings_user-message {
+  z-index: 10;
+  width: 100%;
+  margin: 0 auto;
+  /*border: 1px solid rgb(118, 118, 136);*/
+  padding: 0.5rem;
+  border-radius: 3px;
+  /*background: rgb(202, 132, 199);*/
+  text-align: center;
+  font-size: 13px;
+}
