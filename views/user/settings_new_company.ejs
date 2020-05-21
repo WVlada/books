@@ -1,162 +1,174 @@
 
 <div id="settings_new_company_modal_background">
-<div class="settings_slika-container">
-    <link rel="stylesheet" href="/css/new_company.css" />
-<script
-  src="https://kit.fontawesome.com/ca144eb439.js"
-  crossorigin="anonymous"
-></script>
-
-
-<% if (infoMessage) { %>
-<div id="user-message" class="settings_user-message-div">
-  <div class="settings_user-message user-message--info">
-    <ul class="user-message-error-list">
-      <li><%= infoMessage %></li>
-    </ul>
-  </div>
 </div>
-<% } %> <% if (validationErrors.length > 0) { %>
-<div id="user-message" class="settings_user-message-div">
-  <div class="settings_user-message user-message--error">
-    <ul class="user-message-error-list">
-      <% validationErrors.forEach(error=>{ %>
-      <li><%= error.msg %></li>
-      <% }) %>
-    </ul>
-  </div>
-</div>
-<% } %> <% if (successMessage) { %>
-<div id="user-message" class="settings_user-message-div">
-  <div class="settings_user-message user-message--success">
-    <ul class="user-message-error-list">
-      <li><%= successMessage %></li>
-    </ul>
-  </div>
-</div>
-<% } %>
 
+  
+      <div class="slika-container_settings_new_company">
 
-  <div class="slika-container_new_company">
-    <div id="settings_new_companysignup_slika" class="col-md-6">
-      <div class="new_company_slika_div">
-        <p class="new_company_slika_text_iznad">
-          Create new company
-        </p>
-        <img
-          class="new_company_slika"
-          src="../../images/company.png"
-          alt="New company"
-        />
-        <p class="new_company_slika_text">
+        <% if (infoMessage) { %>
+          <div id="user-message" class="settings_user-message-div">
+            <div class="settings_user-message user-message--info">
+              <ul class="user-message-error-list">
+                <li><%= infoMessage %></li>
+              </ul>
+            </div>
+          </div>
+          <% } %> <% if (validationErrors.length > 0) { %>
+          <div id="user-message" class="settings_user-message-div">
+            <div class="settings_user-message user-message--error">
+              <ul class="user-message-error-list">
+                <% validationErrors.forEach(error=>{ %>
+                <li><%= error.msg %></li>
+                <% }) %>
+              </ul>
+            </div>
+          </div>
+          <% } %> <% if (successMessage) { %>
+          <div id="user-message" class="settings_user-message-div">
+            <div class="settings_user-message user-message--success">
+              <ul class="user-message-error-list">
+                <li><%= successMessage %></li>
+              </ul>
+            </div>
+          </div>
+          <% } %>
+
+          <div id="new_company_form_validation_message_placeholder"></div>
+        
+        <div id="settings_new_companysignup_slika">
+          <div class="new_company_slika_div">
+            <p class="new_company_slika_text_iznad">
+              Create new company
+            </p>
+            <img
+              class="new_company_slika"
+              src="../../images/company.png"
+              alt="New company"
+            />
+            <p class="new_company_slika_text">
+              
+            </p>
+            <p class="new_company_slika_text_ispod">
+              
+            </p>
+          </div>
           
-        </p>
-        <p class="new_company_slika_text_ispod">
           
-        </p>
+          <form id="settings_new_company_form" class="settings_new_company_form" action="/settings_new_company" method="POST">
+            <div class="form-control">
+              <input
+                class="new_company_input new_company_input_name <%= validationErrors.find(e => e.param ==='name') ? 'invalid' : ''%>"
+                type="text"
+                placeholder="Company name"
+                name="name"
+                id="name"
+                value="<%= oldInput.name %>"
+              />
+            </div>
+            <div class="form-control">
+              <% date = new Date(Date.now()) %>
+              <select
+                name="year"
+                id="year"
+                class="new_company_input new_company_input_year <%= validationErrors.find(e => e.param ==='year') ? 'invalid' : ''%>"
+              >
+                <option><%= date.getFullYear() %></option>
+                <option><%= date.getFullYear()-3 %></option>
+                <option><%= date.getFullYear()-2 %></option>
+                <option><%= date.getFullYear()-1 %></option>
+                <option><%= date.getFullYear()+1 %></option>
+              </select>
+            </div>
+
+            <div class="settings_new_company_inline_div">
+              <div class="form-control new_company_inline">
+                <input
+                  class="new_company_input new_company_input_mb <%= validationErrors.find(e => e.param ==='mb') ? 'invalid' : ''%>"
+                  type="mb"
+                  placeholder="mb: 8 digits"
+                  name="mb"
+                  id="mb"
+                  value="<%= oldInput.mb %>"
+                />
+              </div>
+              <div class="form-control new_company_inline">
+                <input
+                  class="new_company_input new_company_input_pib <%= validationErrors.find(e => e.param ==='pib') ? 'invalid' : ''%>"
+                  type="pib"
+                  placeholder="pib: 9 digits"
+                  name="pib"
+                  id="pib"
+                  value="<%= oldInput.pib %>"
+                />
+              </div>
+            </div>
+            <div class="form-control">
+              <input
+                class="new_company_input new_company_input_adress <%= validationErrors.find(e => e.param ==='adress') ? 'invalid' : ''%>"
+                type="adress"
+                placeholder="Company adress"
+                name="adress"
+                id="adress"
+                value="<%= oldInput.adress %>"
+              />
+            </div>
+            
+            <div class="form-control">
+              <input
+                class="new_company_input new_company_input_email <%= validationErrors.find(e => e.param ==='email') ? 'invalid' : ''%>"
+                type="email"
+                placeholder="Company e-mail"
+                name="email"
+                id="email"
+                value="<%= oldInput.email %>"
+              />
+            </div>
+            <div class="form-control">
+              <input
+                class="new_company_input new_company_input_telephone <%= validationErrors.find(e => e.param ==='telephone') ? 'invalid' : ''%>"
+                type="tel"
+                placeholder="Company telephone"
+                name="telephone"
+                id="telephone"
+                value="<%= oldInput.telephone %>"
+              />
+            </div>
+            
+            <div class="form-control">
+              <p class="default_transactions_text">
+                Create default business transactions:
+              </p>
+              <input
+                class="new_company_input_checkbox <%= validationErrors.find(e => e.param ==='checkbox') ? 'invalid' : ''%>"
+                type="checkbox"
+                placeholder=""
+                name="checkbox"
+                id="checkbox"
+                disabled
+              />
+              <input
+                class=""
+                type="hidden"
+                name="checkbox_hidden"
+                id="checkbox_hidden"
+                value="false"
+              />
+            </div>
+           
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+
+          </form>
+          <div>
+            <button id="settings_new_company_button" class="settings_new_company_button" type="button" >Create company</button>
+          <button id="settings_new_company_cancel_button" class="settings_new_company_button new_company_cancel_button">Cancel</button>
+          </div> 
+
+          
+        
       </div>
-      <form class="new_company_form" action="/new_company" method="POST">
-        <div class="form-control">
-          <input
-            class="new_company_input new_company_input_name <%= validationErrors.find(e => e.param ==='name') ? 'invalid' : ''%>"
-            type="text"
-            placeholder="Company name"
-            name="name"
-            id="name"
-            value="<%= oldInput.name %>"
-          />
-        </div>
-        <div class="form-control">
-          <% date = new Date(Date.now()) %>
-          <select
-            name="year"
-            id="year"
-            class="new_company_input new_company_input_year <%= validationErrors.find(e => e.param ==='year') ? 'invalid' : ''%>"
-          >
-            <option><%= date.getFullYear() %></option>
-            <option><%= date.getFullYear()-3 %></option>
-            <option><%= date.getFullYear()-2 %></option>
-            <option><%= date.getFullYear()-1 %></option>
-            <option><%= date.getFullYear()+1 %></option>
-          </select>
-        </div>
-        <div class="settings_new_company_inline_div">
-          <div class="form-control new_company_inline">
-            <input
-              class="new_company_input new_company_input_mb <%= validationErrors.find(e => e.param ==='mb') ? 'invalid' : ''%>"
-              type="mb"
-              placeholder="mb: 8 digits"
-              name="mb"
-              id="mb"
-              value="<%= oldInput.mb %>"
-            />
-          </div>
-          <div class="form-control new_company_inline">
-            <input
-              class="new_company_input new_company_input_pib <%= validationErrors.find(e => e.param ==='pib') ? 'invalid' : ''%>"
-              type="pib"
-              placeholder="pib: 9 digits"
-              name="pib"
-              id="pib"
-              value="<%= oldInput.pib %>"
-            />
-          </div>
-        </div>
 
-        <div class="form-control">
-          <input
-            class="new_company_input new_company_input_adress <%= validationErrors.find(e => e.param ==='adress') ? 'invalid' : ''%>"
-            type="adress"
-            placeholder="Company adress"
-            name="adress"
-            id="adress"
-            value="<%= oldInput.adress %>"
-          />
-        </div>
-        <div class="form-control">
-          <input
-            class="new_company_input new_company_input_email <%= validationErrors.find(e => e.param ==='email') ? 'invalid' : ''%>"
-            type="email"
-            placeholder="Company e-mail"
-            name="email"
-            id="email"
-            value="<%= oldInput.email %>"
-          />
-        </div>
-        <div class="form-control">
-          <input
-            class="new_company_input new_company_input_telephone <%= validationErrors.find(e => e.param ==='telephone') ? 'invalid' : ''%>"
-            type="tel"
-            placeholder="Company telephone"
-            name="telephone"
-            id="telephone"
-            value="<%= oldInput.telephone %>"
-          />
-        </div>
-        <div class="form-control">
-          <p class="default_transactions_text">
-            Create default business transactions:
-          </p>
-          <input
-            class="new_company_input_checkbox <%= validationErrors.find(e => e.param ==='checkbox') ? 'invalid' : ''%>"
-            type="checkbox"
-            placeholder=""
-            name="checkbox"
-            id="checkbox"
-          />
-          <input
-            class=""
-            type="hidden"
-            name="checkbox_hidden"
-            id="checkbox_hidden"
-            value="true"
-          />
-        </div>
-        <button class="settings_new_company_button" type="submit">Create company</button>
-        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-      </form>
-      
-    </div>
+
+
   </div>
   <script>
     var msgdiv = document.getElementById("settings_user-message");
@@ -175,7 +187,70 @@
         }, 3000);
       }
     }
-   
+    $(document).off('click', '#settings_new_company_button').on('click', '#settings_new_company_button', function(event)        
+    { 
+      //event.preventDefault();
+      var me = $(this);
+      var cancel_button = document.getElementById("settings_new_company_cancel_button")
+
+      if (me.data('requestRunning')) 
+        { return; }
+        me.data('requestRunning', true);
+        cancel_button.setAttribute('requestRunning', true);
+        
+        $.ajax({
+          type: 'POST',
+          url: '/settings_new_company',
+          data: $('#settings_new_company_form').serialize(), 
+          success: function(response) {
+            //var modal_placeholder = document.getElementById("_placeholder")
+            //modal_placeholder.innerHTML = "";
+            //$("div.centar").fadeOut(0).html(response).fadeIn(500)
+            //$('#loader').fadeOut();
+           },
+           error: function(error){
+            me.data('requestRunning', false);
+            //// prvo remove prethodne
+            $('.new_company_input_error').each(function(index, element){
+                $(element).removeClass('new_company_input_error');
+              })
+            //$('.new_company_select_error').each(function(index, element){
+            //    $(element).removeClass('new_company_select_error');
+            //})
+            $('#user-message_settings_new_company').remove()
+            //// onda stavljam nove
+            var fail_msg = `<div id="user-message_settings_new_company" class="settings_user-message-div_validation">
+                                <div class="user-message user-message--error">
+                                  <ul class="user-message-error-list new_company_error_list ">`
+            for(let j =0 ; j <= error.responseJSON.length - 1; j++){
+              $(`input[name='${error.responseJSON[j].param}']`).removeClass('new_company_input').addClass('new_company_input_error')
+              $(`input[name='${error.responseJSON[j].param}[]']`).removeClass('new_company_input').addClass('new_company_input_error')
+              
+              fail_msg += `<li>${error.responseJSON[j].msg}</li>`;
+            }
+            fail_msg + `</ul></div></div>`
+            $('#new_company_form_validation_message_placeholder').append(fail_msg).fadeIn(500)
+
+            $('#new_company_form_validation_message_placeholder').delay(1500).fadeOut(1500);
+            
+            
+            $('#loader').fadeOut();
+           },
+            beforeSend: function(){
+              $('#loader').fadeIn(200)
+            }
+        });
+  }
+);
+$(document).off('click', '#settings_new_company_cancel_button').on('click', '#settings_new_company_cancel_button', function(event)        
+    { 
+      var modal_placeholder = document.getElementById("settings_new_company_modal_placeholder");
+      $(modal_placeholder).fadeOut(700);
+      setTimeout(function() {
+        modal_placeholder.innerHTML = "";
+   }, 1500);
+    })
+
   </script>
-</div>
+
 </div>

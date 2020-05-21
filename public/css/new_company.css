@@ -294,36 +294,44 @@ div.text {
   margin-top: 5px;
   margin-bottom: 5px;
 }
+
 /* NEW COMPANY SETTINGS */
 #settings_new_company_modal_background {
-  z-index: 10;
+  z-index: 100;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   background: #aaa;
-  opacity: 0.3;
+  opacity: 0.2;
   text-align: center;
-} 
-#settings_new_company_modal_placeholder {
-  opacity: 1 !important;
+}
+.slika-container_settings_new_company {
+  align-content: center;
+  position: absolute;
+  z-index: 101;
+  top: -40%;
+  left: 50%;
+  margin-right: -50%;
+}
+.new_company_slika_text_iznad {
+  font-size: 18px;
+  font-weight: 700;
+  color: #49435b;
+  margin-top: 15px;
+  margin-bottom: 15px;
 }
 #settings_new_companysignup_slika {
   width: 400px;
-  height: 620px;
+  height: 660px;
   background-image: -webkit-linear-gradient(top, #fff9e8 0%, #d8d9ea 100%);
-  margin: 0 auto;
-  
+  *margin: 0 auto;
   box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.5);
   border-radius: 2px;
 }
-.settings_slika-container {
-  z-index: 100;
-  
-}
 .settings_new_company_inline_div {
-  margin-left: 15px;
+  margin-left: 40px;
 }
 .settings_new_company_button {
   margin: 20px auto;
@@ -339,23 +347,40 @@ div.text {
   display: block;
   cursor: pointer;
   box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.5);
+  border-left-color: transparent;
+  border-right-color: transparent;
+  border-color: transparent;
+  border-top: transparent;
+}
+.settings_new_company_button:focus {
+  outline: none;
+}
+.settings_new_company_button:hover {
+  color: white;
+  background-image: -webkit-linear-gradient(top, #49435b 0%, #6d687e 100%);
 }
 .settings_user-message-div {
-  z-index: 10;
-  top: 100px;
   position: relative;
-  text-align: center;
+  top: 200;
+  margin-left: auto;
   width: max-content;
-  margin-left: 30%;
+  margin-right: auto;
+ 
 }
-.settings_user-message {
-  z-index: 10;
-  width: 100%;
-  margin: 0 auto;
-  /*border: 1px solid rgb(118, 118, 136);*/
-  padding: 0.5rem;
-  border-radius: 3px;
-  /*background: rgb(202, 132, 199);*/
-  text-align: center;
-  font-size: 13px;
+.settings_user-message-div_validation {
+  position: relative;
+  top: 50;
+}
+.new_company_error_div {
+  position: relative;
+}
+#new_company_form_validation_message_placeholder {
+  position: absolute;
+}
+ul.new_company_error_list {
+  list-style-type: disc;
+  margin-left: 10px;
+}
+.new_company_input_error {
+  border: 2px solid rgb(214, 147, 147);
 }

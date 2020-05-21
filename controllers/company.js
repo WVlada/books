@@ -270,7 +270,7 @@ exports.getCompany = async (req, res, next) => {
 exports.getNewCompanyRoot = (req, res, next) => {
   const user = req.user;
   if (user.company.length != 0){
-    console.log("you got here by typing adress in adress bar")
+    console.log("you got here by typing adress in adress bar, or loged in without previously loging out")
     return res.redirect('/')
   }
   let name = "";

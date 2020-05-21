@@ -1,4 +1,6 @@
 <link rel="stylesheet" href="/css/settings.css" />
+<link rel="stylesheet" href="/css/new_company.css" />
+
 <div id="settings_modal_background"></div>
 <div class="settings_modal_placeholder">
   <div class="modal_title_bar">
@@ -86,7 +88,7 @@
             >
               <i class="fa fa-plus-square fa-lg"></i>
             </buttoni>
-            <div id="settings_new_company_placeholder">
+            <div id="settings_new_company_modal_placeholder">
             </div>
             <p class="settings_add_new_company_div_p">
               Add new company
@@ -479,7 +481,7 @@
           type: 'GET',
           url: '/settings_new_company',
           success: function(response) {
-            $("#settings_new_company_placeholder").fadeOut(0).html(response).fadeIn(500)
+            $("#settings_new_company_modal_placeholder").fadeOut(0).html(response).fadeIn(500)
             $('#loader').fadeOut();
            },
            complete: function() {
