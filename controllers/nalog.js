@@ -13,6 +13,7 @@ const { validationResult } = require("express-validator");
 
 const NALOGS_PER_PAGE = 22;
 exports.getNalog = async (req, res, next) => {
+  console.log("*************");
   const user = req.user;
   const company_id = req.current_company_id;
   console.log("*************");
@@ -42,6 +43,11 @@ exports.getNalog = async (req, res, next) => {
   }).select("-_id number name");
   // broj konta
   // brojevi naloga
+  
+  if (broj_konta_array.length == 0){
+    return res.status(422).json({param: "321", msg: "Before creating an Entry, minimum 1 Konto must exist. Create Konto first."});
+  }
+
   const brojevi_postojecih_naloga = [];
   const brojevi = [];
   const nalog_type = "N";
@@ -151,6 +157,13 @@ exports.postNalog = async (req, res, next) => {
   // provera stavova
   // snimanje naloga ce biti moguce samo ako konto postoji
   // jer on je glavni
+  if (!konto_array) {
+    return res
+      .status(400)
+      .json([
+        { param: "konto", msg: "Konto must exist." }
+      ]);
+  }
   let array_konta_za_snimanje = [];
   for (i = 0; i <= konto_array.length - 1; i++) {
     let x = await Konto.findOne({

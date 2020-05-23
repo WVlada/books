@@ -203,16 +203,21 @@
           url: '/settings_new_company',
           data: $('#settings_new_company_form').serialize(), 
           success: function(response) {
-            //var modal_placeholder = document.getElementById("_placeholder")
-            //modal_placeholder.innerHTML = "";
-            //$("div.centar").fadeOut(0).html(response).fadeIn(500)
-            //$('#loader').fadeOut();
-           },
+            var modal_placeholder = document.getElementById("settings_placeholder")
+            modal_placeholder.innerHTML = "";
+            
+            $('body').fadeOut(1000, function(){
+              location.reload(true);
+            });
+            
+            $('#loader').fadeOut();
+           
+          },
            error: function(error){
             me.data('requestRunning', false);
             //// prvo remove prethodne
             $('.new_company_input_error').each(function(index, element){
-                $(element).removeClass('new_company_input_error');
+                $(element).removeClass('new_company_input_error').addClass('new_company_input');
               })
             //$('.new_company_select_error').each(function(index, element){
             //    $(element).removeClass('new_company_select_error');
@@ -220,7 +225,7 @@
             $('#user-message_settings_new_company').remove()
             //// onda stavljam nove
             var fail_msg = `<div id="user-message_settings_new_company" class="settings_user-message-div_validation">
-                                <div class="user-message user-message--error">
+                                <div class="user-message user-message--info">
                                   <ul class="user-message-error-list new_company_error_list ">`
             for(let j =0 ; j <= error.responseJSON.length - 1; j++){
               $(`input[name='${error.responseJSON[j].param}']`).removeClass('new_company_input').addClass('new_company_input_error')

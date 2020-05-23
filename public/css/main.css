@@ -42,6 +42,7 @@ body {
   border-color: #ffff64;
   background: rgb(255, 251, 203);
   color: rgb(210, 197, 10);
+  width: fit-content;
 }
 .user-message--success {
   z-index: 10;
@@ -278,3 +279,8 @@ div.nothing_to_display {
     font-size: 112px;
   }
 } 
+
+#validation_message_placeholder {
+  position: absolute;
+  left: 40%;
+}

@@ -917,6 +917,8 @@ exports.getGraphDaysDue = async (req, res, next) => {
   let les_30 = 0;
   let les_90 = 0;
   let more_90 = 0;
+  // ako se napravi new company, onda ovo ne postoji
+  obj['svi_pozivi_array'] = obj['svi_pozivi_array'] || []
   for(let i = 0; i <= obj.svi_pozivi_array.length -1 ; i++){
     let t = new Date( obj[obj.svi_pozivi_array[i]].datum )
     if (obj[obj.svi_pozivi_array[i]].potrazuje > obj[obj.svi_pozivi_array[i]].duguje){
@@ -933,6 +935,7 @@ exports.getGraphDaysDue = async (req, res, next) => {
     // inner loop
     }  
   }
+  
   const data = [les_30, les_90, more_90]
   //console.log(data)
   return res.render("includes/dashboard/graph_days_due.ejs", {

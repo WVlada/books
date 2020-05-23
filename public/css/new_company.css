@@ -93,6 +93,9 @@
   cursor: pointer;
   box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.5);
 }
+.new_company_button:focus {
+  outline: none;
+}
 .alert_signup {
   margin-top: 100px;
   margin-left: auto;
@@ -376,11 +379,31 @@ div.text {
 }
 #new_company_form_validation_message_placeholder {
   position: absolute;
+  width: 100%;
 }
 ul.new_company_error_list {
   list-style-type: disc;
   margin-left: 10px;
 }
+.new_company_input {
+  border: 2px solid #c5c2cc;
+  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+}
+.new_company_input:focus {
+    border: 2px solid #c5c2cc;
+    box-shadow: inset 0 1px 1px #6d687e, 0 0 12px #6d687e;
+    border-color: #6d687e !important;
+    outline-color: #d4cbee;
+}
 .new_company_input_error {
   border: 2px solid rgb(214, 147, 147);
+}
+.new_company_input_error:focus {
+  border: 2px solid #c5c2cc;
+  box-shadow: inset 0 1px 1px #6d687e, 0 0 12px #6d687e;
+  border-color: #6d687e !important;
+  outline-color: #d4cbee;
+}
+.new_company_input_year {
+  width: 25%;
 }

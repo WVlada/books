@@ -3,6 +3,7 @@ const router = express.Router();
 const isAuth = require("../middleware/isAuth");
 const { check, body } = require("express-validator");
 const User = require("../models/user");
+const Company = require("../models/company");
 const bcrypt = require("bcryptjs");
 
 const userController = require("../controllers/user");

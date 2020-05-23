@@ -213,16 +213,17 @@ li.highlighted {
 .modal_form_hr {
   margin-bottom: 0px;
 }
-/*.modal_footer_hr {
+.modal_footer_hr {
   margin-top: 6px;
   margin-bottom: 3px;
-}*/
+}
 .modal_footer_button_set {
-  margin-top: 4px;
-  margin-bottom: 4px;
-  margin-right: 20px;
   text-align: right;
-  font-size: 13px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  padding: 5;
+  /*float: right;*/
+  margin-right: 10px;
 }
 .modal_footer_button_set button {
   padding: 2px 8px;

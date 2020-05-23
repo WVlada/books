@@ -75,7 +75,8 @@
 			<div class="dole_grid_item_1">
 				<finbutton id="novi_nalog">
 					New entry
-				</finbutton>
+        </finbutton>
+        <div id="validation_message_placeholder"></div>
 			</div>
 			<div class="dole_grid_item_2">	
 				<finbutton id="konto_promet_odabir">
@@ -141,7 +142,32 @@
 </div>
 
 <script>
-	$(document)
+	//$(document)
+  //    .off("click", "#novi_nalog")
+  //    .on("click", "#novi_nalog", function() {
+  //      var me = $(this);
+  //      console.log("222")
+  //      if (me.data("requestRunning")) {
+  //        return;
+  //      }
+  //      me.data("requestRunning", true);
+  //      $.ajax({
+  //        url: "/new_nalog",
+  //        type: "GET",
+  //        dataType: "html",
+  //        complete: function() {
+  //         // me.data("requestRunning", false);
+  //        },
+  //        success: function(html) {
+  //          //$("#nalog_placeholder").fadeOut(0).html(html).fadeIn(500)
+  //          //$('#loader').fadeOut();
+  //        },
+  //        beforeSend: function(){
+  //        //$('#loader').fadeIn(200)
+  //        }
+  //      });
+  //    });
+  $(document)
       .off("click", "#novi_nalog")
       .on("click", "#novi_nalog", function() {
         var me = $(this);
@@ -160,6 +186,23 @@
           },
           success: function(html) {
             $("#nalog_placeholder").fadeOut(0).html(html).fadeIn(500)
+            $('#loader').fadeOut();
+          },
+          error: function(error){
+            me.data('requestRunning', false);
+            var er = JSON.parse(error.responseText)
+            $('#user-message').remove()
+            //// onda stavljam nove
+            var fail_msg = `<div id="user-message" class="settings_user-message-div_validation">
+                                <div class="user-message user-message--info">`
+                                  
+            
+              fail_msg += `${er.msg}`;
+            
+            fail_msg + `</div></div>`
+            $('#validation_message_placeholder').append(fail_msg).fadeIn(500)
+            $('#validation_message_placeholder').delay(1500).fadeOut(1500);
+            
             $('#loader').fadeOut();
           },
           beforeSend: function(){
