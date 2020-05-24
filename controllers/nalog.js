@@ -186,6 +186,21 @@ exports.postNalog = async (req, res, next) => {
       potrazuje_array[i] = 0;
     }
   }
+  // ako su svi null, ne treba nista da snimam
+  let counter = 0;
+  for (i = 0; i <= array_konta_za_snimanje.length - 1; i++) {
+    if (array_konta_za_snimanje[i] == null) {
+      counter += 1;
+    }
+  }
+  if (counter == array_konta_za_snimanje.length){
+    return res
+      .status(400)
+      .json([
+        { param: "konto", msg: "At least 1 Konto must exist." }
+      ]);
+  }
+  // ako su svi null, ne treba nista da snimam
   const duguje_sum = duguje_array.reduce(
     (a, b) =>
       Math.round(Number(String(a).replace(/,/g, "")) * 100) / 100 +

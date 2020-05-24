@@ -4,6 +4,11 @@
   src="https://kit.fontawesome.com/ca144eb439.js"
   crossorigin="anonymous"
 ></script>
+<script
+    src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+    crossorigin="anonymous"
+  ></script>
 <div class="background-image"></div>
 
 <% if (infoMessage) { %>
@@ -154,7 +159,7 @@
             value="true"
           />
         </div>
-        <button class="new_company_button" type="submit">Create company</button>
+        <button id="new_company_button" class="new_company_button" type="submit">Create company</button>
         <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
       </form>
       <div class="signup-back-to-login">
@@ -179,5 +184,15 @@
         }, 3000);
       }
     }
+    $(document).off('click', '#new_company_button').on('click', '#new_company_button', function()        
+    { 
+      //$("body").fadeOut(1500)
+      $("#loaderNewCompany").show();
+      
+    }
+);
   </script>
+</div>
+<div id="loaderNewCompany">
+  <i id="loaderNewCompany-spinner" class="fas fa-spinner fa-spin fa-5x"></i>
 </div>

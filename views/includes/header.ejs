@@ -107,7 +107,7 @@
     <div id="validation_message_placeholder"></div>
     <ul class="nav navbar-nav moje_right">
       <li>
-        <a href="/logout" class="logout_link">Logout</a>
+        <a id="logout_dugme" href="/logout" class="logout_link">Logout</a>
       </li>
 
       <li>
@@ -126,10 +126,10 @@
     crossorigin="anonymous"
   ></script>-->
   <script
-    src="https://code.jquery.com/jquery-3.4.1.min.js"
-    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-    crossorigin="anonymous"
-  ></script>
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"
+></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.js"></script>
   <script
     src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
@@ -307,6 +307,12 @@
         }
       });
     }
+    $(document).off('click', '#logout_dugme').on('click', '#logout_dugme', function()        
+    { 
+      //$("body").fadeOut(1500)
+      $("#loader").show();
+      
+    })
     //$(document).off('click', 'button.settings_dugme').on('click', 'button.settings_dugme', function()
     //
     //    {
