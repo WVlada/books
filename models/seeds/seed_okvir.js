@@ -47,8 +47,32 @@ await Okvir.create({ company: company, number: "47",  name: "VAT payable",      
 await Okvir.create({ company: company, number: "48",  name: "Other taxes, and contributions", type: "P" })
 await Okvir.create({ company: company, number: "49",  name: "Passive accruals",                     type: "P" })
  
-await Okvir.create({ company: company, number: "5",   name: "EXPENSES",     type: "P" })
+await Okvir.create({ company: company, number: "5",   name: "EXPENSES",     type: "A" })
+await Okvir.create({ company: company, number: "50",  name: "Costs of merchandise sold", type: "A" })
+await Okvir.create({ company: company, number: "51",  name: "Costs of material", type: "A" })
+await Okvir.create({ company: company, number: "52",  name: "Costs of salaries, fringe benefits and other personal expenses", type: "A" })
+await Okvir.create({ company: company, number: "53",  name: "Costs of production services", type: "A" })
+await Okvir.create({ company: company, number: "54",  name: "Costs of depreciation and provisions", type: "A" })
+await Okvir.create({ company: company, number: "55",  name: "Non-production costs", type: "A" })
+await Okvir.create({ company: company, number: "56",  name: "Financial expenses", type: "A" })
+await Okvir.create({ company: company, number: "57",  name: "Other expenses", type: "A" })
+await Okvir.create({ company: company, number: "58",  name: "Impairment Costs", type: "A" })
+await Okvir.create({ company: company, number: "59",  name: "Losses of suspended business", type: "A" })
+
 await Okvir.create({ company: company, number: "6",   name: "REVENUES",     type: "P" })
+await Okvir.create({ company: company, number: "60",  name: "Income from the sale of merchandise", type: "P" })
+await Okvir.create({ company: company, number: "61",  name: "Income from sales of products and services rendered", type: "P" })
+await Okvir.create({ company: company, number: "62",  name: "Income from the own use of products, services and merchandise", type: "P" })
+await Okvir.create({ company: company, number: "63",  name: "Change in value of inventories of work in progress and finished  products", type: "P" })
+await Okvir.create({ company: company, number: "64",  name: "Income from premiums, subventions, donations, etc", type: "P" })
+await Okvir.create({ company: company, number: "65",  name: "Other operating income", type: "P" })
+await Okvir.create({ company: company, number: "66",  name: "Financial income", type: "P" })
+await Okvir.create({ company: company, number: "67",  name: "Other income", type: "P" })
+await Okvir.create({ company: company, number: "68",  name: "Income from assets valuation adjustments", type: "P" })
+await Okvir.create({ company: company, number: "69",  name: "Profit of suspended business", type: "P" })
+
+
+
 console.log("Okvir seed completed.")
 }
 

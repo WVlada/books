@@ -269,6 +269,10 @@ exports.getCompany = async (req, res, next) => {
 
 exports.getNewCompanyRoot = (req, res, next) => {
   const user = req.user;
+  if (user.company.length != 0 && user.fromLinkedIn == true){
+    console.log("Youa re already signed up with linkedIn, and didnt Logout to delete your data.")
+    return res.redirect('/')
+  }
   if (user.company.length != 0){
     console.log("you got here by typing adress in adress bar, or loged in without previously loging out")
     return res.redirect('/')
@@ -280,10 +284,10 @@ exports.getNewCompanyRoot = (req, res, next) => {
   let adress = "";
   let telephone = "";
   if (user.fromLinkedIn) {
-    name = "Evolve Finance ltd.";
+    name = "Just Try Finance ltd.";
     mb = "12345678";
     pib = "123456789";
-    email = "office@evolve-finance.com";
+    email = "office@try-finance.com";
     adress = "Bulevar Mihajla Pupina 120";
     telephone = "064555555";
   }
@@ -319,7 +323,7 @@ exports.postNewCompanyRoot = (req, res, next) => {
   const telephone = req.body.telephone;
   const user = req.user;
   const checkbox = req.body.checkbox_hidden;
-
+  console.log(req.body)
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(422).render("company/new_company", {
@@ -494,7 +498,8 @@ exports.getKontniPlan = async (req, res, next) => {
   let totalKontos;
   const kontos = await Konto.find({
     company: current_company,
-  }); //
+  });
+  console.log(kontos) 
   //.countDocuments()
   //.then(numberOfKontos => {
   //  totalKontos = numberOfKontos;
@@ -509,7 +514,7 @@ exports.getKontniPlan = async (req, res, next) => {
     number: 1,
   });
   const sva_konta_i_okvir = [];
-
+  console.log(okvir)
   for (let i = 0; i <= okvir.length - 1; i++) {
     sva_konta_i_okvir.push(okvir[i]);
     if (okvir[i].number.length == 2) {

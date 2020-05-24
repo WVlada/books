@@ -62,6 +62,23 @@ exports.postEditKonto = async (req, res, next) => {
       .status(400)
       .json([{ param: "number", msg: "Account already exists." }]);
   }
+  /////// da ne dozvolim pravljenje konta Van okvira
+  const prva_cifre_za_proveru = number.substring(0,1);// 2 not included
+  const array_of_not_available_kontos_prva_cifra = ["7","8","9"]
+  if (array_of_not_available_kontos_prva_cifra.includes(prva_cifre_za_proveru)){
+    return res
+      .status(400)
+      .json([{ param: "number", msg: "Account number must be within Okvir limits." }]);
+  }
+  const prve_dve_cifre = number.substring(0,2);// 2 not included
+  const array_of_not_available_kontos = ["06","07","08","09","16","17","18","19","29","36","37","38","39"]
+  if (array_of_not_available_kontos.includes(prve_dve_cifre)){
+    return res
+      .status(400)
+      .json([{ param: "number", msg: "Account number must be within Okvir limits." }]);
+  }
+  /////// da ne dozvolim pravljenje konta Van okvira
+
   const prva_cifra = parseInt(number.charAt(0));
   let type;
   let msg;

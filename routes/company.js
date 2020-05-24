@@ -14,9 +14,9 @@ router.post(
   "/new_company",
   [
     check("name")
-      .isLength({ min: 3, max: 20 })
+      .isLength({ min: 3, max: 30 })
       .withMessage(
-        "Company name must be minimum 3 and maximum 20 characters long."
+        "Company name must be minimum 3 and maximum 30 characters long."
       )
       .trim(),
     check("year")

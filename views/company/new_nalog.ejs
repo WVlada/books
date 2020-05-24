@@ -100,6 +100,9 @@
                       <option></option>
                       <option value="<%= sifra_komitenta_array[i]._id  %>"><%= sifra_komitenta_array[i].sifra %> | <%= sifra_komitenta_array[i].name %> </option>
                     <% } %>
+                    <% if (sifra_komitenta_array.length === 0) { %>
+                      <option value=""></option>
+                    <% } %>
                   </select>
               </div>
             </div>
@@ -174,6 +177,9 @@
                       <option></option>
                       <option><%= broj_konta_array[i].number %> | <%= broj_konta_array[i].name %> </option>
                     <% } %>
+                    <% if (sifra_komitenta_array.length === 0) { %>
+                      <option value=""></option>
+                    <% } %>
                   </select>
               </div>
             </div>
@@ -209,6 +215,9 @@
                       <option></option>
                       <option value="<%= sifra_komitenta_array[i]._id  %>"><%= sifra_komitenta_array[i].sifra %> | <%= sifra_komitenta_array[i].name %> </option>
                     <% } %>
+                    <% if (sifra_komitenta_array.length === 0) { %>
+                      <option value=""></option>
+                    <% } %>  
                   </select>
               </div>
             </div>
