@@ -76,6 +76,7 @@ exports.getKomitentBanksIndex = async (req, res, next) => {
   });
   console.log("*************");
   console.log(type);
+  console.log(current_company);
   console.log("*************");
   const banks = await Komitent.find({
     company: current_company,

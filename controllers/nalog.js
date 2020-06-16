@@ -45,7 +45,7 @@ exports.getNalog = async (req, res, next) => {
   // brojevi naloga
   
   if (broj_konta_array.length == 0){
-    return res.status(422).json({param: "321", msg: "Before creating an Entry, minimum 1 Account must exist. Add Acc. first."});
+    return res.status(422).json({param: "nalog", msg: "Before creating an Entry, minimum 1 Account must exist. Add Acc. first."});
   }
 
   const brojevi_postojecih_naloga = [];

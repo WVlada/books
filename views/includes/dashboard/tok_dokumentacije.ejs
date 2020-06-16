@@ -295,6 +295,23 @@
           complete: function() {
             me.data("requestRunning", false);
           },
+          error: function(error){
+            me.data('requestRunning', false);
+            var er = JSON.parse(error.responseText)
+            $('#user-message').remove()
+            //// onda stavljam nove
+            var fail_msg = `<div id="user-message" class="settings_user-message-div_validation">
+                                <div class="user-message user-message--info">`
+                                  
+            
+              fail_msg += `${er.msg}`;
+            
+            fail_msg + `</div></div>`
+            $('#validation_message_placeholder').append(fail_msg).fadeIn(500)
+            $('#validation_message_placeholder').delay(1500).fadeOut(1500);
+            
+            $('#loader').fadeOut();
+          },
           success: function(html) {
             $("#nalog_placeholder")
               .fadeOut(0)
