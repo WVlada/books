@@ -148,6 +148,7 @@ router.post("/settings_new_company", [
 ], isAuth, userController.postNewCompanySettings);
 
 router.get("/auth/linkedin/callback", userController.getLinkedin);
+router.get("/preview_app", userController.getPreviewApp)
 router.get("/back_to_login", userController.getBackToLogin);
 
 module.exports = router;

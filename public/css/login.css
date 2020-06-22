@@ -23,7 +23,7 @@
 }
 #login_slika {
   width: 400px;
-  height: 270px;
+  height: 310px;
   background-image: -webkit-linear-gradient(top, #fff9e8 0%, #d8d9ea 100%);
   margin: 0 auto;
   z-index: 2;
@@ -228,4 +228,8 @@ div.text {
 }
 .linked_in_slika:hover {
   cursor: pointer;
+}
+#preview_app_a_link {
+  text-decoration: none;
+  color: #bfbdc4;
 }

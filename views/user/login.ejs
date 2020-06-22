@@ -39,7 +39,7 @@
         <h1>Welcome</h1>
       </div>
       <p>This app is made for presentation purposes.</p>
-      <h2>Chose Sign in with LinkedIn option to continue</h2>
+      <h2>Chose "Preview app" or Sign in with LinkedIn option to continue</h2>
 			<p><b>Signing in with LinkedIn account</b>, seeds database with example data. All app features are enabled, and functional. No user data is being stored (email, name etc...).</p>
         <p>Clicking logout button, clears your user data and every change you might made.</p>
       <br/>
@@ -72,6 +72,7 @@
       </div>
 
       <button class="login_button" type="submit">Login</button>
+      <span class="login_button" type="submit"><a id="preview_app_a_link" href="/preview_app" >Preview app</a></span>
       <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
     </form>
     <div class="login-signup">
@@ -134,6 +135,11 @@ $(document).ready(function(){
       .on("click", "div.click_to_continue", function() {
         $("#welcome").fadeOut();
       })
+  $(document)
+      .off("click", "#preview_app")
+      .on("click", "#preview_app", function() {
+          
+  })
   </script>
         
 
