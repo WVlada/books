@@ -5,6 +5,9 @@ const csrf = require("csurf");
 const favicon = require("serve-favicon");
 const path = require("path");
 
+const dotenv = require("dotenv")
+dotenv.config()
+
 const mongoose = require("mongoose");
 const MongoDBStore = require("connect-mongodb-session")(session);
 
@@ -101,7 +104,6 @@ app.use(komitentRoutes);
 app.use(nalogRoutes);
 app.use(kontoRoutes);
 app.use(errorController.get404);
-
 mongoose
   .connect(MONGODB_URI, { useUnifiedTopology: true, useNewUrlParser: true })
   .then(result => {
